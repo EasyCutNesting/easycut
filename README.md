@@ -97,10 +97,18 @@ EasyCut è sviluppato in linguaggio **AutoLISP** e utilizza AutoCAD come ambient
 
 La documentazione ufficiale riporta test su:
 
-* AutoCAD 2007, versione inglese, 32/64 bit.
-* AutoCAD 2019, versione italiana/inglese, 64 bit.
-* Windows 7 Professional.
+* AutoCAD 2007, versione inglese, 32/64 bit ad 
+* Autocad 2021, versione italiana/inglese, 64 bit.
+* Autocad 2024, versione italiana/inglese, 64 bit.
+* Autocad 2026, versione italiana/inglese, 64 bit.
+
+Sistema operativo supportato:
+* Windows XP.
+* Windows Vista.
+* Windows 7.
+* Windows 8.
 * Windows 10.
+* Windows 11.
 
 La compatibilità con altre versioni di AutoCAD e Windows deve essere verificata in base all'ambiente di installazione.
 
