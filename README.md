@@ -1,5 +1,6 @@
 # EasyCut Nesting
 
+
 **Software gratuito per l'ottimizzazione del taglio di lamiere e barre**
 
 EasyCut Nesting è un software per la gestione e l'ottimizzazione del taglio di materiali, sviluppato per lavorare all'interno di AutoCAD.
