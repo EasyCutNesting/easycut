@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<parts>
+	<shape name="Fianco_Sx" path="C:\Users\adl20\EasyCut\Output\Nesting\fianco_armadio.dxf" quantity="8" />
+	<shape name="Ripiano" path="C:\Users\adl20\EasyCut\Output\Nesting\ripiano.dxf" quantity="8" />
+</parts>

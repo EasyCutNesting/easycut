@@ -1,0 +1,29 @@
+(defun c:ExportToExcel (/ xlApp xlBook xlSheet row)
+  ;; Inizializza l'applicazione Excel
+  (setq xlApp (vlax-get-or-create-object "Excel.Application"))
+  
+  ;; Rendi Excel visibile (opzionale, imposta a :vlax-false per nascosto)
+  (vla-put-visible xlApp :vlax-true)
+  
+  ;; Crea una nuova cartella di lavoro
+  (setq xlBook (vlax-invoke (vlax-get-property xlApp "Workbooks") "Add"))
+  (setq xlSheet (vlax-get-property xlBook "ActiveSheet"))
+  
+  ;; Esempio: Scrivere dati in alcune celle
+  (vlax-put-property (vlax-get-property xlSheet "Range" "A1") "Value2" "ID")
+  (vlax-put-property (vlax-get-property xlSheet "Range" "B1") "Value2" "Coordinate")
+  (vlax-put-property (vlax-get-property xlSheet "Range" "A2") "Value2" 1)
+  (vlax-put-property (vlax-get-property xlSheet "Range" "B2") "Value2" "10,20,0")
+  
+  ;; Salva il file (specificare percorso completo)
+  ;; (vlax-invoke xlBook "SaveAs" "C:\\Percorso\\TuoFile.xlsx")
+  
+  ;; Chiudi e pulisci
+  ;; (vlax-invoke xlBook "Close" :vlax-false)
+  ;; (vlax-invoke xlApp "Quit")
+  ;; (vlax-release-object xlSheet)
+  ;; (vlax-release-object xlBook)
+  ;; (vlax-release-object xlApp)
+  (princ "\nDati esportati in Excel.")
+  (princ)
+)

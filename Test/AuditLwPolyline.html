@@ -1,0 +1,149 @@
+<style>
+pre.small {
+           line-height:0.6;
+           background-color:#1a1a1ad1;
+           color:silver;
+          }
+</style>
+<pre class="small">
+<ol>
+<li><font color="red">(</font><font color="#0099ff">defun</font> <font color="#0099ff">CheckSelfIntersectShape</font> <font color="red">(</font>ename <font color="#0099ff">/</font> LWP:_intersect LWP:_unique LWP:_pts</li>
+<li>										obj parts n i j closed tol</li>
+<li>										o1 o2 raw pts res<font color="red">)</font></li>
+<li></li>
+<li></li>
+<li></li>
+<li>	<font color="red">(</font><font color="#0099ff">defun</font> LWP:_intersect <font color="red">(</font>o1 o2 <font color="#0099ff">/</font> r<font color="red">)</font></li>
+<li></li>
+<li>		<font color="red">(</font><font color="#0099ff">setq</font> r</li>
+<li>			<font color="red">(</font><font color="#0099ff">vl-catch-all-apply</font></li>
+<li>				<font color="#e33333">'</font><font color="#0099ff">vla-IntersectWith</font></li>
+<li>				<font color="red">(</font><font color="#0099ff">list</font> o1 o2 <font color="#0099ff">acExtendNone</font><font color="red">)</font></li>
+<li>			<font color="red">)</font></li>
+<li>		<font color="red">)</font></li>
+<li>		<font color="red">(</font><font color="#0099ff">if</font> <font color="red">(</font><font color="#0099ff">vl-catch-all-error-p</font> r<font color="red">)</font></li>
+<li>			<font color="#0099ff">nil</font></li>
+<li>			r</li>
+<li>		<font color="red">)</font></li>
+<li>	<font color="red">)</font></li>
+<li>	<font color="#00ff00">;</font></li>
+<li>	<font color="#00ff00">;</font></li>
+<li>	<font color="red">(</font><font color="#0099ff">defun</font> LWP:_unique <font color="red">(</font>lst tol <font color="#0099ff">/</font> p out<font color="red">)</font></li>
+<li></li>
+<li>		<font color="red">(</font><font color="#0099ff">foreach</font> p lst</li>
+<li>			<font color="red">(</font><font color="#0099ff">if</font> <font color="red">(</font><font color="#0099ff">not</font></li>
+<li>					<font color="red">(</font><font color="#0099ff">vl-some</font></li>
+<li>						<font color="#e33333">'</font><font color="red">(</font><font color="#0099ff">lambda</font> <font color="red">(</font>q<font color="red">)</font> <font color="red">(</font><font color="#0099ff">equal</font> p q tol<font color="red">))</font></li>
+<li>						out</li>
+<li>					<font color="red">)</font></li>
+<li>				<font color="red">)</font></li>
+<li>				<font color="red">(</font><font color="#0099ff">setq</font> out <font color="red">(</font><font color="#0099ff">cons</font> p out<font color="red">))</font></li>
+<li>			<font color="red">)</font></li>
+<li>		<font color="red">)</font></li>
+<li></li>
+<li>		<font color="red">(</font><font color="#0099ff">reverse</font> out<font color="red">)</font></li>
+<li>	<font color="red">)</font></li>
+<li>	<font color="#00ff00">;</font></li>
+<li>	<font color="#00ff00">;</font></li>
+<li>	<font color="red">(</font><font color="#0099ff">defun</font> LWP:_pts <font color="red">(</font>v <font color="#0099ff">/</font> LWP:_unwrap</li>
+<li>						 l out<font color="red">)</font></li>
+<li></li>
+<li>		<font color="red">(</font><font color="#0099ff">defun</font> LWP:_unwrap <font color="red">(</font>v<font color="red">)</font></li>
+<li>			<font color="red">(</font><font color="#0099ff">cond</font></li>
+<li>				<font color="red">((</font><font color="#0099ff">null</font> v<font color="red">)</font> <font color="#0099ff">nil</font><font color="red">)</font></li>
+<li>				<font color="#00ff00">;; error ActiveX</font></li>
+<li>				<font color="red">((</font><font color="#0099ff">vl-catch-all-error-p</font> v<font color="red">)</font> <font color="#0099ff">nil</font><font color="red">)</font></li>
+<li>				<font color="#00ff00">;; Variant wrapper</font></li>
+<li>				<font color="red">((</font><font color="#0099ff">=</font> <font color="red">(</font><font color="#0099ff">type</font> v<font color="red">)</font> <font color="#e33333">'</font><font color="#0099ff">VARIANT</font><font color="red">)</font></li>
+<li>					<font color="red">(</font>LWP:_unwrap <font color="red">(</font><font color="#0099ff">vlax-variant-value</font> v<font color="red">)))</font></li>
+<li>					<font color="#00ff00">;; SAFEARRAY</font></li>
+<li>				<font color="red">((</font><font color="#0099ff">=</font> <font color="red">(</font><font color="#0099ff">type</font> v<font color="red">)</font> <font color="#e33333">'</font><font color="#0099ff">SAFEARRAY</font><font color="red">)</font></li>
+<li>					<font color="red">(</font><font color="#0099ff">if</font> <font color="red">(</font><font color="#0099ff">and</font> v</li>
+<li>						<font color="red">(</font><font color="#0099ff">&gt;=</font> <font color="red">(</font><font color="#0099ff">vlax-safearray-get-u-bound</font> v <font color="orange">1</font><font color="red">)</font></li>
+<li>							<font color="red">(</font><font color="#0099ff">vlax-safearray-get-l-bound</font> v <font color="orange">1</font><font color="red">)))</font></li>
+<li>						<font color="red">(</font><font color="#0099ff">vlax-safearray-&gt;list</font> v<font color="red">)</font></li>
+<li>						<font color="#0099ff">nil</font></li>
+<li>					<font color="red">)</font></li>
+<li>				<font color="red">)</font></li>
+<li>				<font color="#00ff00">;; already list</font></li>
+<li>				<font color="red">((</font><font color="#0099ff">listp</font> v<font color="red">)</font> v<font color="red">)</font></li>
+<li>				<font color="red">(</font><font color="#0099ff">T</font> <font color="#0099ff">nil</font><font color="red">)</font></li>
+<li>			<font color="red">)</font></li>
+<li>		<font color="red">)</font></li>
+<li>		<font color="#00ff00">;</font></li>
+<li>		<font color="#00ff00">; Main +++++</font></li>
+<li>		<font color="#00ff00">;</font></li>
+<li>		<font color="red">(</font><font color="#0099ff">setq</font> l <font color="red">(</font>LWP:_unwrap v<font color="red">))</font></li>
+<li>		<font color="red">(</font><font color="#0099ff">if</font> <font color="red">(</font><font color="#0099ff">and</font> l <font color="red">(</font><font color="#0099ff">listp</font> l<font color="red">))</font></li>
+<li>			<font color="red">(</font><font color="#0099ff">progn</font></li>
+<li>				<font color="red">(</font><font color="#0099ff">while</font> <font color="red">(</font><font color="#0099ff">and</font> l <font color="red">(</font><font color="#0099ff">&gt;=</font> <font color="red">(</font><font color="#0099ff">length</font> l<font color="red">)</font> <font color="orange">3</font><font color="red">))</font></li>
+<li>					<font color="red">(</font><font color="#0099ff">setq</font> out</li>
+<li>						<font color="red">(</font><font color="#0099ff">cons</font></li>
+<li>							<font color="red">(</font><font color="#0099ff">list</font> <font color="red">(</font><font color="#0099ff">car</font> l<font color="red">)</font> <font color="red">(</font><font color="#0099ff">cadr</font> l<font color="red">)</font> <font color="red">(</font><font color="#0099ff">caddr</font> l<font color="red">))</font></li>
+<li>							out</li>
+<li>						<font color="red">)</font></li>
+<li>					<font color="red">)</font></li>
+<li>					<font color="red">(</font><font color="#0099ff">setq</font> l <font color="red">(</font><font color="#0099ff">cdddr</font> l<font color="red">))</font></li>
+<li>				<font color="red">)</font></li>
+<li>				<font color="red">(</font><font color="#0099ff">reverse</font> out<font color="red">)</font></li>
+<li>			<font color="red">)</font></li>
+<li>			<font color="#0099ff">nil</font></li>
+<li>		<font color="red">)</font></li>
+<li>	<font color="red">)</font>	</li>
+<li>	<font color="#00ff00">;</font></li>
+<li>	<font color="#00ff00">; Main</font></li>
+<li>	<font color="#00ff00">;</font></li>
+<li>	<font color="red">(</font><font color="#0099ff">setq</font> tol <font color="#e33333">1e-8</font><font color="red">)</font></li>
+<li></li>
+<li>	<font color="red">(</font><font color="#0099ff">setq</font> obj <font color="red">(</font><font color="#0099ff">vlax-ename-&gt;vla-object</font> ename<font color="red">))</font></li>
+<li>	<font color="red">(</font><font color="#0099ff">setq</font> closed <font color="red">(</font><font color="#0099ff">=</font> <font color="#0099ff">:vlax-true</font> <font color="red">(</font><font color="#0099ff">vla-get-Closed</font> obj<font color="red">)))</font></li>
+<li></li>
+<li>	<font color="#00ff00">;; explode in memory</font></li>
+<li>	<font color="red">(</font><font color="#0099ff">setq</font> parts <font color="red">(</font><font color="#0099ff">vlax-safearray-&gt;list</font> <font color="red">(</font><font color="#0099ff">vlax-variant-value</font> <font color="red">(</font><font color="#0099ff">vla-Explode</font> obj<font color="red">))))</font></li>
+<li>	<font color="red">(</font><font color="#0099ff">setq</font> n <font color="red">(</font><font color="#0099ff">length</font> parts<font color="red">))</font></li>
+<li>	<font color="red">(</font><font color="#0099ff">setq</font> i <font color="orange">0</font><font color="red">)</font></li>
+<li></li>
+<li>	<font color="red">(</font><font color="#0099ff">while</font> <font color="red">(</font><font color="#0099ff">&lt;</font> i n<font color="red">)</font></li>
+<li></li>
+<li>		<font color="red">(</font><font color="#0099ff">setq</font> j <font color="red">(</font><font color="#0099ff">+</font> i <font color="orange">2</font><font color="red">))</font></li>
+<li></li>
+<li>		<font color="red">(</font><font color="#0099ff">while</font> <font color="red">(</font><font color="#0099ff">&lt;</font> j n<font color="red">)</font></li>
+<li></li>
+<li>			<font color="red">(</font><font color="#0099ff">setq</font> o1 <font color="red">(</font><font color="#0099ff">nth</font> i parts<font color="red">))</font></li>
+<li>			<font color="red">(</font><font color="#0099ff">setq</font> o2 <font color="red">(</font><font color="#0099ff">nth</font> j parts<font color="red">))</font></li>
+<li></li>
+<li>			<font color="#00ff00">;; skip adiacenti</font></li>
+<li>			<font color="red">(</font><font color="#0099ff">if</font> <font color="red">(</font><font color="#0099ff">not</font></li>
+<li>				<font color="red">(</font><font color="#0099ff">or</font> <font color="red">(</font><font color="#0099ff">=</font> <font color="red">(</font><font color="#0099ff">abs</font> <font color="red">(</font><font color="#0099ff">-</font> i j<font color="red">))</font> <font color="orange">1</font><font color="red">)</font></li>
+<li>					<font color="red">(</font><font color="#0099ff">and</font> closed</li>
+<li>						<font color="red">(</font><font color="#0099ff">=</font> <font color="red">(</font><font color="#0099ff">min</font> i j<font color="red">)</font> <font color="orange">0</font><font color="red">)</font></li>
+<li>						<font color="red">(</font><font color="#0099ff">=</font> <font color="red">(</font><font color="#0099ff">max</font> i j<font color="red">)</font> <font color="red">(</font><font color="#0099ff">1-</font> n<font color="red">)))))</font></li>
+<li></li>
+<li>					<font color="red">(</font><font color="#0099ff">progn</font></li>
+<li></li>
+<li>						<font color="#00ff00">;; safe intersect</font></li>
+<li>						<font color="red">(</font><font color="#0099ff">setq</font> raw <font color="red">(</font>LWP:_intersect o1 o2<font color="red">))</font></li>
+<li>						<font color="#00ff00">;; safe unwrap \U+2192 points</font></li>
+<li>						<font color="red">(</font><font color="#0099ff">setq</font> pts <font color="red">(</font>LWP:_pts raw<font color="red">))</font></li>
+<li>						<font color="#00ff00">;; accumulate</font></li>
+<li>						<font color="red">(</font><font color="#0099ff">if</font> pts</li>
+<li>							<font color="red">(</font><font color="#0099ff">foreach</font> p pts</li>
+<li>								<font color="red">(</font><font color="#0099ff">setq</font> res <font color="red">(</font><font color="#0099ff">cons</font> p res<font color="red">))</font></li>
+<li>							<font color="red">)</font></li>
+<li>						<font color="red">)</font></li>
+<li>					<font color="red">)</font></li>
+<li>			<font color="red">)</font></li>
+<li>			<font color="red">(</font><font color="#0099ff">setq</font> j <font color="red">(</font><font color="#0099ff">1+</font> j<font color="red">))</font></li>
+<li>		<font color="red">)</font></li>
+<li></li>
+<li>		<font color="red">(</font><font color="#0099ff">setq</font> i <font color="red">(</font><font color="#0099ff">1+</font> i<font color="red">))</font></li>
+<li>	<font color="red">)</font></li>
+<li>	<font color="#00ff00">;; cleanup</font></li>
+<li>	<font color="red">(</font><font color="#0099ff">foreach</font> o parts <font color="red">(</font><font color="#0099ff">vla-delete</font> o<font color="red">))</font></li>
+<li>	<font color="#00ff00">;; final unique</font></li>
+<li>	<font color="red">(</font>LWP:_unique res tol<font color="red">)</font></li>
+<li><font color="red">)</font></li>
+<li><font color="#00ff00">;</font></li>
+<li></li>
+</ol>
+</pre>

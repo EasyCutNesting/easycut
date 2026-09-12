@@ -1,0 +1,2 @@
+(vl-directory-files "C:\\Users\\Default User\\AppData\\Local\\Application Data" nil -1)
+(GETFOLDERATTRIBUTES "C:\\Users\\Default User\\AppData\\Local\\Application Data")

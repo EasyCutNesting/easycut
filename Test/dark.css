@@ -1,0 +1,19 @@
+body { background: #1a1a1a; }
+ol   { color: silver; }
+
+.quote        { color: #e33333; }
+.bracket      { color: red;     }
+.blockcomment { color: #00ff00; }
+.comment      { color: #00ff00; }
+.string       { color: cyan;    }
+.protected    { color: #0099ff; }
+.integer      { color: yellow;  }
+.real         { color: orange;  }
+.dot          { color: #e33333; }
+
+div.theme ul a.dark1
+{
+    background: #004b00;
+    background: -moz-linear-gradient(-90deg,#00ab00,#002b00);
+    background: -webkit-gradient(linear, left top, left bottom, from(#00ab00), to(#002b00));
+}

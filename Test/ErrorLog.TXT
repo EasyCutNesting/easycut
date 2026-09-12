@@ -1,0 +1,6 @@
+28.05.2019 17:02:04 UNIT:[Unit1.pas] ERROR:Il modulo di gestione di database Microsoft Jet non è in grado di trovare la tabella o la query di input  'INTERNALSHAPE'. Verificare che esista e che il nome sia stato digitato correttamente
+28.05.2019 17:02:39 UNIT:[Unit1.pas] ERROR:Impossibile applicare il tipo di ordinamento
+28.05.2019 17:02:41 UNIT:[Unit1.pas] ERROR:Impossibile applicare il tipo di ordinamento
+28.05.2019 17:10:39 UNIT:[Unit1.pas] ERROR:Missing Connection or ConnectionString
+28.05.2019 17:10:49 UNIT:[Unit1.pas] ERROR:Impossibile applicare il tipo di ordinamento
+28.05.2019 17:11:29 UNIT:[Unit1.pas] ERROR:Impossibile applicare il tipo di ordinamento

@@ -1,0 +1,595 @@
+999
+     *******************************************
+999
+     BOCAD Software GmbH   Rev.18.000   0202.22
+999
+     Filename:   c:\progetti21\danieli_aqs\b4\temp_11\30213.dxf
+999
+     Creator:    bocad
+999
+     Date:       20.01.2016
+999
+     Factor:     10.000000
+999
+     *******************************************
+  0
+SECTION
+  2
+HEADER
+  9
+$DWGCODEPAGE
+  3
+ANSI_1252
+  9
+$INSBASE
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$EXTMIN
+ 10
+-0.500000
+ 20
+-165.500031
+  9
+$EXTMAX
+ 10
+11004.493408
+ 20
+165.499992
+  9
+$LIMMIN
+ 10
+-1.500000
+ 20
+-166.500031
+  9
+$LIMMAX
+ 10
+11005.493408
+ 20
+166.499992
+  9
+$LTSCALE
+ 40
+10.000000
+  0
+ENDSEC
+  0
+SECTION
+  2
+TABLES
+  0
+TABLE
+  2
+LTYPE
+ 70
+4
+  0
+LTYPE
+  2
+CONTINUOUS
+ 70
+64
+  3
+____________________________________________
+ 72
+65
+ 73
+0
+ 40
+0.0
+  0
+LTYPE
+  2
+HIDDEN
+ 70
+64
+  3
+__ __ __ __ __ __ __ __ __ __ __ __ __ __ __
+ 72
+65
+ 73
+2
+ 40
+0.50
+ 49
+0.30
+ 49
+-0.20
+  0
+LTYPE
+  2
+DASHDOT
+ 70
+64
+  3
+____ _ ____ _ ____ _ ____ _ ____ _ ____ _ __
+ 72
+65
+ 73
+4
+ 40
+2.0
+ 49
+1.5
+ 49
+-0.25
+ 49
+0
+ 49
+-0.25
+  0
+LTYPE
+  2
+DOT
+ 70
+64
+  3
+............................................
+ 72
+65
+ 73
+2
+ 40
+0.30
+ 49
+0
+ 49
+-0.30
+  0
+ENDTAB
+  0
+TABLE
+  2
+LAYER
+ 70
+23
+  0
+LAYER
+  2
+UNTERSCHRIFT
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+TEILE
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+REST
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+MARKERPUNKTE
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+HILFSPUNKTE
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+PICKPUNKTE
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+SCHRAUBEN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+SCHWEISSEN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+GRAFIK
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEM_FREI
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEM_SYSTEM
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEM_KONTUR
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEM_ANBAU
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEM_SCHRAUBEN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEM_SCHWEISSEN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+FREIER_TEXT
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEZ_TEILE
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEZ_SCHRAUBEN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEZ_SCHWEISSEN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+SCHRAFFUREN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+SCHNITTSYMBOL
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+RASTER
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+LISTEN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+RAHMEN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+ENDTAB
+  0
+TABLE
+  2
+STYLE
+ 70
+1
+  0
+STYLE
+  2
+STANDARD
+ 70
+64
+ 40
+0
+ 41
+1
+ 50
+0.0
+ 71
+0
+ 42
+0.35
+  3
+ROMANS
+  0
+ENDTAB
+  0
+ENDSEC
+  0
+SECTION
+  2
+ENTITIES
+  0
+TEXT
+ 8
+UNTERSCHRIFT
+ 62
+2
+ 10
+5423.996582
+ 20
+-163.000031
+ 40
+3.250000
+ 41
+0.800000
+ 51
+15.000000
+  1
+Project  DP0GN9  ,Qty. 3  , Pos. 
+  0
+TEXT
+ 8
+UNTERSCHRIFT
+ 62
+2
+ 10
+5522.796875
+ 20
+-163.000031
+ 40
+3.250000
+ 41
+0.800000
+ 51
+15.000000
+  1
+  , Profi l PL330*12
+  0
+TEXT
+ 8
+UNTERSCHRIFT
+ 62
+2
+ 10
+5509.796875
+ 20
+-163.000031
+ 40
+3.250000
+ 41
+0.800000
+ 51
+15.000000
+  1
+30213
+  0
+LINE
+  8
+TEILE
+ 62
+2
+ 10
+0.000000
+ 20
+-135.000015
+ 11
+0.000000
+ 21
+134.999969
+  0
+LINE
+  8
+TEILE
+ 62
+2
+ 10
+0.000000
+ 20
+134.999969
+ 11
+30.000000
+ 21
+164.999985
+  0
+LINE
+  8
+TEILE
+ 62
+2
+ 10
+30.000000
+ 20
+164.999985
+ 11
+10973.993164
+ 21
+165.000000
+  0
+LINE
+  8
+TEILE
+ 62
+2
+ 10
+10973.993164
+ 20
+165.000000
+ 11
+11003.993164
+ 21
+135.000000
+  0
+LINE
+  8
+TEILE
+ 62
+2
+ 10
+11003.993164
+ 20
+135.000000
+ 11
+11003.993164
+ 21
+-135.000031
+  0
+LINE
+  8
+TEILE
+ 62
+2
+ 10
+11003.993164
+ 20
+-135.000031
+ 11
+10973.993164
+ 21
+-165.000031
+  0
+LINE
+  8
+TEILE
+ 62
+2
+ 10
+10973.993164
+ 20
+-165.000031
+ 11
+30.000000
+ 21
+-165.000015
+  0
+LINE
+  8
+TEILE
+ 62
+2
+ 10
+30.000000
+ 20
+-165.000015
+ 11
+0.000000
+ 21
+-135.000015
+  0
+ENDSEC
+  0
+EOF
+

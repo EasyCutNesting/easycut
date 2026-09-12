@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<commessa>
+    <!-- Impostazioni Generali -->
+    <configurazione>
+       <lama>4</lama>
+       <rifilo>15</rifilo>
+		<cartella_output>C:\\Users\\adl20\\EasyCut\\Output\\Nesting</cartella_output>
+		<prefisso_file>RectPack</prefisso_file>
+		<mostra_grafica>True</mostra_grafica>
+		<testo_offset_x>10</testo_offset_x>
+		<testo_offset_y>10</testo_offset_y>
+		<testo_altezza>2</testo_altezza>
+    </configurazione>
+
+    <!-- Pannelli grandi disponibili in Magazzino -->
+    <magazzino>
+        <pannello larghezza="3000" altezza="2000" />
+        <pannello larghezza="3000" altezza="2000" />
+    </magazzino>
+
+    <!-- Elenco dei Pezzi Ordinati da ricavare -->
+    <prodotti>
+        <pezzo larghezza="1200" altezza="800" nome="Fianco_Destro" rotazione="False" />
+        <pezzo larghezza="1200" altezza="800" nome="Fianco_Sinistro" rotazione="False" />
+        <pezzo larghezza="1200" altezza="800" nome="Base_Armadio" rotazione="False" />
+        <pezzo larghezza="600" altezza="400" nome="Ripiano_1" rotazione="False" />
+        <pezzo larghezza="600" altezza="400" nome="Ripiano_2" rotazione="False" />
+        <pezzo larghezza="400" altezza="300" nome="Frontale_Cassetto" rotazione="False" />
+        <pezzo larghezza="500" altezza="250" nome="Fondino" rotazione="False" />
+        <pezzo larghezza="1200" altezza="800" nome="Fianco_Destro" rotazione="False" />
+        <pezzo larghezza="1200" altezza="800" nome="Fianco_Sinistro" rotazione="False" />
+        <pezzo larghezza="1200" altezza="800" nome="Base_Armadio" rotazione="False" />
+        <pezzo larghezza="600" altezza="400" nome="Ripiano_1" rotazione="False" />
+        <pezzo larghezza="600" altezza="400" nome="Ripiano_2" rotazione="False" />
+        <pezzo larghezza="400" altezza="300" nome="Frontale_Cassetto" rotazione="False" />
+        <pezzo larghezza="500" altezza="250" nome="Fondino" rotazione="False" />
+        <pezzo larghezza="1200" altezza="800" nome="Fianco_Destro" rotazione="False" />
+        <pezzo larghezza="1200" altezza="800" nome="Fianco_Sinistro" rotazione="False" />
+        <pezzo larghezza="1200" altezza="800" nome="Base_Armadio" rotazione="False" />
+        <pezzo larghezza="600" altezza="400" nome="Ripiano_1" rotazione="False" />
+        <pezzo larghezza="600" altezza="400" nome="Ripiano_2" rotazione="False" />
+        <pezzo larghezza="400" altezza="300" nome="Frontale_Cassetto" rotazione="False" />
+        <pezzo larghezza="500" altezza="250" nome="Fondino" rotazione="False" />
+    </prodotti>
+</commessa>

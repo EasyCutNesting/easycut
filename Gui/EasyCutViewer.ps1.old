@@ -1,0 +1,180 @@
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Drawing
+
+# ============================================================
+# CONFIGURAZIONE E PERCORSI
+# ============================================================
+
+$scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Path
+if ([string]::IsNullOrEmpty($scriptPath)) { $scriptPath = "." }
+
+$configFile = Join-Path $scriptPath "EasyCutViewerConfig.json"
+$tempFile   = Join-Path $env:TEMP "EasyCutViewer_next.txt"
+
+# ============================================================
+# FUNZIONI DI CONFIGURAZIONE
+# ============================================================
+
+function Load-ECVConfig {
+    if (Test-Path $configFile) {
+        try {
+            return Get-Content $configFile -Raw | ConvertFrom-Json
+        } catch {}
+    }
+
+    return @{
+        Width    = 700
+        Height   = 500
+        Font     = "Consolas"
+        FontSize = 10
+    }
+}
+
+function Save-ECVConfig($form) {
+    $cfg = @{
+        Width  = $form.Width
+        Height = $form.Height
+    }
+    $cfg | ConvertTo-Json | Out-File $configFile -Encoding utf8
+}
+
+# ============================================================
+# FUNZIONI DI LETTURA FILE
+# ============================================================
+
+function Get-ECVFileContent($path) {
+    try {
+        $stream = [System.IO.File]::Open($path, 'Open', 'Read', 'ReadWrite')
+        $reader = New-Object System.IO.StreamReader($stream)
+        $content = $reader.ReadToEnd()
+        $reader.Close()
+        $stream.Close()
+        return $content
+    } catch {
+        return ""
+    }
+}
+
+function Process-ECVFile($file, $form, $textBox, $txtNomeFile) {
+    if (-not $file) { return }
+    if (-not (Test-Path $file)) { return }
+
+    $txtNomeFile.Text = $file
+    $textBox.Text = Get-ECVFileContent $file
+
+    $form.Activate()
+    $form.WindowState = 'Normal'
+
+    $textBox.Select(0,0)
+    $txtNomeFile.Select(0,0)
+    $form.ActiveControl = $null
+}
+
+# ============================================================
+# CREAZIONE INTERFACCIA GRAFICA
+# ============================================================
+
+function New-ECVUI($config) {
+    $form = New-Object System.Windows.Forms.Form
+    $form.Text = "EasyCutViewer"
+    $form.Size = New-Object System.Drawing.Size($config.Width, $config.Height)
+    $form.StartPosition = "CenterScreen"
+    $form.Padding = New-Object System.Windows.Forms.Padding(3)
+
+    # TextBox contenuto
+    $textBox = New-Object System.Windows.Forms.TextBox
+    $textBox.Multiline = $true
+    $textBox.ScrollBars = "Vertical"
+    $textBox.Font = New-Object System.Drawing.Font("Consolas", 10)
+    $textBox.Dock = 'Fill'
+
+    # TextBox nome file
+    $txtNomeFile = New-Object System.Windows.Forms.TextBox
+    $txtNomeFile.ReadOnly = $true
+    $txtNomeFile.BackColor = 'LightGray'
+    $txtNomeFile.Dock = 'Top'
+
+    # Pulsante ricarica
+    $btnReload = New-Object System.Windows.Forms.Button
+    $btnReload.Text = "Ricarica"
+    $btnReload.Dock = 'Top'
+    $btnReload.Add_Click({
+        if ($txtNomeFile.Text -and (Test-Path $txtNomeFile.Text)) {
+            $textBox.Text = Get-ECVFileContent $txtNomeFile.Text
+        }
+    })
+
+    $form.Controls.Add($textBox)
+    $form.Controls.Add($btnReload)
+    $form.Controls.Add($txtNomeFile)
+
+    return $form, $textBox, $txtNomeFile
+}
+
+# ============================================================
+# FILESYSTEM WATCHER (SOLO ULTIMO FILE)
+# ============================================================
+
+function Start-ECVWatcher {
+    param(
+        [string]$TempFile,
+        $Form,
+        $TextBox,
+        $TxtNomeFile
+    )
+
+    $watcher = New-Object System.IO.FileSystemWatcher
+    $watcher.Path = Split-Path $TempFile
+    $watcher.Filter = (Split-Path $TempFile -Leaf)
+    $watcher.NotifyFilter = 'LastWrite'
+    $watcher.EnableRaisingEvents = $true
+
+    $watcher.Add_Changed({
+        try {
+            $lastFile = Get-Content $TempFile -Raw
+            Remove-Item $TempFile -Force -ErrorAction SilentlyContinue
+
+            Process-ECVFile $lastFile $Form $TextBox $TxtNomeFile
+        } catch {}
+    })
+}
+
+# ============================================================
+# MUTEX PER SINGOLA ISTANZA
+# ============================================================
+
+$createdNew = $false
+$mutex = New-Object System.Threading.Mutex($true, "Global\EasyCutViewerSingleInstanceMutex", [ref]$createdNew)
+
+if (-not $createdNew) {
+    if ($args.Count -gt 0) {
+        [System.IO.File]::WriteAllText($tempFile, "$($args[0])")
+    }
+    exit
+}
+
+# ============================================================
+# AVVIO PROGRAMMA
+# ============================================================
+
+$config = Load-ECVConfig
+$form, $textBox, $txtNomeFile = New-ECVUI $config
+
+Start-ECVWatcher -TempFile $tempFile -Form $form -TextBox $textBox -TxtNomeFile $txtNomeFile
+
+# Se avviato con file da VisualLISP (sempre caricare l'ultimo passato)
+if ($args.Count -gt 0) {
+    Process-ECVFile $args[0] $form $textBox $txtNomeFile
+}
+
+$form.Add_FormClosing({
+    Save-ECVConfig $form
+    $mutex.ReleaseMutex()
+    $mutex.Dispose()
+
+    if (Test-Path $tempFile) {
+        Remove-Item $tempFile -Force -ErrorAction SilentlyContinue
+    }
+})
+
+$form.ShowDialog()

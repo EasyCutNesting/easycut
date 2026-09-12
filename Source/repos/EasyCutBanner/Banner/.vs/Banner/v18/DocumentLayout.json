@@ -1,0 +1,61 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\EasyCutNesting Beta\\Source\\repos\\EasyCutBanner\\Banner\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{ACED8518-567A-4362-B094-3D256A020238}|Banner.vbproj|c:\\easycutnesting beta\\source\\repos\\easycutbanner\\banner\\form1.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
+      "RelativeMoniker": "D:0:0:{ACED8518-567A-4362-B094-3D256A020238}|Banner.vbproj|solutionrelative:form1.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ACED8518-567A-4362-B094-3D256A020238}|Banner.vbproj|c:\\easycutnesting beta\\source\\repos\\easycutbanner\\banner\\form1.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{ACED8518-567A-4362-B094-3D256A020238}|Banner.vbproj|solutionrelative:form1.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Form1.vb [Progettazione]",
+              "DocumentMoniker": "C:\\EasyCutNesting Beta\\Source\\repos\\EasyCutBanner\\Banner\\Form1.vb",
+              "RelativeDocumentMoniker": "Form1.vb",
+              "ToolTip": "C:\\EasyCutNesting Beta\\Source\\repos\\EasyCutBanner\\Banner\\Form1.vb [Progettazione]",
+              "RelativeToolTip": "Form1.vb [Progettazione]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2026-08-08T16:24:03.633Z",
+              "EditorCaption": " [Progettazione]"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Form1.vb",
+              "DocumentMoniker": "C:\\EasyCutNesting Beta\\Source\\repos\\EasyCutBanner\\Banner\\Form1.vb",
+              "RelativeDocumentMoniker": "Form1.vb",
+              "ToolTip": "C:\\EasyCutNesting Beta\\Source\\repos\\EasyCutBanner\\Banner\\Form1.vb",
+              "RelativeToolTip": "Form1.vb",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2026-08-08T16:22:55.579Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

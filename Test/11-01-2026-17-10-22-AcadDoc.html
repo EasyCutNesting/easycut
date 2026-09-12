@@ -1,0 +1,44 @@
+<style>
+pre.small {
+           line-height:0.6;
+           background-color:#1a1a1a;
+           color:silver;
+          }
+</style>
+<pre class="small">
+<ol>
+<li><font color="#00ff00">; Start Load Application                                                     ;</font></li>
+<li><font color="#00ff00">; Build 2025/08/09 17:53:38                                                  ;</font></li>
+<li><font color="#00ff00">; Version ver 3.3.3 2022.12.29                                               ;</font></li>
+<li>Ciccio</li>
+<li>Pluto papaerino</li>
+<li><font color="red">(</font><font color="#0099ff">defun</font> Search&AddTrsPth <font color="red">(</font>AddPath <font color="#0099ff">/</font> TrsPth<font color="red">)</font>                                           </li>
+<li>    <font color="red">(</font><font color="#0099ff">if</font> AddPath                                                                      <font color="#00ff00">; EasyCutNesting</font></li>
+<li>        <font color="red">(</font><font color="#0099ff">if</font> <font color="red">(</font><font color="#0099ff">findfile</font> AddPath<font color="red">)</font>                                                       </li>
+<li>            <font color="red">(</font><font color="#0099ff">progn</font>                                                                   <font color="#00ff00">; EasyCutNesting</font></li>
+<li>                <font color="red">(</font><font color="#0099ff">if</font> <font color="red">(</font><font color="#0099ff">setq</font> TrsPth <font color="red">(</font><font color="#0099ff">getvar</font> <font color="#e33333">'</font>trustedpaths<font color="red">))</font>                             </li>
+<li>                    <font color="red">(</font><font color="#0099ff">if</font> <font color="red">(</font><font color="#0099ff">not</font> <font color="red">(</font><font color="#0099ff">vl-string-search</font> <font color="red">(</font><font color="#0099ff">strcase</font> AddPath<font color="red">)</font> <font color="red">(</font><font color="#0099ff">strcase</font> TrsPth<font color="red">)))</font>  <font color="#00ff00">; EasyCutNesting</font></li>
+<li>                        <font color="red">(</font><font color="#0099ff">progn</font>                                                       <font color="#00ff00">; EasyCutNesting</font></li>
+<li>                            <font color="red">(</font><font color="#0099ff">setq</font> TrsPth <font color="red">(</font><font color="#0099ff">vl-string-left-trim</font> <font color="cyan">" "</font> TrsPth<font color="red">))</font>           </li>
+<li>                            <font color="red">(</font><font color="#0099ff">setq</font> TrsPth <font color="red">(</font><font color="#0099ff">vl-string-right-trim</font>  <font color="cyan">" "</font> TrsPth<font color="red">))</font>         <font color="#00ff00">; EasyCutNesting</font></li>
+<li>                            <font color="red">(</font><font color="#0099ff">cond</font>                                                    <font color="#00ff00">; EasyCutNesting</font></li>
+<li>                                <font color="red">((</font><font color="#0099ff">or</font> <font color="red">(</font><font color="#0099ff">=</font> TrsPth <font color="cyan">"."</font><font color="red">)</font> <font color="red">(</font><font color="#0099ff">=</font> TrsPth <font color="cyan">""</font><font color="red">))</font>                   </li>
+<li>                                  <font color="red">(</font><font color="#0099ff">setq</font> TrsPth AddPath<font color="red">)</font>                              <font color="#00ff00">; EasyCutNesting</font></li>
+<li>                                <font color="red">)</font>                                                    <font color="#00ff00">; EasyCutNesting</font></li>
+<li>                                <font color="red">(</font><font color="#0099ff">t</font>                                                   <font color="#00ff00">; EasyCutNesting</font></li>
+<li>                                  <font color="red">(</font><font color="#0099ff">setq</font> TrsPth <font color="red">(</font><font color="#0099ff">strcat</font> TrsPth <font color="cyan">";"</font> AddPath<font color="red">))</font>          <font color="#00ff00">; EasyCutNesting</font></li>
+<li>                                <font color="red">)</font>                                                    <font color="#00ff00">; EasyCutNesting</font></li>
+<li>                            <font color="red">)</font>                                                        <font color="#00ff00">; EasyCutNesting</font></li>
+<li>                            <font color="red">(</font><font color="#0099ff">setvar</font> <font color="#e33333">'</font>trustedpaths TrsPth<font color="red">)</font>                            </li>
+<li>                        <font color="red">)</font>                                                            <font color="#00ff00">; EasyCutNesting</font></li>
+<li>                    <font color="red">)</font>                                                                <font color="#00ff00">; EasyCutNesting</font></li>
+<li>                <font color="red">)</font>                                                                    <font color="#00ff00">; EasyCutNesting</font></li>
+<li>            <font color="red">)</font>                                                                        <font color="#00ff00">; EasyCutNesting</font></li>
+<li>        <font color="red">)</font>                                                                            <font color="#00ff00">; EasyCutNesting</font></li>
+<li>    <font color="red">)</font>                                                                                <font color="#00ff00">; EasyCutNesting</font></li>
+<li><font color="red">)</font>                                                                                    <font color="#00ff00">; EasyCutNesting</font></li>
+<li><font color="red">(</font>Search&AddTrsPth <font color="cyan">"C:\\EasyCutBeta\\..."</font><font color="red">)</font>  </li>
+<li><font color="red">(</font><font color="#0099ff">load</font> <font color="cyan">"C:\\EasyCutBeta\\Load\\StartEasyCut.lsp"</font> <font color="cyan">""</font><font color="red">)</font> </li>
+<li><font color="#00ff00">; End Load Application                                                               </font></li>
+</ol>
+</pre>

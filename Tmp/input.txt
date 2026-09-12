@@ -1,0 +1,6 @@
+file di input EasyCut
+      riga1 riga11 EasyCut
+	EasyCut		
+riga2 EasyCut
+EasyCut
+riga3 EasyCut

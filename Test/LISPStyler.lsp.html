@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<!-- saved from url=(0048)http://www.lee-mac.com/lisp/html/LISPStyler.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>LISPStyler.lsp</title>
+<link rel="stylesheet" type="text/css" href="./LISPStyler.lsp_files/code.css">
+<link rel="stylesheet" type="text/css" href="./LISPStyler.lsp_files/dark1.css" id="theme">
+<script type="text/javascript" async="" src="./LISPStyler.lsp_files/ga.js.download"></script><script type="text/javascript" src="./LISPStyler.lsp_files/year.js.download"></script>
+<script type="text/javascript" src="./LISPStyler.lsp_files/switchcss.js.download"></script>
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-22502315-1']);
+_gaq.push(['_trackPageview']);
+
+(function() 
+{
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+</head>
+<body>
+<div class="container">
+<div class="header">LISPStyler.lsp © <script type="text/javascript">writeyear();</script>2020  Lee Mac</div>
+<div class="theme"><ul><li><a class="dark1" onclick="switchcss(&#39;themes/dark1.css&#39;);">Dark</a></li><li><a class="light1" onclick="switchcss(&#39;themes/light1.css&#39;);">Light</a></li><li><a class="vlide" onclick="switchcss(&#39;themes/vlide.css&#39;);">VLIDE</a></li></ul></div>
+</div>
+<ol>
+<li><span class="comment">;;--------------------=={&nbsp;LISP&nbsp;Styler&nbsp;}==---------------------;;</span></li>
+<li><span class="comment">;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li><span class="comment">;;&nbsp;&nbsp;A&nbsp;generic&nbsp;styling&nbsp;engine&nbsp;allowing&nbsp;the&nbsp;user&nbsp;to&nbsp;add&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li><span class="comment">;;&nbsp;&nbsp;specified&nbsp;styling&nbsp;tags&nbsp;to&nbsp;various&nbsp;code&nbsp;elements&nbsp;of&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li><span class="comment">;;&nbsp;&nbsp;a&nbsp;LISP&nbsp;file.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li><span class="comment">;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li><span class="comment">;;&nbsp;&nbsp;Output&nbsp;file&nbsp;is&nbsp;saved&nbsp;to&nbsp;the&nbsp;same&nbsp;directory&nbsp;as&nbsp;supplied&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li><span class="comment">;;&nbsp;&nbsp;input&nbsp;file.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li><span class="comment">;;------------------------------------------------------------;;</span></li>
+<li><span class="comment">;;&nbsp;&nbsp;Author:&nbsp;Lee&nbsp;Mac,&nbsp;Copyright&nbsp;©&nbsp;2011&nbsp;-&nbsp;www.lee-mac.com&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li><span class="comment">;;------------------------------------------------------------;;</span></li>
+<li><span class="comment">;;&nbsp;&nbsp;Arguments:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li><span class="comment">;;&nbsp;&nbsp;file&nbsp;&nbsp;&nbsp;-&nbsp;filename&nbsp;of&nbsp;lsp&nbsp;file&nbsp;to&nbsp;convert&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li><span class="comment">;;&nbsp;&nbsp;styles&nbsp;-&nbsp;list&nbsp;of&nbsp;styling&nbsp;tags&nbsp;(format&nbsp;described&nbsp;below)&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li><span class="comment">;;&nbsp;&nbsp;extn&nbsp;&nbsp;&nbsp;-&nbsp;extension&nbsp;of&nbsp;the&nbsp;output&nbsp;file&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li><span class="comment">;;&nbsp;&nbsp;&lt;&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Boolean&nbsp;flag&nbsp;determining&nbsp;whether&nbsp;&lt;&nbsp;&amp;&nbsp;&gt;&nbsp;are&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li><span class="comment">;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;converted&nbsp;to&nbsp;&amp;lt;&nbsp;and&nbsp;&amp;gt;&nbsp;in&nbsp;the&nbsp;output&nbsp;file&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li><span class="comment">;;------------------------------------------------------------;;</span></li>
+<li>&nbsp;</li>
+<li><span class="bracket">(</span><span class="protected">defun</span>&nbsp;LM:LISPStyler</li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="bracket">(</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">;;&nbsp;--&nbsp;Arguments&nbsp;--</span></li>
+<li>&nbsp;&nbsp;&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;file&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">;;&nbsp;-&nbsp;Filename&nbsp;of&nbsp;LISP&nbsp;file&nbsp;to&nbsp;Convert</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;styles&nbsp;&nbsp;<span class="comment">;;&nbsp;-&nbsp;List&nbsp;of&nbsp;Styles&nbsp;tags&nbsp;for&nbsp;each&nbsp;code&nbsp;item</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;extn&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">;;&nbsp;-&nbsp;Extension&nbsp;for&nbsp;resultant&nbsp;file&nbsp;(e.g.&nbsp;".html")</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&lt;&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">;;&nbsp;-&nbsp;T&nbsp;if&nbsp;'&lt;'&nbsp;and&nbsp;'&gt;'&nbsp;are&nbsp;to&nbsp;be&nbsp;replaced&nbsp;with&nbsp;&amp;lt;&nbsp;&amp;gt;</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="protected">/</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">;;&nbsp;--&nbsp;Subfunctions&nbsp;--</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;*error*</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;_read</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;_fix&lt;&gt;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;_PadBetween</li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">;;&nbsp;--&nbsp;Local&nbsp;Variables&nbsp;--</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;_bracket</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;_bracketl</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;_container</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;_containerl</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;_integer</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;_integerl</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;_mcomment</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;_mcommentl</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;_protected</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;_protectedl</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;_quote</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;_quotel</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;_real</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;_reall</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;_scomment</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;_scommentl</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;_string</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;_stringl</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;a</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;exceptions</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;fl</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;i</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;ichrs</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;l</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;lines</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;ochrs</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;of</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;outfile</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;s</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;str</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;w</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;wf</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;x</li>
+<li>&nbsp;&nbsp;&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;Code&nbsp;based&nbsp;on&nbsp;an&nbsp;algorithm&nbsp;concocted&nbsp;by&nbsp;the&nbsp;genius&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;of&nbsp;ElpanovEvgeniy.&nbsp;Rewritten&nbsp;&amp;&nbsp;modified&nbsp;by&nbsp;Lee&nbsp;Mac&nbsp;2011&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;include&nbsp;line&nbsp;&amp;&nbsp;character&nbsp;reports,&nbsp;and&nbsp;to&nbsp;enable&nbsp;the&nbsp;user&nbsp;to&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;use&nbsp;custom&nbsp;styles.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;Notes&nbsp;on&nbsp;Function&nbsp;Arguments:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;file&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;Full&nbsp;filename&nbsp;of&nbsp;LISP&nbsp;file&nbsp;to&nbsp;convert,&nbsp;forward&nbsp;slashes&nbsp;or&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;double-backslashes&nbsp;may&nbsp;be&nbsp;used&nbsp;in&nbsp;filename.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;styles&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;List&nbsp;of&nbsp;tags&nbsp;to&nbsp;enclose&nbsp;various&nbsp;code&nbsp;items,&nbsp;list&nbsp;must&nbsp;be&nbsp;in&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;the&nbsp;following&nbsp;form:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;&nbsp;&nbsp;(&lt;container&nbsp;open&gt;&nbsp;&lt;container&nbsp;close&gt;)&nbsp;&nbsp;&nbsp;e.g.&nbsp;(&lt;pre&gt;&nbsp;&lt;/pre&gt;)&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;&nbsp;&nbsp;(&lt;quote&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;open&gt;&nbsp;&lt;quote&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;close&gt;)&nbsp;&nbsp;&nbsp;quotes/dots&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;&nbsp;&nbsp;(&lt;bracket&nbsp;&nbsp;&nbsp;open&gt;&nbsp;&lt;bracket&nbsp;&nbsp;&nbsp;close&gt;)&nbsp;&nbsp;&nbsp;parentheses&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;&nbsp;&nbsp;(&lt;mcomment&nbsp;&nbsp;open&gt;&nbsp;&lt;mcomment&nbsp;&nbsp;close&gt;)&nbsp;&nbsp;&nbsp;multiline&nbsp;comments&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;&nbsp;&nbsp;(&lt;scomment&nbsp;&nbsp;open&gt;&nbsp;&lt;scomment&nbsp;&nbsp;close&gt;)&nbsp;&nbsp;&nbsp;single&nbsp;comments&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;&nbsp;&nbsp;(&lt;string&nbsp;&nbsp;&nbsp;&nbsp;open&gt;&nbsp;&lt;string&nbsp;&nbsp;&nbsp;&nbsp;close&gt;)&nbsp;&nbsp;&nbsp;strings&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;&nbsp;&nbsp;(&lt;protected&nbsp;open&gt;&nbsp;&lt;protected&nbsp;close&gt;)&nbsp;&nbsp;&nbsp;protected&nbsp;symbols&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;&nbsp;&nbsp;(&lt;integer&nbsp;&nbsp;&nbsp;open&gt;&nbsp;&lt;integer&nbsp;&nbsp;&nbsp;close&gt;)&nbsp;&nbsp;&nbsp;integers&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;&nbsp;&nbsp;(&lt;real&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;open&gt;&nbsp;&lt;real&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;close&gt;)&nbsp;&nbsp;&nbsp;reals&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;If&nbsp;no&nbsp;tag&nbsp;is&nbsp;required&nbsp;for&nbsp;an&nbsp;item,&nbsp;the&nbsp;entry&nbsp;must&nbsp;still&nbsp;be&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;present,&nbsp;as:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;&nbsp;&nbsp;(""&nbsp;"")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;extn&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;Extension&nbsp;for&nbsp;resultant&nbsp;file&nbsp;-&nbsp;dot&nbsp;must&nbsp;be&nbsp;included.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;Example:&nbsp;&nbsp;&nbsp;".html"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;&lt;&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;Boolean&nbsp;flag&nbsp;to&nbsp;determine&nbsp;whether&nbsp;the&nbsp;characters&nbsp;'&lt;'&nbsp;and&nbsp;'&gt;'&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;are&nbsp;to&nbsp;be&nbsp;replaced&nbsp;with&nbsp;&amp;lt;&nbsp;and&nbsp;&amp;gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;If&nbsp;T,&nbsp;'&lt;'&nbsp;and&nbsp;'&gt;'&nbsp;are&nbsp;replaced.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;Note&nbsp;that&nbsp;by&nbsp;the&nbsp;nature&nbsp;of&nbsp;the&nbsp;algorithm&nbsp;to&nbsp;determine&nbsp;the&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;type&nbsp;of&nbsp;code&nbsp;item,&nbsp;any&nbsp;user-defined&nbsp;symbols&nbsp;in&nbsp;the&nbsp;current&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;namespace&nbsp;will&nbsp;be&nbsp;interpreted&nbsp;as&nbsp;the&nbsp;datatype&nbsp;to&nbsp;which&nbsp;they&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;point.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;For&nbsp;this&nbsp;reason,&nbsp;a&nbsp;list&nbsp;of&nbsp;exceptions&nbsp;is&nbsp;required&nbsp;to&nbsp;avoid&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;the&nbsp;incorrect&nbsp;styling&nbsp;of&nbsp;symbols&nbsp;appearing&nbsp;as&nbsp;functions&nbsp;&amp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;variables&nbsp;in&nbsp;this&nbsp;program&nbsp;or&nbsp;indeed&nbsp;any&nbsp;other&nbsp;defined&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;functions&nbsp;or&nbsp;global&nbsp;variables.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;This&nbsp;list&nbsp;may&nbsp;be&nbsp;extended&nbsp;to&nbsp;suit&nbsp;the&nbsp;user's&nbsp;environment.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;exceptions</li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">;;&nbsp;Subfunctions,&nbsp;Arguments&nbsp;&amp;&nbsp;Variables&nbsp;in&nbsp;this&nbsp;Program</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="quote">'</span><span class="bracket">(</span><span class="string">"*error*"</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"_read"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"_fix&lt;&gt;"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"_padbetween"</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"file"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"styles"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"extn"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"&lt;&gt;"</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"_bracket"</span>&nbsp;&nbsp;&nbsp;<span class="string">"_bracketl"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"_container"</span>&nbsp;<span class="string">"_containerl"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"_integer"</span>&nbsp;&nbsp;&nbsp;<span class="string">"_integerl"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"_mcomment"</span>&nbsp;&nbsp;<span class="string">"_mcommentl"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"_protected"</span>&nbsp;<span class="string">"_protectedl"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"_quote"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"_quotel"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"_real"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"_reall"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"_scomment"</span>&nbsp;&nbsp;<span class="string">"_scommentl"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"_string"</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"_stringl"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"a"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"exceptions"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"fl"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"i"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"ichrs"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"l"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"lines"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"ochrs"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"of"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"outfile"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"s"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"str"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"w"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"wf"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"x"</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"lm:lispstyler"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;Error&nbsp;Handler</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">defun</span>&nbsp;*error*&nbsp;<span class="bracket">(</span>&nbsp;msg&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">mapcar</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">function</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">lambda</span>&nbsp;<span class="bracket">(</span>&nbsp;sym&nbsp;<span class="bracket">)</span>&nbsp;<span class="bracket">(</span><span class="protected">and</span>&nbsp;sym&nbsp;<span class="bracket">(</span><span class="protected">close</span>&nbsp;sym<span class="bracket">)))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">list</span>&nbsp;of&nbsp;wf<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">if</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">and</span>&nbsp;msg</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">not</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">member</span>&nbsp;<span class="bracket">(</span><span class="protected">strcase</span>&nbsp;msg<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="quote">'</span><span class="bracket">(</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"CONSOLE&nbsp;BREAK"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"FUNCTION&nbsp;CANCELLED"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"QUIT&nbsp;/&nbsp;EXIT&nbsp;ABORT"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">princ</span>&nbsp;<span class="bracket">(</span><span class="protected">strcat</span>&nbsp;<span class="string">"\n**&nbsp;Error:&nbsp;"</span>&nbsp;msg&nbsp;<span class="string">"&nbsp;**"</span><span class="bracket">))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">princ</span><span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;Attempts&nbsp;to&nbsp;read&nbsp;file&nbsp;with&nbsp;supplied&nbsp;filename,&nbsp;returns&nbsp;a&nbsp;list</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;of&nbsp;strings&nbsp;in&nbsp;the&nbsp;file.</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">defun</span>&nbsp;_read&nbsp;<span class="bracket">(</span>&nbsp;file&nbsp;<span class="protected">/</span>&nbsp;of&nbsp;l&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">cond</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;of&nbsp;<span class="bracket">(</span><span class="protected">open</span>&nbsp;file&nbsp;<span class="string">"r"</span><span class="bracket">))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">while</span>&nbsp;<span class="bracket">(</span><span class="protected">car</span>&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;l&nbsp;<span class="bracket">(</span><span class="protected">cons</span>&nbsp;<span class="bracket">(</span><span class="protected">read-line</span>&nbsp;of<span class="bracket">)</span>&nbsp;l<span class="bracket">))))</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;of&nbsp;<span class="bracket">(</span><span class="protected">close</span>&nbsp;of<span class="bracket">))</span>&nbsp;<span class="bracket">(</span><span class="protected">reverse</span>&nbsp;<span class="bracket">(</span><span class="protected">cdr</span>&nbsp;l<span class="bracket">))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;Substitutes&nbsp;all&nbsp;instances&nbsp;of&nbsp;'&lt;'&nbsp;and&nbsp;'&gt;'&nbsp;with&nbsp;&amp;lt;&nbsp;and&nbsp;&amp;gt;&nbsp;in</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;supplied&nbsp;string.</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">defun</span>&nbsp;_fix&lt;&gt;&nbsp;<span class="bracket">(</span>&nbsp;string&nbsp;<span class="protected">/</span>&nbsp;_stringsubst&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">defun</span>&nbsp;_stringsubst&nbsp;<span class="bracket">(</span>&nbsp;new&nbsp;old&nbsp;string&nbsp;<span class="protected">/</span>&nbsp;i&nbsp;nl&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;i&nbsp;<span class="integer">0</span>&nbsp;nl&nbsp;<span class="bracket">(</span><span class="protected">strlen</span>&nbsp;new<span class="bracket">))</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">while</span>&nbsp;<span class="bracket">(</span><span class="protected">and</span>&nbsp;<span class="bracket">(</span><span class="protected">&lt;</span>&nbsp;i&nbsp;<span class="bracket">(</span><span class="protected">strlen</span>&nbsp;string<span class="bracket">))</span>&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;i&nbsp;<span class="bracket">(</span><span class="protected">vl-string-search</span>&nbsp;old&nbsp;string&nbsp;i<span class="bracket">)))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;string&nbsp;<span class="bracket">(</span><span class="protected">vl-string-subst</span>&nbsp;new&nbsp;old&nbsp;string&nbsp;i<span class="bracket">)</span>&nbsp;i&nbsp;<span class="bracket">(</span><span class="protected">+</span>&nbsp;i&nbsp;nl<span class="bracket">))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;string</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span>_stringsubst&nbsp;<span class="string">"&amp;lt;"</span>&nbsp;<span class="string">"&lt;"</span>&nbsp;<span class="bracket">(</span>_stringsubst&nbsp;<span class="string">"&amp;gt;"</span>&nbsp;<span class="string">"&gt;"</span>&nbsp;string<span class="bracket">))</span></li>
+<li>&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;String&nbsp;padding&nbsp;function&nbsp;-&nbsp;provides&nbsp;some&nbsp;eye-candy&nbsp;for&nbsp;the</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;output&nbsp;report.</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">defun</span>&nbsp;_PadBetween&nbsp;<span class="bracket">(</span>&nbsp;s1&nbsp;s2&nbsp;ch&nbsp;ln&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">if</span>&nbsp;<span class="bracket">(</span><span class="protected">&lt;</span>&nbsp;<span class="bracket">(</span><span class="protected">+</span>&nbsp;<span class="bracket">(</span><span class="protected">strlen</span>&nbsp;s1<span class="bracket">)</span>&nbsp;<span class="bracket">(</span><span class="protected">strlen</span>&nbsp;s2<span class="bracket">))</span>&nbsp;ln<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span>_PadBetween&nbsp;<span class="bracket">(</span><span class="protected">strcat</span>&nbsp;s1&nbsp;ch<span class="bracket">)</span>&nbsp;s2&nbsp;ch&nbsp;ln<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">strcat</span>&nbsp;s1&nbsp;s2<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Main&nbsp;Function&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">mapcar</span>&nbsp;<span class="quote">'</span><span class="protected">set</span></li>
+<li>&nbsp;&nbsp;&nbsp;<span class="quote">'</span><span class="bracket">(</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_container</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_quote</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_bracket</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_mcomment</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_scomment</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_string</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_protected</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_integer</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_real</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;styles</li>
+<li>&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">mapcar</span>&nbsp;<span class="quote">'</span><span class="protected">set</span></li>
+<li>&nbsp;&nbsp;&nbsp;<span class="quote">'</span><span class="bracket">(</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_containerL</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_quoteL</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_bracketL</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_mcommentL</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_scommentL</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_stringL</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_protectedL</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_integerL</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_realL</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">mapcar</span>&nbsp;<span class="quote">'</span><span class="bracket">(</span><span class="protected">lambda</span>&nbsp;<span class="bracket">(</span>&nbsp;x&nbsp;<span class="bracket">)</span>&nbsp;<span class="bracket">(</span><span class="protected">mapcar</span>&nbsp;<span class="quote">'</span><span class="protected">strlen</span>&nbsp;x<span class="bracket">))</span>&nbsp;styles<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="comment">;;---------------------------------------------------------------;;</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">cond</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">not</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">and</span>&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;l&nbsp;<span class="bracket">(</span>_read&nbsp;file<span class="bracket">))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;wf</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">open</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;outfile</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">strcat</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">vl-string-translate</span>&nbsp;<span class="string">"/"</span>&nbsp;<span class="string">"\\"</span>&nbsp;<span class="bracket">(</span><span class="protected">vl-filename-directory</span>&nbsp;file<span class="bracket">))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"\\"</span>&nbsp;<span class="bracket">(</span><span class="protected">vl-filename-base</span>&nbsp;file<span class="bracket">)</span>&nbsp;extn</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"w"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">princ</span>&nbsp;<span class="string">"\n**&nbsp;File&nbsp;Error&nbsp;**"</span><span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">t</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;lines&nbsp;<span class="bracket">(</span><span class="protected">length</span>&nbsp;l<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ochrs&nbsp;<span class="integer">0</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ichrs&nbsp;<span class="bracket">(</span><span class="protected">apply</span>&nbsp;<span class="quote">'</span><span class="protected">+</span>&nbsp;<span class="bracket">(</span><span class="protected">mapcar</span>&nbsp;<span class="quote">'</span><span class="protected">strlen</span>&nbsp;l<span class="bracket">))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;s&nbsp;<span class="bracket">(</span><span class="protected">car</span>&nbsp;l<span class="bracket">)</span>&nbsp;l&nbsp;<span class="bracket">(</span><span class="protected">cdr</span>&nbsp;l<span class="bracket">)</span>&nbsp;str&nbsp;<span class="string">""</span>&nbsp;i&nbsp;<span class="integer">0</span><span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">write-line</span>&nbsp;<span class="bracket">(</span><span class="protected">car</span>&nbsp;_container<span class="bracket">)</span>&nbsp;wf<span class="bracket">)</span>&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">+</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">car</span>&nbsp;_containerL<span class="bracket">)))</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">while</span>&nbsp;s</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">cond</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">=</span>&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;a&nbsp;<span class="bracket">(</span><span class="protected">ascii</span>&nbsp;s<span class="bracket">))</span>&nbsp;<span class="integer">0</span><span class="bracket">)</span>&nbsp;<span class="comment">;&nbsp;Empty&nbsp;String</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">write-line</span>&nbsp;str&nbsp;wf<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;s&nbsp;<span class="bracket">(</span><span class="protected">car</span>&nbsp;l<span class="bracket">)</span>&nbsp;l&nbsp;<span class="bracket">(</span><span class="protected">cdr</span>&nbsp;l<span class="bracket">)</span>&nbsp;str&nbsp;<span class="string">""</span><span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">or</span>&nbsp;<span class="bracket">(</span><span class="protected">=</span>&nbsp;a&nbsp;<span class="integer">32</span><span class="bracket">)</span>&nbsp;<span class="bracket">(</span><span class="protected">=</span>&nbsp;a&nbsp;<span class="integer">9</span><span class="bracket">))</span>&nbsp;<span class="comment">;&nbsp;Space&nbsp;&amp;&nbsp;Tab</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">strcat</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">chr</span>&nbsp;a<span class="bracket">))</span>&nbsp;s&nbsp;<span class="bracket">(</span><span class="protected">substr</span>&nbsp;s&nbsp;<span class="integer">2</span><span class="bracket">)</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">1+</span>&nbsp;ochrs<span class="bracket">)</span>&nbsp;i&nbsp;<span class="integer">0</span><span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">or</span>&nbsp;<span class="bracket">(</span><span class="protected">=</span>&nbsp;a&nbsp;<span class="integer">39</span><span class="bracket">)</span>&nbsp;<span class="bracket">(</span><span class="protected">=</span>&nbsp;a&nbsp;<span class="integer">46</span><span class="bracket">))</span>&nbsp;<span class="comment">;&nbsp;'&nbsp;or&nbsp;.</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">strcat</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">car</span>&nbsp;_quote<span class="bracket">)</span>&nbsp;<span class="bracket">(</span><span class="protected">chr</span>&nbsp;a<span class="bracket">))</span>&nbsp;s&nbsp;<span class="bracket">(</span><span class="protected">substr</span>&nbsp;s&nbsp;<span class="integer">2</span><span class="bracket">)</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">+</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">car</span>&nbsp;_quoteL<span class="bracket">)</span>&nbsp;<span class="integer">1</span><span class="bracket">))</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">while</span>&nbsp;<span class="bracket">(</span><span class="protected">=</span>&nbsp;<span class="bracket">(</span><span class="protected">ascii</span>&nbsp;s<span class="bracket">)</span>&nbsp;<span class="integer">39</span><span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">strcat</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">substr</span>&nbsp;s&nbsp;<span class="integer">1</span>&nbsp;<span class="integer">1</span><span class="bracket">))</span>&nbsp;s&nbsp;<span class="bracket">(</span><span class="protected">substr</span>&nbsp;s&nbsp;<span class="integer">2</span><span class="bracket">)</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">1+</span>&nbsp;ochrs<span class="bracket">))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">strcat</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">cadr</span>&nbsp;_quote<span class="bracket">))</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">+</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">cadr</span>&nbsp;_quoteL<span class="bracket">)))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">&lt;</span>&nbsp;<span class="integer">38</span>&nbsp;a&nbsp;<span class="integer">42</span><span class="bracket">)</span>&nbsp;<span class="comment">;&nbsp;Brackets</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">strcat</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">car</span>&nbsp;_bracket<span class="bracket">)</span>&nbsp;<span class="bracket">(</span><span class="protected">chr</span>&nbsp;a<span class="bracket">))</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">+</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">car</span>&nbsp;_bracketL<span class="bracket">)</span>&nbsp;<span class="integer">1</span><span class="bracket">)</span>&nbsp;s&nbsp;<span class="bracket">(</span><span class="protected">substr</span>&nbsp;s&nbsp;<span class="integer">2</span><span class="bracket">))</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">while</span>&nbsp;<span class="bracket">(</span><span class="protected">&lt;</span>&nbsp;<span class="integer">39</span>&nbsp;<span class="bracket">(</span><span class="protected">ascii</span>&nbsp;s<span class="bracket">)</span>&nbsp;<span class="integer">42</span><span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">strcat</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">substr</span>&nbsp;s&nbsp;<span class="integer">1</span>&nbsp;<span class="integer">1</span><span class="bracket">))</span>&nbsp;s&nbsp;<span class="bracket">(</span><span class="protected">substr</span>&nbsp;s&nbsp;<span class="integer">2</span><span class="bracket">)</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">1+</span>&nbsp;ochrs<span class="bracket">))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">strcat</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">cadr</span>&nbsp;_bracket<span class="bracket">))</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">+</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">cadr</span>&nbsp;_bracketL<span class="bracket">)))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">=</span>&nbsp;a&nbsp;<span class="integer">59</span><span class="bracket">)</span>&nbsp;<span class="comment">;&nbsp;Single&nbsp;or&nbsp;Multiline&nbsp;Comments</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">if</span>&nbsp;<span class="bracket">(</span><span class="protected">eq</span>&nbsp;<span class="bracket">(</span><span class="protected">substr</span>&nbsp;s&nbsp;<span class="integer">2</span>&nbsp;<span class="integer">1</span><span class="bracket">)</span>&nbsp;<span class="string">"|"</span><span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">progn</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">strcat</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">car</span>&nbsp;_mcomment<span class="bracket">))</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">+</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">car</span>&nbsp;_mcommentL<span class="bracket">)))</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">while</span>&nbsp;<span class="bracket">(</span><span class="protected">and</span>&nbsp;s&nbsp;<span class="bracket">(</span><span class="protected">not</span>&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;i&nbsp;<span class="bracket">(</span><span class="protected">vl-string-search</span>&nbsp;<span class="string">"|;"</span>&nbsp;s<span class="bracket">))))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">write-line</span>&nbsp;<span class="bracket">(</span><span class="protected">strcat</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">if</span>&nbsp;&lt;&gt;&nbsp;<span class="bracket">(</span>_fix&lt;&gt;&nbsp;s<span class="bracket">)</span>&nbsp;s<span class="bracket">))</span>&nbsp;wf<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">+</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">strlen</span>&nbsp;<span class="bracket">(</span><span class="protected">strcat</span>&nbsp;str&nbsp;s<span class="bracket">)))</span>&nbsp;s&nbsp;<span class="bracket">(</span><span class="protected">car</span>&nbsp;l<span class="bracket">)</span>&nbsp;l&nbsp;<span class="bracket">(</span><span class="protected">cdr</span>&nbsp;l<span class="bracket">)</span>&nbsp;str&nbsp;<span class="string">""</span><span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">strcat</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">substr</span>&nbsp;s&nbsp;<span class="integer">1</span>&nbsp;<span class="bracket">(</span><span class="protected">+</span>&nbsp;<span class="integer">2</span>&nbsp;i<span class="bracket">))</span>&nbsp;<span class="bracket">(</span><span class="protected">cadr</span>&nbsp;_mcomment<span class="bracket">))</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">+</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">+</span>&nbsp;<span class="integer">2</span>&nbsp;i<span class="bracket">)</span>&nbsp;<span class="bracket">(</span><span class="protected">cadr</span>&nbsp;_mcommentL<span class="bracket">)))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;s&nbsp;<span class="bracket">(</span><span class="protected">substr</span>&nbsp;s&nbsp;<span class="bracket">(</span><span class="protected">+</span>&nbsp;<span class="integer">3</span>&nbsp;i<span class="bracket">)))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">progn</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">write-line</span>&nbsp;<span class="bracket">(</span><span class="protected">strcat</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">car</span>&nbsp;_scomment<span class="bracket">)</span>&nbsp;<span class="bracket">(</span><span class="protected">if</span>&nbsp;&lt;&gt;&nbsp;<span class="bracket">(</span>_fix&lt;&gt;&nbsp;s<span class="bracket">)</span>&nbsp;s<span class="bracket">)</span>&nbsp;<span class="bracket">(</span><span class="protected">cadr</span>&nbsp;_scomment<span class="bracket">))</span>&nbsp;wf<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">+</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">car</span>&nbsp;_scommentL<span class="bracket">)</span>&nbsp;<span class="bracket">(</span><span class="protected">strlen</span>&nbsp;s<span class="bracket">)</span>&nbsp;<span class="bracket">(</span><span class="protected">cadr</span>&nbsp;_scommentL<span class="bracket">))</span>&nbsp;s&nbsp;<span class="bracket">(</span><span class="protected">car</span>&nbsp;l<span class="bracket">)</span>&nbsp;l&nbsp;<span class="bracket">(</span><span class="protected">cdr</span>&nbsp;l<span class="bracket">)</span>&nbsp;str&nbsp;<span class="string">""</span><span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">=</span>&nbsp;a&nbsp;<span class="integer">34</span><span class="bracket">)</span>&nbsp;<span class="comment">;&nbsp;Strings</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">strcat</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">car</span>&nbsp;_string<span class="bracket">))</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">+</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">car</span>&nbsp;_stringL<span class="bracket">))</span>&nbsp;i&nbsp;<span class="integer">0</span>&nbsp;fl&nbsp;<span class="protected">t</span><span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">while</span>&nbsp;<span class="bracket">(</span><span class="protected">and</span>&nbsp;s&nbsp;fl<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">while</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">and</span>&nbsp;s&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;i&nbsp;<span class="bracket">(</span><span class="protected">vl-string-search</span>&nbsp;<span class="string">"\""</span>&nbsp;s&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;i&nbsp;<span class="bracket">(</span><span class="protected">1+</span>&nbsp;i<span class="bracket">))))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">not</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">or</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">zerop</span>&nbsp;i<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">not</span>&nbsp;<span class="bracket">(</span><span class="protected">eq</span>&nbsp;<span class="bracket">(</span><span class="protected">substr</span>&nbsp;s&nbsp;i&nbsp;<span class="integer">1</span><span class="bracket">)</span>&nbsp;<span class="string">"\\"</span><span class="bracket">))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">eq</span>&nbsp;<span class="bracket">(</span><span class="protected">substr</span>&nbsp;s&nbsp;<span class="bracket">(</span><span class="protected">1-</span>&nbsp;i<span class="bracket">)</span>&nbsp;<span class="integer">2</span><span class="bracket">)</span>&nbsp;<span class="string">"\\\\"</span><span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">if</span>&nbsp;<span class="bracket">(</span><span class="protected">null</span>&nbsp;i<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;str&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">strcat</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">if</span>&nbsp;&lt;&gt;&nbsp;<span class="bracket">(</span>_fix&lt;&gt;&nbsp;s<span class="bracket">)</span>&nbsp;s<span class="bracket">)</span>&nbsp;<span class="string">"\n"</span><span class="bracket">)</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">+</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">strlen</span>&nbsp;s<span class="bracket">))</span>&nbsp;s&nbsp;<span class="bracket">(</span><span class="protected">car</span>&nbsp;l<span class="bracket">)</span>&nbsp;l&nbsp;<span class="bracket">(</span><span class="protected">cdr</span>&nbsp;l<span class="bracket">)</span>&nbsp;i&nbsp;<span class="integer">-1</span><span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;str&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">strcat</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">if</span>&nbsp;&lt;&gt;&nbsp;<span class="bracket">(</span>_fix&lt;&gt;&nbsp;<span class="bracket">(</span><span class="protected">substr</span>&nbsp;s&nbsp;<span class="integer">1</span>&nbsp;<span class="bracket">(</span><span class="protected">1+</span>&nbsp;i<span class="bracket">)))</span>&nbsp;<span class="bracket">(</span><span class="protected">substr</span>&nbsp;s&nbsp;<span class="integer">1</span>&nbsp;<span class="bracket">(</span><span class="protected">1+</span>&nbsp;i<span class="bracket">)))</span>&nbsp;<span class="bracket">(</span><span class="protected">cadr</span>&nbsp;_string<span class="bracket">))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">+</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">1+</span>&nbsp;i<span class="bracket">)</span>&nbsp;<span class="bracket">(</span><span class="protected">cadr</span>&nbsp;_stringL<span class="bracket">))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s&nbsp;<span class="bracket">(</span><span class="protected">substr</span>&nbsp;s&nbsp;<span class="bracket">(</span><span class="protected">+</span>&nbsp;<span class="integer">2</span>&nbsp;i<span class="bracket">))</span>&nbsp;fl&nbsp;<span class="protected">nil</span>&nbsp;i&nbsp;<span class="integer">0</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">progn</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;i</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">apply</span>&nbsp;<span class="bracket">(</span><span class="protected">function</span>&nbsp;<span class="protected">min</span><span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">vl-remove-if</span>&nbsp;<span class="bracket">(</span><span class="protected">function</span>&nbsp;<span class="protected">null</span><span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">cons</span>&nbsp;<span class="bracket">(</span><span class="protected">strlen</span>&nbsp;s<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">mapcar</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">function</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">lambda</span>&nbsp;<span class="bracket">(</span>&nbsp;pat&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">vl-string-search</span>&nbsp;pat&nbsp;s<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="quote">'</span><span class="bracket">(</span><span class="string">"("</span>&nbsp;<span class="string">")"</span>&nbsp;<span class="string">"&nbsp;"</span>&nbsp;<span class="string">"\t"</span>&nbsp;<span class="string">"'"</span>&nbsp;<span class="string">";"</span>&nbsp;<span class="string">"\""</span><span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;w&nbsp;<span class="bracket">(</span><span class="protected">substr</span>&nbsp;s&nbsp;<span class="integer">1</span>&nbsp;i<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s&nbsp;<span class="bracket">(</span><span class="protected">substr</span>&nbsp;s&nbsp;<span class="bracket">(</span><span class="protected">1+</span>&nbsp;i<span class="bracket">))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">or</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">eq</span>&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;a&nbsp;<span class="bracket">(</span><span class="protected">type</span>&nbsp;<span class="bracket">(</span><span class="protected">eval</span>&nbsp;<span class="bracket">(</span><span class="protected">read</span>&nbsp;w<span class="bracket">))))</span>&nbsp;<span class="quote">'</span>SUBR<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">vl-position</span>&nbsp;<span class="bracket">(</span><span class="protected">strcase</span>&nbsp;w<span class="bracket">)</span>&nbsp;<span class="quote">'</span><span class="bracket">(</span><span class="string">"NIL"</span>&nbsp;<span class="string">"T"</span>&nbsp;<span class="string">"PI"</span><span class="bracket">))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">and</span>&nbsp;a&nbsp;<span class="bracket">(</span><span class="protected">eq</span>&nbsp;<span class="bracket">(</span><span class="protected">type</span>&nbsp;<span class="bracket">(</span><span class="protected">read</span>&nbsp;w<span class="bracket">))</span>&nbsp;<span class="quote">'</span>SYM<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">not</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">vl-position</span>&nbsp;<span class="bracket">(</span><span class="protected">strcase</span>&nbsp;w&nbsp;<span class="protected">t</span><span class="bracket">)</span>&nbsp;exceptions<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;str&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">strcat</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">car</span>&nbsp;_protected<span class="bracket">)</span>&nbsp;<span class="bracket">(</span><span class="protected">if</span>&nbsp;&lt;&gt;&nbsp;<span class="bracket">(</span>_fix&lt;&gt;&nbsp;w<span class="bracket">)</span>&nbsp;w<span class="bracket">)</span>&nbsp;<span class="bracket">(</span><span class="protected">cadr</span>&nbsp;_protected<span class="bracket">))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">+</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">car</span>&nbsp;_protectedL<span class="bracket">)</span>&nbsp;i&nbsp;<span class="bracket">(</span><span class="protected">cadr</span>&nbsp;_protectedL<span class="bracket">))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">or</span>&nbsp;<span class="bracket">(</span><span class="protected">eq</span>&nbsp;a&nbsp;<span class="quote">'</span>USUBR<span class="bracket">)</span>&nbsp;<span class="bracket">(</span><span class="protected">vl-position</span>&nbsp;<span class="bracket">(</span><span class="protected">strcase</span>&nbsp;w&nbsp;<span class="protected">t</span><span class="bracket">)</span>&nbsp;exceptions<span class="bracket">))</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">strcat</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">if</span>&nbsp;&lt;&gt;&nbsp;<span class="bracket">(</span>_fix&lt;&gt;&nbsp;w<span class="bracket">)</span>&nbsp;w<span class="bracket">))</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">+</span>&nbsp;ochrs&nbsp;i<span class="bracket">))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">eq</span>&nbsp;a&nbsp;<span class="quote">'</span>INT<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">strcat</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">car</span>&nbsp;_integer<span class="bracket">)</span>&nbsp;w&nbsp;<span class="bracket">(</span><span class="protected">cadr</span>&nbsp;_integer<span class="bracket">))</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">+</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">car</span>&nbsp;_integerL<span class="bracket">)</span>&nbsp;i&nbsp;<span class="bracket">(</span><span class="protected">cadr</span>&nbsp;_integerL<span class="bracket">)))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">eq</span>&nbsp;a&nbsp;<span class="quote">'</span>REAL<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">strcat</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">car</span>&nbsp;_real<span class="bracket">)</span>&nbsp;w&nbsp;<span class="bracket">(</span><span class="protected">cadr</span>&nbsp;_real<span class="bracket">))</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">+</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">car</span>&nbsp;_realL<span class="bracket">)</span>&nbsp;i&nbsp;<span class="bracket">(</span><span class="protected">cadr</span>&nbsp;_realL<span class="bracket">)))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">t</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">strcat</span>&nbsp;str&nbsp;<span class="bracket">(</span><span class="protected">if</span>&nbsp;&lt;&gt;&nbsp;<span class="bracket">(</span>_fix&lt;&gt;&nbsp;w<span class="bracket">)</span>&nbsp;w<span class="bracket">))</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">+</span>&nbsp;ochrs&nbsp;i<span class="bracket">))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">if</span>&nbsp;<span class="bracket">(</span><span class="protected">and</span>&nbsp;s&nbsp;<span class="bracket">(</span><span class="protected">=</span>&nbsp;<span class="bracket">(</span><span class="protected">ascii</span>&nbsp;s<span class="bracket">)</span>&nbsp;<span class="integer">0</span><span class="bracket">))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">progn</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">write-line</span>&nbsp;str&nbsp;wf<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;s&nbsp;<span class="bracket">(</span><span class="protected">car</span>&nbsp;l<span class="bracket">)</span>&nbsp;l&nbsp;<span class="bracket">(</span><span class="protected">cdr</span>&nbsp;l<span class="bracket">)</span>&nbsp;str&nbsp;<span class="string">""</span>&nbsp;i&nbsp;<span class="integer">0</span><span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">write-line</span>&nbsp;<span class="bracket">(</span><span class="protected">cadr</span>&nbsp;_container<span class="bracket">)</span>&nbsp;wf<span class="bracket">)</span>&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;wf&nbsp;<span class="bracket">(</span><span class="protected">close</span>&nbsp;wf<span class="bracket">)</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">+</span>&nbsp;ochrs&nbsp;<span class="bracket">(</span><span class="protected">cadr</span>&nbsp;_containerL<span class="bracket">)))</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">princ</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">strcat</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span>_PadBetween&nbsp;<span class="string">"\n"</span>&nbsp;<span class="string">""</span>&nbsp;<span class="string">"-"</span>&nbsp;<span class="integer">40</span><span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"\nConversion&nbsp;Report:&nbsp;Successful"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span>_PadBetween&nbsp;<span class="string">"\n"</span>&nbsp;<span class="string">""</span>&nbsp;<span class="string">"-"</span>&nbsp;<span class="integer">40</span><span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"\nInput&nbsp;File&nbsp;Statistics"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span>_PadBetween&nbsp;<span class="string">"\n"</span>&nbsp;<span class="string">""</span>&nbsp;<span class="string">"-"</span>&nbsp;<span class="integer">40</span><span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span>_PadBetween&nbsp;<span class="string">"\nLines"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">itoa</span>&nbsp;lines<span class="bracket">)</span>&nbsp;<span class="string">"."</span>&nbsp;<span class="integer">35</span><span class="bracket">)</span>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span>_PadBetween&nbsp;<span class="string">"\nCharacters"</span>&nbsp;<span class="bracket">(</span><span class="protected">itoa</span>&nbsp;ichrs<span class="bracket">)</span>&nbsp;<span class="string">"."</span>&nbsp;<span class="integer">35</span><span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span>_PadBetween&nbsp;<span class="string">"\n"</span>&nbsp;<span class="string">""</span>&nbsp;<span class="string">"-"</span>&nbsp;<span class="integer">40</span><span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"\nOutput&nbsp;File&nbsp;Statistics"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span>_PadBetween&nbsp;<span class="string">"\n"</span>&nbsp;<span class="string">""</span>&nbsp;<span class="string">"-"</span>&nbsp;<span class="integer">40</span><span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span>_PadBetween&nbsp;<span class="string">"\nLines"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">itoa</span>&nbsp;<span class="bracket">(</span><span class="protected">+</span>&nbsp;<span class="integer">2</span>&nbsp;lines<span class="bracket">))</span>&nbsp;<span class="string">"."</span>&nbsp;<span class="integer">35</span><span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span>_PadBetween&nbsp;<span class="string">"\nCharacters"</span>&nbsp;<span class="bracket">(</span><span class="protected">itoa</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ochrs<span class="bracket">)</span>&nbsp;&nbsp;<span class="string">"."</span>&nbsp;<span class="integer">35</span><span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span>_PadBetween&nbsp;<span class="string">"\n"</span>&nbsp;<span class="string">""</span>&nbsp;<span class="string">"-"</span>&nbsp;<span class="integer">40</span><span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"\n"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span>startapp&nbsp;<span class="string">"notepad"</span>&nbsp;outfile<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">princ</span><span class="bracket">)</span></li>
+<li><span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;</li>
+<li><span class="comment">;;------------------------------------------------------------;;</span></li>
+<li><span class="comment">;;&nbsp;&nbsp;Example&nbsp;calling&nbsp;Functions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li><span class="comment">;;------------------------------------------------------------;;</span></li>
+<li>&nbsp;</li>
+<li><span class="comment">;;&nbsp;LISP&nbsp;2&nbsp;BBCode&nbsp;(for&nbsp;use&nbsp;in&nbsp;forums)</span></li>
+<li>&nbsp;</li>
+<li><span class="bracket">(</span><span class="protected">defun</span>&nbsp;c:lsp2bbc&nbsp;<span class="bracket">(</span>&nbsp;<span class="protected">/</span>&nbsp;file&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;©&nbsp;Lee&nbsp;Mac&nbsp;2011</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">cond</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">not</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;file</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">getfiled</span>&nbsp;<span class="string">"Select&nbsp;LISP&nbsp;File&nbsp;to&nbsp;Convert"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">cond</span>&nbsp;<span class="bracket">(</span>&nbsp;<span class="bracket">(</span><span class="protected">getenv</span>&nbsp;<span class="string">"LMAC_LISPStyler"</span><span class="bracket">)</span>&nbsp;<span class="bracket">)</span>&nbsp;<span class="bracket">(</span>&nbsp;<span class="string">""</span>&nbsp;<span class="bracket">))</span>&nbsp;<span class="string">"lsp"</span>&nbsp;<span class="integer">16</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">princ</span>&nbsp;<span class="string">"\n*Cancel*"</span><span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">t</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setenv</span>&nbsp;<span class="string">"LMAC_LISPStyler"</span>&nbsp;<span class="bracket">(</span><span class="protected">vl-filename-directory</span>&nbsp;file<span class="bracket">))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span>LM:LISPStyler&nbsp;file</li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="quote">'</span><span class="bracket">(</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="string">"[code]"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"[/code]"</span>&nbsp;<span class="bracket">)</span>&nbsp;&nbsp;<span class="comment">;;&nbsp;Container</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="string">"[color=DARKRED]"</span>&nbsp;&nbsp;&nbsp;<span class="string">"[/color]"</span><span class="bracket">)</span>&nbsp;&nbsp;<span class="comment">;;&nbsp;Quotes/Dots</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="string">"[color=RED]"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"[/color]"</span><span class="bracket">)</span>&nbsp;&nbsp;<span class="comment">;;&nbsp;Brackets</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="string">"[color=#990099]"</span>&nbsp;&nbsp;&nbsp;<span class="string">"[/color]"</span><span class="bracket">)</span>&nbsp;&nbsp;<span class="comment">;;&nbsp;Multiline&nbsp;Comments</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="string">"[color=#990099]"</span>&nbsp;&nbsp;&nbsp;<span class="string">"[/color]"</span><span class="bracket">)</span>&nbsp;&nbsp;<span class="comment">;;&nbsp;Single&nbsp;Comments</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="string">"[color=#a52a2a]"</span>&nbsp;&nbsp;&nbsp;<span class="string">"[/color]"</span><span class="bracket">)</span>&nbsp;&nbsp;<span class="comment">;;&nbsp;Strings</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="string">"[color=BLUE]"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"[/color]"</span><span class="bracket">)</span>&nbsp;&nbsp;<span class="comment">;;&nbsp;Protected&nbsp;Symbols</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="string">"[color=#009900]"</span>&nbsp;&nbsp;&nbsp;<span class="string">"[/color]"</span><span class="bracket">)</span>&nbsp;&nbsp;<span class="comment">;;&nbsp;Integers</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="string">"[color=#009999]"</span>&nbsp;&nbsp;&nbsp;<span class="string">"[/color]"</span><span class="bracket">)</span>&nbsp;&nbsp;<span class="comment">;;&nbsp;Reals</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">".bbc"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="protected">nil</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">princ</span><span class="bracket">)</span></li>
+<li><span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li><span class="comment">;;&nbsp;LISP&nbsp;2&nbsp;HTML&nbsp;-&nbsp;for&nbsp;use&nbsp;on&nbsp;websites.</span></li>
+<li>&nbsp;</li>
+<li><span class="bracket">(</span><span class="protected">defun</span>&nbsp;c:lsp2html&nbsp;<span class="bracket">(</span>&nbsp;<span class="protected">/</span>&nbsp;file&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;<span class="comment">;;&nbsp;©&nbsp;Lee&nbsp;Mac&nbsp;2011</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">cond</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">not</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setq</span>&nbsp;file</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">getfiled</span>&nbsp;<span class="string">"Select&nbsp;LISP&nbsp;File&nbsp;to&nbsp;Convert"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">cond</span>&nbsp;<span class="bracket">(</span>&nbsp;<span class="bracket">(</span><span class="protected">getenv</span>&nbsp;<span class="string">"LMAC_LISPStyler"</span><span class="bracket">)</span>&nbsp;<span class="bracket">)</span>&nbsp;<span class="bracket">(</span>&nbsp;<span class="string">""</span>&nbsp;<span class="bracket">))</span>&nbsp;<span class="string">"lsp"</span>&nbsp;<span class="integer">16</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">princ</span>&nbsp;<span class="string">"\n*Cancel*"</span><span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">t</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">setenv</span>&nbsp;<span class="string">"LMAC_LISPStyler"</span>&nbsp;<span class="bracket">(</span><span class="protected">vl-filename-directory</span>&nbsp;file<span class="bracket">))</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span>LM:LISPStyler&nbsp;file</li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="quote">'</span><span class="bracket">(</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="string">"&lt;pre&gt;"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"&lt;/pre&gt;"</span>&nbsp;<span class="bracket">)</span>&nbsp;&nbsp;<span class="comment">;;&nbsp;Container</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="string">"&lt;span&nbsp;class=\"quot\"&gt;"</span>&nbsp;<span class="string">"&lt;/span&gt;"</span><span class="bracket">)</span>&nbsp;&nbsp;<span class="comment">;;&nbsp;Quotes/Dots</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="string">"&lt;span&nbsp;class=\"brkt\"&gt;"</span>&nbsp;<span class="string">"&lt;/span&gt;"</span><span class="bracket">)</span>&nbsp;&nbsp;<span class="comment">;;&nbsp;Brackets</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="string">"&lt;span&nbsp;class=\"cmt\"&gt;"</span>&nbsp;&nbsp;<span class="string">"&lt;/span&gt;"</span><span class="bracket">)</span>&nbsp;&nbsp;<span class="comment">;;&nbsp;Multiline&nbsp;Comments</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="string">"&lt;span&nbsp;class=\"cmt\"&gt;"</span>&nbsp;&nbsp;<span class="string">"&lt;/span&gt;"</span><span class="bracket">)</span>&nbsp;&nbsp;<span class="comment">;;&nbsp;Single&nbsp;Comments</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="string">"&lt;span&nbsp;class=\"str\"&gt;"</span>&nbsp;&nbsp;<span class="string">"&lt;/span&gt;"</span><span class="bracket">)</span>&nbsp;&nbsp;<span class="comment">;;&nbsp;Strings</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="string">"&lt;span&nbsp;class=\"func\"&gt;"</span>&nbsp;<span class="string">"&lt;/span&gt;"</span><span class="bracket">)</span>&nbsp;&nbsp;<span class="comment">;;&nbsp;Protected&nbsp;Symbols</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="string">"&lt;span&nbsp;class=\"int\"&gt;"</span>&nbsp;&nbsp;<span class="string">"&lt;/span&gt;"</span><span class="bracket">)</span>&nbsp;&nbsp;<span class="comment">;;&nbsp;Integers</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">(</span><span class="string">"&lt;span&nbsp;class=\"rea\"&gt;"</span>&nbsp;&nbsp;<span class="string">"&lt;/span&gt;"</span><span class="bracket">)</span>&nbsp;&nbsp;<span class="comment">;;&nbsp;Reals</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">".html"</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="protected">T</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="bracket">)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li>&nbsp;&nbsp;<span class="bracket">(</span><span class="protected">princ</span><span class="bracket">)</span></li>
+<li><span class="bracket">)</span></li>
+<li>&nbsp;</li>
+<li><span class="comment">;;------------------------------------------------------------;;</span></li>
+<li><span class="comment">;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End&nbsp;of&nbsp;File&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;</span></li>
+<li><span class="comment">;;------------------------------------------------------------;;</span></li>
+</ol>
+
+
+</body></html>

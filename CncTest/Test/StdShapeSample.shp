@@ -1,0 +1,33 @@
+Prg;Id;Order;Phase;Mark;Qta;Thik;Length;Height;Mat;n.torch
+1;559169032;---;---;---;1;1;1772.1;4095.8;---;1
+2;478629070;---;---;---;1;1;904.3;492.2;---;1
+3;922808204;-;-;Att balestra su telaio 2pz sp10;2;0.0;223.2;259;-;1
+4;653557447;-;-;Sovrasp dietro 1pz sp2;1;2;2598;735.6;-;1
+5;057237122;-;-;Ser later con tappo 1pz sp2;1;2;1004;1107;-;1
+6;517219908;-;-;Tamp post ruot 2pz sp2;2;2;359;458;-;1
+7;226479051;-;-;Sovrasp dietro 2pz sp2;2;2;4033;663.9;-;1
+8;977267145;-;-;Sovrasp avanti 2pz sp2;2;2;3000;663.9;-;1
+9;138049971;-;-;terzo att su paraf 1pz sp3;1;3;495.7;188.4;-;1
+10;782780452;-;-;tamp interno tubolari 1pz sp3;1;3;248.5;1648.8;-;1
+11;803232330;-;-;testata dietro 2pz sp3;2;3;220.4;163.2;-;1
+12;757993804;-;-;testata 2pz sp3;2;3;602.2;212;-;1
+13;819971660;-;-;Tamp tubo ribalt 2pz sp3;2;3;85;85;-;1
+14;521133001;-;-;Tamp sotto port 2pz sp3;2;3;236.9;160;-;1
+15;442778519;-;-;Test ant part sotto 1pz sp4;1;4;2290;1952;-;1
+16;754009307;-;-;Test ant part sopra 1pz sp4;1;4;2480;851.1;-;1
+17;353234039;-;-;Test sponda avanti 2pz sp4;2;4;94;536.3;-;1
+18;917487388;-;-;Terzo attacco 2pz sp4;2;4;183.9;159.4;-;1
+19;466172921;-;-;Tappo 2 braccio 2pz sp4;2;4;122;190;-;1
+20;941668298;-;-;Tappo 1 braccio 2pz sp4;2;4;109.4;213.3;-;1
+21;199249544;-;-;Tamp post frontalino 2pz sp4;2;4;351.4;416.1;-;1
+22;548280563;-;-;Supp barra luce 2pz sp4;2;4;312.7;583;-;1
+23;732563738;-;-;Secondo attacco 2pz sp4;2;4;98.6;176.5;-;1
+24;969487404;-;-;Test vert sponde 8pz sp4;8;4;49;540.3;-;1
+25;684424770;-;-;Tappo sopra 2pz sp5;2;5;226.6;106.3;-;1
+26;624335847;-;-;Supporto freno a volantino 2 pz sp 5;2;5;87.7;122.4;-;1
+27;052882408;-;-;Supporto silentblok 8pz sp5;8;5;130;320;-;1
+28;756794652;-;-;Uscita tubbi 1pz sp6;1;6;200;208.2;-;1
+29;909399845;-;-;Suporto pistone  fermo  asse 4pz sp8;4;8;352.4;474;-;1
+30;585892529;-;-;Suporto piede 1pz sp10;1;10;370;385;-;1
+31;842288993;-;-;Ali centraggio cilindro 2pz sp10;2;10;226.9;166.3;-;1
+32;143230117;-;-;Suporto gomma 8pz sp4;8;10;200.5;200.5;-;1

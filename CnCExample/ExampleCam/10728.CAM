@@ -1,0 +1,115 @@
+[ENTITY4]
+[HEAD]
+NUM_COM:04TP2010
+DES_COM:
+LOT_COM:
+DLO_COM:
+CLI_COM:
+IND_COM:
+DAT_COM:20/05/10
+NUM_DIS:PIPPO
+DES_DIS:
+DAT_DIS:21/06/10
+REV_DIS:
+NOM_DIS:
+TRA_PEZ:ZINCATO
+SBA_PEZ:
+TIP_PEZ:
+MAR_PEZ:1_40_0200
+DES_PEZ:
+POS_PEZ:10728
+NOT_PEZ:
+ING_PEZ:
+QTA_PEZ:18
+MCL_PEZ:
+COD_PEZ:
+COS_PEZ:
+IDF_PEZ:35A540A5B22844DA89CA1BDE8FCAFD62
+CMP_MAR:
+NOM_PRO:plate 15
+TIP_PRO:R
+LUN_PRO:1210
+LAR_PRO:190.96
+SPE_PRO:15
+MAT_PRO:S355-JR
+PES_PRO:
+SUP_PRO:
+CPE_LIS:1
+CSU_LIS:1
+PRE_LIS:plate
+PUN_LIS:27.2075
+SUN_LIS:0.504152
+PROGRAM:TecnoMETAL_4D T080642
+SPD_NOT:
+COD_MAG:
+PUN_NET:26.8855
+PUN_NET2:26.8855
+[SHAPE]
+R 4
+     0.00      0.00      0.00      0.00      0.00      0.00 
+     0.00      0.00      0.00      0.00      0.00      0.00      0.00 
+  1210.00    190.96     15.00 
+[OUTLINE]
+LIV1
+  1209.50    -40.00      7.50      0.00      0.00      0.00      0.00
+  1210.00      0.00      7.50     40.00   -180.00    -90.72      0.00
+  1170.00      0.00      7.50      0.00      0.00      0.00      0.00
+    40.00     -0.33      7.50      0.00      0.00      0.00      0.00
+    -0.00      0.00      7.50     40.00    -74.95     -0.47      0.00
+    10.38    -38.63      7.50      0.00      0.00      0.00      0.00
+    12.30    -38.06      7.50      0.00      0.00      0.00      0.00
+     0.04     -0.22      7.50     39.77    -90.06    -72.05      0.00
+     0.00    -40.00      7.50      0.00      0.00      0.00      0.00
+     0.00   -190.96      7.50      0.00      0.00      0.00      0.00
+  1210.00   -190.96      7.50      0.00      0.00      0.00      0.00
+  1209.50    -40.00      7.50      0.00      0.00      0.00      0.00
+
+LIV2
+LIV3
+LIV4
+[INLINE]
+LIV1
+LIV2
+LIV3
+LIV4
+[BREAK]
+LIV1
+     0.00      0.00
+LIV2
+     0.00      0.00
+LIV3
+     0.00      0.00
+LIV4
+     0.00      0.00
+[HOLE]
+LIV1
+LIV2
+LIV3
+LIV4
+[MARK]
+LIV1
+LIV2
+LIV3
+LIV4
+[COMP]
+[CUTTING]
+[FOLD]
+LIV1
+LIV2
+[OPEN]
+LIV1
+LIV2
+[CUTTER]
+[WELD]
+LIV1
+     0.00   -190.96      7.50      0.00    -40.00      7.50 W06     15.00      2.00      0.00      0.00      0.00     45.00 
+  1210.00    -40.00      7.50   1210.00   -190.96      7.50 W06     15.00      2.00      0.00      0.00      0.00     45.00 
+LIV2
+LIV3
+LIV4
+[THREED]
+[INLINE2]
+LIV1
+LIV2
+LIV3
+LIV4

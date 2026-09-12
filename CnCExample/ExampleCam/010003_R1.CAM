@@ -1,0 +1,110 @@
+[ENTITY4]
+[HEAD]
+NUM_COM:DANIELI
+DES_COM:
+LOT_COM:
+DLO_COM:
+CLI_COM:
+IND_COM:
+DAT_COM:04/05/10
+NUM_DIS:CONTROVENTI_6_RECOVER
+DES_DIS:
+DAT_DIS:04/06/10
+REV_DIS:
+NOM_DIS:
+TRA_PEZ:ZINCATO
+SBA_PEZ:
+TIP_PEZ:
+MAR_PEZ:C1_10_0001
+DES_PEZ:
+POS_PEZ:010003
+NOT_PEZ:
+ING_PEZ:
+QTA_PEZ:4
+MCL_PEZ:
+COD_PEZ:
+COS_PEZ:
+IDF_PEZ:25F499CE6732430F823EEA3B832BC876
+CMP_MAR:
+NOM_PRO:PL. 15
+TIP_PRO:R
+LUN_PRO:250
+LAR_PRO:220
+SPE_PRO:15
+MAT_PRO:S355-JR
+PES_PRO:
+SUP_PRO:
+CPE_LIS:1
+CSU_LIS:1
+PRE_LIS:PL.
+PUN_LIS:6.47625
+SUN_LIS:0.1241
+PROGRAM:TecnoMETAL_4D T070134
+SPD_NOT:
+COD_MAG:
+PUN_NET:6.3158
+PUN_NET2:6.4762
+[SHAPE]
+R 4
+     0.00      0.00      0.00      0.00      0.00      0.00 
+     0.00      0.00      0.00      0.00      0.00      0.00      0.00 
+   250.00    220.00     15.00 
+[OUTLINE]
+LIV1
+   250.00      0.00      7.50      0.00      0.00      0.00      0.00
+     0.00      0.00      7.50      0.00      0.00      0.00      0.00
+     0.00   -220.00      7.50      0.00      0.00      0.00      0.00
+   250.00   -220.00      7.50      0.00      0.00      0.00      0.00
+   250.00      0.00      7.50      0.00      0.00      0.00      0.00
+
+LIV2
+LIV3
+LIV4
+[INLINE]
+LIV1
+LIV2
+LIV3
+LIV4
+[BREAK]
+LIV1
+     0.00      0.00
+LIV2
+     0.00      0.00
+LIV3
+     0.00      0.00
+LIV4
+     0.00      0.00
+[HOLE]
+LIV1
+H     21.00     65.00   -145.00      7.50      0.00      0.00      0.00
+H     21.00     65.00    -75.00      7.50      0.00      0.00      0.00
+H     21.00    185.00    -75.00      7.50      0.00      0.00      0.00
+H     21.00    185.00   -145.00      7.50      0.00      0.00      0.00
+LIV2
+LIV3
+LIV4
+[MARK]
+LIV1
+LIV2
+LIV3
+LIV4
+[COMP]
+[CUTTING]
+[FOLD]
+LIV1
+LIV2
+[OPEN]
+LIV1
+LIV2
+[CUTTER]
+[WELD]
+LIV1
+LIV2
+LIV3
+LIV4
+[THREED]
+[INLINE2]
+LIV1
+LIV2
+LIV3
+LIV4

@@ -1,0 +1,157 @@
+<style>
+pre.small {
+           line-height:0.6;
+           background-color:#1a1a1a;
+           color:silver;
+          }
+</style>
+<pre class="small">
+<ol>
+<li><font color="#00ff00">;muddyrunnergirl - 2014</font></li>
+<li><font color="#00ff00">;</font></li>
+<li><font color="#00ff00">;</font></li>
+<li><font color="#00ff00">;Append specified paths to Trusted Locations via LISP</font></li>
+<li><font color="#00ff00">;also --</font></li>
+<li><font color="#00ff00">;Remove specified paths from Trusted Locations via LISP</font></li>
+<li><font color="#00ff00">;</font></li>
+<li><font color="#00ff00">;</font></li>
+<li><font color="#00ff00">;below you will find a several functions which can help you surgically add or remove paths</font></li>
+<li><font color="#00ff00">;from the TRUSTEDPATHS sysvar, programmatically.</font></li>
+<li><font color="#00ff00">;some of you might find the methods, below overkill, but it's simply meant to illustrate how to handle</font></li>
+<li><font color="#00ff00">; a variety of installation/uninstallation programming styles... enjoy!</font></li>
+<li><font color="#00ff00">;P.S., props to EC-CAD (Bob) from Autodesk forums, this is based on his AddSupportPath function.</font></li>
+<li></li>
+<li></li>
+<li><font color="#00ff00">;*************************************************************************************************************** </font></li>
+<li><font color="#00ff00">;*************************************************************************************************************** </font></li>
+<li><font color="#00ff00">;</font></li>
+<li><font color="#00ff00">;function: STRPARSE</font></li>
+<li><font color="#00ff00">;	This is a string parsing function - a helper routine</font></li>
+<li><font color="#00ff00">;	you won't need to make any changes or customizations to this function</font></li>
+<li><font color="#00ff00">;*************************************************************</font></li>
+<li><font color="#00ff00">;*************************************************************</font></li>
+<li><font color="red">(</font><font color="#0099ff">defun</font> strParse	<font color="red">(</font>Str Delimiter <font color="#0099ff">/</font> SearchStr StringLen return n char<font color="red">)</font></li>
+<li>	<font color="red">(</font><font color="#0099ff">setq</font> SearchStr Str<font color="red">)</font></li>
+<li>	<font color="red">(</font><font color="#0099ff">setq</font> StringLen <font color="red">(</font><font color="#0099ff">strlen</font> SearchStr<font color="red">))</font></li>
+<li>	<font color="red">(</font><font color="#0099ff">setq</font> return <font color="#e33333">'</font><font color="red">())</font></li>
+<li></li>
+<li>	<font color="red">(</font><font color="#0099ff">while</font> <font color="red">(</font><font color="#0099ff">&gt;</font> StringLen <font color="orange">0</font><font color="red">)</font></li>
+<li>		<font color="red">(</font><font color="#0099ff">setq</font> n <font color="orange">1</font><font color="red">)</font></li>
+<li>		<font color="red">(</font><font color="#0099ff">setq</font> char <font color="red">(</font><font color="#0099ff">substr</font> SearchStr <font color="orange">1</font> <font color="orange">1</font><font color="red">))</font></li>
+<li>		<font color="red">(</font><font color="#0099ff">while</font> <font color="red">(</font><font color="#0099ff">and</font> <font color="red">(</font><font color="#0099ff">/=</font> char Delimiter<font color="red">)</font> <font color="red">(</font><font color="#0099ff">/=</font> char <font color="cyan">""</font><font color="red">))</font></li>
+<li>			<font color="red">(</font><font color="#0099ff">setq</font> n <font color="red">(</font><font color="#0099ff">1+</font> n<font color="red">))</font></li>
+<li>			<font color="red">(</font><font color="#0099ff">setq</font> char <font color="red">(</font><font color="#0099ff">substr</font> SearchStr n <font color="orange">1</font><font color="red">))</font></li>
+<li>		<font color="red">)</font> <font color="#00ff00">;_ end of while</font></li>
+<li>		<font color="red">(</font><font color="#0099ff">setq</font> return <font color="red">(</font><font color="#0099ff">cons</font> <font color="red">(</font><font color="#0099ff">substr</font> SearchStr <font color="orange">1</font> <font color="red">(</font><font color="#0099ff">1-</font> n<font color="red">))</font> return<font color="red">))</font></li>
+<li>		<font color="red">(</font><font color="#0099ff">setq</font> SearchStr <font color="red">(</font><font color="#0099ff">substr</font> SearchStr <font color="red">(</font><font color="#0099ff">1+</font> n<font color="red">)</font> StringLen<font color="red">))</font></li>
+<li>		<font color="red">(</font><font color="#0099ff">setq</font> StringLen <font color="red">(</font><font color="#0099ff">strlen</font> SearchStr<font color="red">))</font></li>
+<li>	<font color="red">)</font> <font color="#00ff00">; end of while</font></li>
+<li>	<font color="red">(</font><font color="#0099ff">reverse</font> return<font color="red">)</font></li>
+<li><font color="red">)</font><font color="#00ff00">; end function</font></li>
+<li><font color="#00ff00">;**************</font></li>
+<li></li>
+<li><font color="#00ff00">;*************************************************************************************************************** </font></li>
+<li><font color="#00ff00">;*************************************************************************************************************** </font></li>
+<li><font color="#00ff00">;</font></li>
+<li><font color="#00ff00">;function: ADDTRUSTPATH</font></li>
+<li><font color="#00ff00">;	This is the static function that defines how to handle the Path Locations you will specify later</font></li>
+<li><font color="#00ff00">;	you won't need to make any changes or customizations to this function, either</font></li>
+<li><font color="#00ff00">;*************************************************************</font></li>
+<li><font color="#00ff00">;*************************************************************</font></li>
+<li><font color="red">(</font><font color="#0099ff">defun</font> addTrustPath <font color="red">(</font>dir pos <font color="#0099ff">/</font> tmp c lst<font color="red">)</font></li>
+<li> <font color="red">(</font><font color="#0099ff">setq</font> tmp <font color="cyan">""</font> c <font color="orange">-1</font><font color="red">)</font></li>
+<li> <font color="red">(</font><font color="#0099ff">if</font> <font color="red">(</font><font color="#0099ff">not</font> <font color="red">(</font><font color="#0099ff">member</font> <font color="red">(</font><font color="#0099ff">strcase</font> dir<font color="red">)</font></li>
+<li> <font color="red">(</font><font color="#0099ff">setq</font> lst <font color="red">(</font><font color="#0099ff">mapcar</font> <font color="#e33333">'</font><font color="#0099ff">strcase</font> <font color="red">(</font>strParse <font color="red">(</font><font color="#0099ff">getvar</font> <font color="cyan">"TRUSTEDPATHS"</font><font color="red">)</font> <font color="cyan">";"</font><font color="red">)))))</font></li>
+<li>  <font color="red">(</font><font color="#0099ff">progn</font></li>
+<li>   <font color="red">(</font><font color="#0099ff">if</font> <font color="red">(</font><font color="#0099ff">not</font> pos<font color="red">)</font> <font color="red">(</font><font color="#0099ff">setq</font> tmp <font color="red">(</font><font color="#0099ff">strcat</font> dir <font color="cyan">";"</font> <font color="red">(</font><font color="#0099ff">getvar</font> <font color="cyan">"TRUSTEDPATHS"</font><font color="red">)))</font></li>
+<li>     <font color="red">(</font><font color="#0099ff">mapcar</font> <font color="#e33333">'</font><font color="red">(</font><font color="#0099ff">lambda</font> <font color="red">(</font>x<font color="red">)</font></li>
+<li>      <font color="red">(</font><font color="#0099ff">setq</font> tmp <font color="red">(</font><font color="#0099ff">if</font> <font color="red">(</font><font color="#0099ff">=</font> <font color="red">(</font><font color="#0099ff">setq</font> c <font color="red">(</font><font color="#0099ff">1+</font> c<font color="red">))</font> pos<font color="red">)</font></li>
+<li>      <font color="red">(</font><font color="#0099ff">strcat</font> tmp <font color="cyan">";"</font> dir <font color="cyan">";"</font> x<font color="red">)</font></li>
+<li>      <font color="red">(</font><font color="#0099ff">strcat</font> tmp <font color="cyan">";"</font> x<font color="red">)</font></li>
+<li>     <font color="red">)</font></li>
+<li>    <font color="red">)</font></li>
+<li>   <font color="red">)</font></li>
+<li>   lst</li>
+<li>  <font color="red">)</font></li>
+<li> <font color="red">)</font></li>
+<li> <font color="red">(</font><font color="#0099ff">setvar</font> <font color="cyan">"TRUSTEDPATHS"</font> tmp<font color="red">)</font></li>
+<li> <font color="red">)</font></li>
+<li> <font color="red">)</font></li>
+<li> <font color="red">(</font><font color="#0099ff">princ</font><font color="red">)</font></li>
+<li><font color="red">)</font><font color="#00ff00">; end function</font></li>
+<li><font color="#00ff00">;**************</font></li>
+<li></li>
+<li><font color="#00ff00">;*************************************************************************************************************** </font></li>
+<li><font color="#00ff00">;*************************************************************************************************************** </font></li>
+<li><font color="#00ff00">;</font></li>
+<li><font color="#00ff00">;function: ADDTRUST</font></li>
+<li><font color="#00ff00">;	This function, ADDTRUST, gives you a place to define the paths you want to add to your "Trusted Locations"</font></li>
+<li><font color="#00ff00">;	Replace the sample paths with your own customization root directories.</font></li>
+<li><font color="#00ff00">;	The "\\..." at the end of the path gives trust to all subfolders after that main folder you specify</font></li>
+<li><font color="#00ff00">;*************************************************************</font></li>
+<li><font color="#00ff00">;*************************************************************</font></li>
+<li><font color="red">(</font><font color="#0099ff">defun</font> ADDTRUST <font color="red">()</font></li>
+<li><font color="red">(</font>addTrustPath <font color="cyan">"C:\\MY-MENU\\..."</font> <font color="#0099ff">nil</font><font color="red">)</font></li>
+<li><font color="red">(</font>addTrustPath <font color="cyan">"G:\\CAD Library\\..."</font> <font color="#0099ff">nil</font><font color="red">)</font></li>
+<li><font color="red">)</font><font color="#00ff00">; end function</font></li>
+<li><font color="#00ff00">;**************</font></li>
+<li></li>
+<li></li>
+<li></li>
+<li><font color="#00ff00">;Finally, This is the piece of code you want to call in your installation .LSP file.</font></li>
+<li><font color="#00ff00">;It will make sure to only try to add TRUSTEDPATHS if you're running ACAD2014 or higher</font></li>
+<li></li>
+<li></li>
+<li><font color="red">(</font><font color="#0099ff">if</font> <font color="red">(</font><font color="#0099ff">&gt;=</font> <font color="red">(</font><font color="#0099ff">getvar</font> <font color="cyan">"ACADVER"</font><font color="red">)</font> <font color="cyan">"19.1"</font><font color="red">)(</font>ADDTRUST<font color="red">))</font> </li>
+<li></li>
+<li></li>
+<li><font color="#00ff00">;*************************************************************************************************************** </font></li>
+<li><font color="#00ff00">;***************************************************************************************************************</font></li>
+<li><font color="#00ff00">;;</font></li>
+<li><font color="#00ff00">;;	REMOVETRUSTPATH - put this in your partial menu's .mnl file...functions for uninstall of customization routines</font></li>
+<li><font color="#00ff00">;;</font></li>
+<li><font color="#00ff00">;***************************************************************************************************************</font></li>
+<li><font color="#00ff00">; </font></li>
+<li><font color="#00ff00">;function: REMOVETRUSTPATH</font></li>
+<li><font color="#00ff00">;	This is the static function that defines how to handle the Path Locations you will specify later</font></li>
+<li><font color="#00ff00">;	you won't need to make any changes or customizations to this function</font></li>
+<li><font color="#00ff00">;*************************************************************</font></li>
+<li></li>
+<li><font color="red">(</font><font color="#0099ff">defun</font> RemoveTrustPath <font color="red">(</font>PathtoDelete <font color="#0099ff">/</font> lst tmp<font color="red">)</font></li>
+<li><font color="red">(</font><font color="#0099ff">setq</font> PathtoDelete <font color="red">(</font><font color="#0099ff">strcase</font> PathtoDelete<font color="red">))</font></li>
+<li><font color="red">(</font><font color="#0099ff">setq</font> lst <font color="red">(</font><font color="#0099ff">mapcar</font> <font color="#e33333">'</font><font color="#0099ff">strcase</font> <font color="red">(</font>strParse <font color="red">(</font><font color="#0099ff">getvar</font> <font color="cyan">"TRUSTEDPATHS"</font><font color="red">)</font> <font color="cyan">";"</font><font color="red">)))</font></li>
+<li><font color="red">(</font><font color="#0099ff">if</font> <font color="red">(</font><font color="#0099ff">member</font> PathtoDelete lst<font color="red">)</font></li>
+<li><font color="red">(</font><font color="#0099ff">progn</font></li>
+<li><font color="red">(</font><font color="#0099ff">setq</font> lst <font color="red">(</font><font color="#0099ff">vl-remove</font> <font color="red">(</font><font color="#0099ff">strcase</font> PathToDelete<font color="red">)</font> lst<font color="red">))</font></li>
+<li><font color="red">(</font><font color="#0099ff">setq</font> tmp <font color="cyan">""</font><font color="red">)</font></li>
+<li><font color="red">(</font><font color="#0099ff">foreach</font> folder lst</li>
+<li><font color="red">(</font><font color="#0099ff">setq</font> tmp <font color="red">(</font><font color="#0099ff">strcat</font> tmp folder <font color="cyan">";"</font><font color="red">))</font></li>
+<li><font color="red">)</font></li>
+<li><font color="red">(</font><font color="#0099ff">setvar</font> <font color="cyan">"TRUSTEDPATHS"</font> tmp<font color="red">)</font></li>
+<li><font color="red">)</font></li>
+<li><font color="red">)</font></li>
+<li><font color="red">(</font><font color="#0099ff">princ</font><font color="red">)</font></li>
+<li><font color="red">)</font><font color="#00ff00">; end function</font></li>
+<li><font color="#00ff00">;**************</font></li>
+<li></li>
+<li></li>
+<li></li>
+<li><font color="#00ff00">;*************************************************************************************************************** </font></li>
+<li><font color="#00ff00">;function: REMOVETRUST</font></li>
+<li><font color="#00ff00">;	This function, REMOVETRUST, gives you a place to define the paths you want to remove from your "Trusted Locations"</font></li>
+<li><font color="#00ff00">;	Replace the sample paths with your own customization root directories.</font></li>
+<li><font color="#00ff00">;	</font></li>
+<li><font color="#00ff00">;*************************************************************</font></li>
+<li><font color="#00ff00">;*************************************************************</font></li>
+<li><font color="red">(</font><font color="#0099ff">defun</font> REMOVETRUST <font color="red">()</font></li>
+<li><font color="red">(</font>RemoveTrustPath <font color="cyan">"C:\\MY-MENU\\..."</font><font color="red">)</font></li>
+<li><font color="red">(</font>RemoveTrustPath <font color="cyan">"G:\\CAD Library\\..."</font><font color="red">)</font></li>
+<li><font color="red">)</font><font color="#00ff00">; end function</font></li>
+<li><font color="#00ff00">;**************</font></li>
+<li></li>
+<li></li>
+<li><font color="#00ff00">;This is the actual function you call if you have a menu uninstallation routine</font></li>
+<li></li>
+<li><font color="red">(</font><font color="#0099ff">if</font> <font color="red">(</font><font color="#0099ff">&gt;=</font> <font color="red">(</font><font color="#0099ff">getvar</font> <font color="cyan">"ACADVER"</font><font color="red">)</font> <font color="cyan">"19.1"</font><font color="red">)(</font>REMOVETRUST<font color="red">))</font> </li>
+</ol>
+</pre>

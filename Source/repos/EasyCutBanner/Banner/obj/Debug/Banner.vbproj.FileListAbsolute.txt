@@ -1,0 +1,23 @@
+C:\EasyCut\Source\repos\EasyCutBanner\Banner\bin\Debug\Banner.exe.config
+C:\EasyCut\Source\repos\EasyCutBanner\Banner\bin\Debug\Banner.exe
+C:\EasyCut\Source\repos\EasyCutBanner\Banner\bin\Debug\Banner.pdb
+C:\EasyCut\Source\repos\EasyCutBanner\Banner\bin\Debug\Banner.xml
+C:\EasyCut\Source\repos\EasyCutBanner\Banner\obj\Debug\Banner.vbprojAssemblyReference.cache
+C:\EasyCut\Source\repos\EasyCutBanner\Banner\obj\Debug\Banner.Form1.resources
+C:\EasyCut\Source\repos\EasyCutBanner\Banner\obj\Debug\Banner.Resources.resources
+C:\EasyCut\Source\repos\EasyCutBanner\Banner\obj\Debug\Banner.vbproj.GenerateResource.cache
+C:\EasyCut\Source\repos\EasyCutBanner\Banner\obj\Debug\Banner.exe
+C:\EasyCut\Source\repos\EasyCutBanner\Banner\obj\Debug\Banner.xml
+C:\EasyCut\Source\repos\EasyCutBanner\Banner\obj\Debug\Banner.pdb
+C:\EasyCutNesting Beta\Source\repos\EasyCutBanner\Banner\bin\Debug\Banner.exe.config
+C:\EasyCutNesting Beta\Source\repos\EasyCutBanner\Banner\bin\Debug\Banner.exe
+C:\EasyCutNesting Beta\Source\repos\EasyCutBanner\Banner\bin\Debug\Banner.pdb
+C:\EasyCutNesting Beta\Source\repos\EasyCutBanner\Banner\bin\Debug\Banner.xml
+C:\EasyCutNesting Beta\Source\repos\EasyCutBanner\Banner\obj\Debug\Banner.vbproj.AssemblyReference.cache
+C:\EasyCutNesting Beta\Source\repos\EasyCutBanner\Banner\obj\Debug\Banner.Form1.resources
+C:\EasyCutNesting Beta\Source\repos\EasyCutBanner\Banner\obj\Debug\Banner.Resources.resources
+C:\EasyCutNesting Beta\Source\repos\EasyCutBanner\Banner\obj\Debug\Banner.vbproj.GenerateResource.cache
+C:\EasyCutNesting Beta\Source\repos\EasyCutBanner\Banner\obj\Debug\Banner.vbproj.CoreCompileInputs.cache
+C:\EasyCutNesting Beta\Source\repos\EasyCutBanner\Banner\obj\Debug\Banner.exe
+C:\EasyCutNesting Beta\Source\repos\EasyCutBanner\Banner\obj\Debug\Banner.xml
+C:\EasyCutNesting Beta\Source\repos\EasyCutBanner\Banner\obj\Debug\Banner.pdb

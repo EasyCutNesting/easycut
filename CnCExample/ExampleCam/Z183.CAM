@@ -1,0 +1,112 @@
+[ENTITY3]
+[HEAD]
+NUM_COM:c450
+DES_COM:
+LOT_COM:4
+DLO_COM:
+CLI_COM:
+IND_COM:
+DAT_COM:
+NUM_DIS:
+DES_DIS:
+PRE_DIS:
+FAB_DIS:
+NOM_DIS:
+TRA_PEZ:
+SBA_PEZ:4
+TIP_PEZ:
+MAR_PEZ:z183
+DES_PEZ:
+POS_PEZ:z183
+NOT_PEZ:
+ING_PEZ:90.0*90.0*3055.4
+QTA_PEZ:1
+MCL_PEZ:
+COD_PEZ:
+COS_PEZ:
+TIP_PRO:D
+LUN_PRO:3055.383
+MAT_PRO:s355j0
+PES_PRO:12.2
+SUP_PRO:0.351
+NOM_PRO:L90*9
+LAR_PRO:
+SPE_PRO:
+PRE_LIS:
+CPE_LIS:1
+CSU_LIS:1
+PUN_LIS:37.28
+SUN_LIS:1.072
+PRE_LIS:LAM.
+CMP_MAR:
+PROGRAM:
+IDF_PEZ:
+[SHAPE]
+D 4
+       90.00        90.00         0.00         9.00         0.00         9.00
+        0.00         0.00         0.00         0.00         0.00         0.00         0.00
+     3055.38         0.00         0.00
+[OUTLINE]
+LIV1
+        0.00         0.00         0.00         0.00         0.00         0.00
+
+     3055.38         0.00         0.00         0.00         0.00         0.00
+
+     3055.38       -90.00         0.00         0.00         0.00         0.00
+
+        0.00       -90.00         0.00         0.00         0.00         0.00
+
+LIV2
+        0.00         0.00         0.00         0.00         0.00         0.00
+
+     3055.38         0.00         0.00         0.00         0.00         0.00
+
+     3055.38         0.00       -90.00         0.00         0.00         0.00
+
+        0.00         0.00       -90.00         0.00         0.00         0.00
+
+LIV3
+LIV4
+[INLINE]
+LIV1
+LIV2
+LIV3
+LIV4
+[BREAK]
+LIV1
+        0.00         0.00
+LIV2
+        0.00         0.00
+LIV3
+        0.00         0.00
+LIV4
+        0.00         0.00
+[HOLE]
+LIV1
+LIV2
+H   22.0        40.00         0.00       -45.00     0.00     0.00     0.00
+H   22.0       100.00         0.00       -45.00     0.00     0.00     0.00
+H   22.0      3015.38         0.00       -45.00     0.00     0.00     0.00
+H   22.0      2955.38         0.00       -45.00     0.00     0.00     0.00
+LIV3
+LIV4
+[MARK]
+LIV1
+LIV2
+LIV3
+LIV4
+[COMP]
+[CUTTING]
+[FOLD]
+LIV1
+LIV2
+[OPEN]
+LIV1
+LIV2
+[CUTTER]
+[WELD]
+LIV1
+LIV2
+LIV3
+LIV3
+[THREED]

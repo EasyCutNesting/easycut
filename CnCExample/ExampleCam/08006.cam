@@ -1,0 +1,108 @@
+[ENTITY3]
+[HEAD]
+NUM_COM:c
+DES_COM:
+LOT_COM:800
+DLO_COM:
+CLI_COM:
+IND_COM:
+DAT_COM:
+NUM_DIS:
+DES_DIS:
+PRE_DIS:
+FAB_DIS:
+NOM_DIS:
+TRA_PEZ:
+SBA_PEZ:800
+TIP_PEZ:
+MAR_PEZ:08006
+DES_PEZ:
+POS_PEZ:08006
+NOT_PEZ:
+ING_PEZ:240.0*100.0*1160.0
+QTA_PEZ:1
+MCL_PEZ:
+COD_PEZ:
+COS_PEZ:
+TIP_PRO:A
+LUN_PRO:1160
+MAT_PRO:s275
+PES_PRO:13.56
+SUP_PRO:0.87
+NOM_PRO:BLU240*100*4
+LAR_PRO:
+SPE_PRO:
+PRE_LIS:
+CPE_LIS:1
+CSU_LIS:1
+PUN_LIS:15.74
+SUN_LIS:1.009
+PRE_LIS:LAM.
+CMP_MAR:
+PROGRAM:
+IDF_PEZ:
+[SHAPE]
+A 4
+      240.00       100.00         0.00         4.00         4.00         4.00
+        0.00         0.00         0.00         0.00        4.00         0.00         0.00
+     1160.00         0.00         0.00
+[OUTLINE]
+LIV1
+        0.00         0.00         0.00         0.00         0.00         0.00
+     1160.00         0.00         0.00         0.00         0.00         0.00
+     1160.00       -72.63         0.00         0.00         0.00         0.00
+     1022.66       -72.63         0.00         0.00         0.00         0.00
+     1022.66       -82.63         0.00         0.00         0.00         0.00
+     1160.00       -82.63         0.00         0.00         0.00         0.00
+     1160.00      -240.00         0.00         0.00         0.00         0.00
+        0.00      -240.00         0.00         0.00         0.00         0.00
+LIV2
+        0.00         0.00      -100.00         0.00         0.00         0.00
+     1160.00         0.00      -100.00         0.00         0.00         0.00
+     1160.00         0.00         0.00         0.00         0.00         0.00
+        0.00         0.00         0.00         0.00         0.00         0.00
+LIV3
+        0.00      -240.00      -100.00         0.00         0.00         0.00
+        0.00      -240.00         0.00         0.00         0.00         0.00
+     1160.00      -240.00         0.00         0.00         0.00         0.00
+     1160.00      -240.00      -100.00         0.00         0.00         0.00
+LIV4
+[INLINE]
+LIV1
+LIV2
+LIV3
+LIV4
+[BREAK]
+LIV1
+        0.00         0.00
+LIV2
+        0.00         0.00
+LIV3
+        0.00         0.00
+LIV4
+        0.00         0.00
+[HOLE]
+LIV1
+LIV2
+LIV3
+LIV4
+[MARK]:
+LIV1
+LIV2
+LIV3
+LIV4
+[COMP]
+[CUTTING]
+[FOLD]
+LIV1
+LIV2
+[OPEN]
+LIV1
+LIV2
+[CUTTER]
+[WELD]
+LIV1
+LIV2
+LIV3
+LIV4
+[THREED]

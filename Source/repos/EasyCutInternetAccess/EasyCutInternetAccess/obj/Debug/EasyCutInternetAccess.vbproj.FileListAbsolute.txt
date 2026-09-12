@@ -1,0 +1,11 @@
+C:\EasyCutBeta\Source\repos\EasyCutInternetAccess\EasyCutInternetAccess\bin\Debug\EasyCutInternetAccess.exe.config
+C:\EasyCutBeta\Source\repos\EasyCutInternetAccess\EasyCutInternetAccess\bin\Debug\EasyCutInternetAccess.exe
+C:\EasyCutBeta\Source\repos\EasyCutInternetAccess\EasyCutInternetAccess\bin\Debug\EasyCutInternetAccess.pdb
+C:\EasyCutBeta\Source\repos\EasyCutInternetAccess\EasyCutInternetAccess\bin\Debug\EasyCutInternetAccess.xml
+C:\EasyCutBeta\Source\repos\EasyCutInternetAccess\EasyCutInternetAccess\obj\Debug\EasyCutInternetAccess.vbprojAssemblyReference.cache
+C:\EasyCutBeta\Source\repos\EasyCutInternetAccess\EasyCutInternetAccess\obj\Debug\EasyCutInternetAccess.Resources.resources
+C:\EasyCutBeta\Source\repos\EasyCutInternetAccess\EasyCutInternetAccess\obj\Debug\EasyCutInternetAccess.vbproj.GenerateResource.cache
+C:\EasyCutBeta\Source\repos\EasyCutInternetAccess\EasyCutInternetAccess\obj\Debug\EasyCutInternetAccess.vbproj.CoreCompileInputs.cache
+C:\EasyCutBeta\Source\repos\EasyCutInternetAccess\EasyCutInternetAccess\obj\Debug\EasyCutInternetAccess.exe
+C:\EasyCutBeta\Source\repos\EasyCutInternetAccess\EasyCutInternetAccess\obj\Debug\EasyCutInternetAccess.xml
+C:\EasyCutBeta\Source\repos\EasyCutInternetAccess\EasyCutInternetAccess\obj\Debug\EasyCutInternetAccess.pdb

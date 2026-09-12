@@ -1,0 +1,112 @@
+[ENTITY4]
+[HEAD]
+NUM_COM:2013011
+DES_COM:Rampa C
+LOT_COM:
+DLO_COM:
+CLI_COM:Cimolai
+IND_COM:
+DAT_COM:
+NUM_DIS:2013011DCD10390
+DES_DIS:
+DAT_DIS:27/08/13
+REV_DIS:
+NOM_DIS:
+TRA_PEZ:VERNICIATO
+SBA_PEZ:101
+TIP_PEZ:
+MAR_PEZ:1502
+DES_PEZ:ANGOLARE
+POS_PEZ:1502
+NOT_PEZ:
+ING_PEZ:480*12*4125
+QTA_PEZ:12
+MCL_PEZ:
+COD_PEZ:
+COS_PEZ:
+NOM_PRO:Pl. 12
+TIP_PRO:R
+LUN_PRO:4125
+LAR_PRO:480
+SPE_PRO:12
+MAT_PRO:S355JOW
+PES_PRO:
+SUP_PRO:
+CPE_LIS:
+CSU_LIS:
+PUN_LIS:186.52
+SUN_LIS:3.96
+CMP_MAR:
+PROGRAM:TecnoTRACE-T081339
+SPD_NOT:
+IDF_PEZ:4385822BEF9E4F858F4C0C6E20CDCED3
+FLG_DWG:TOTAL
+MAR_CMP:1502=1,
+CMP_TOT:1502=12,
+SBS_CMP:101=12,
+[SHAPE]
+R 4
+     0.00      0.00      0.00      0.00      0.00      0.00 
+     0.00      0.00      0.00      0.00      0.00      0.00      0.00 
+  4125.00    480.00     12.00 
+[OUTLINE]
+LIV1
+  4125.13    -20.71      6.00      0.00      0.00      0.00      0.00
+  4125.13    -20.71      6.00      0.00      0.00      0.00      0.00
+  4125.12   -479.68      6.00      0.00      0.00      0.00      0.00
+    -0.03   -479.68      6.00      0.00      0.00      0.00      0.00
+     0.00    -20.54      6.00      0.00      0.00      0.00      0.00
+  2058.25 -103550.88      6.00 103550.80     88.86     91.14      0.00
+  4125.13    -20.71      6.00      0.00      0.00      0.00      0.00
+
+LIV2
+LIV3
+LIV4
+[INLINE]
+LIV1
+LIV2
+LIV3
+LIV4
+[BREAK]
+LIV1
+     0.00      0.00
+LIV2
+     0.00      0.00
+LIV3
+     0.00      0.00
+LIV4
+     0.00      0.00
+[HOLE]
+LIV1
+H     26.00     57.00   -404.68      6.00      0.00      0.00      0.00
+H     26.00     57.00   -334.68      6.00      0.00      0.00      0.00
+H     26.00   4068.12   -404.68      6.00      0.00      0.00      0.00
+H     26.00   4068.12   -334.68      6.00      0.00      0.00      0.00
+LIV2
+LIV3
+LIV4
+[MARK]
+LIV1
+LIV2
+LIV3
+LIV4
+[COMP]
+[CUTTING]
+[FOLD]
+LIV1
+LIV2
+[OPEN]
+LIV1
+LIV2
+[CUTTER]
+[WELD]
+LIV1
+LIV2
+LIV3
+LIV4
+[THREED]
+[INLINE2]
+LIV1
+LIV2
+LIV3
+LIV4

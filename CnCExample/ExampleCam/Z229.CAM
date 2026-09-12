@@ -1,0 +1,108 @@
+[ENTIT3]
+[HEAD]
+NUM_COM:c450
+DES_COM:
+LOT_COM:4
+DLO_COM:
+CLI_COM:
+IND_COM:
+DAT_COM:
+NUM_DIS:
+DES_DIS:
+PRE_DIS:
+FAB_DIS:
+NOM_DIS:
+TRA_PEZ:
+SBA_PEZ:4
+TIP_PEZ:
+MAR_PEZ:z229
+DES_PEZ:
+POS_PEZ:z229
+NOT_PEZ:
+ING_PEZ:350.0*135.0*10.0
+QTA_PEZ:84
+MCL_PEZ:
+COD_PEZ:
+COS_PEZ:
+TIP_PRO:R
+LUN_PRO:350
+MAT_PRO:s355j0
+PES_PRO:
+SUP_PRO:
+NOM_PRO:LAM.10
+LAR_PRO:135
+SPE_PRO:10
+PRE_LIS:LAM.
+CPE_LIS:1
+CSU_LIS:1
+PUN_LIS:3.71
+SUN_LIS:0.101
+PRE_LIS:LAM.
+CMP_MAR:
+PROGRAM:
+IDF_PEZ:
+[SHAPE]
+R 1
+   0.00   0.00   0.00   0.00    0.00   0.00   0.00
+   0.00   0.00   0.00   0.00    0.00   0.00   0.00
+      350.00      135.00       10.00
+[OUTLINE]
+LIV1
+        0.00      -135.00        10.00         0.00         0.00         0.00
+      350.00      -135.00        10.00         0.00         0.00         0.00
+      350.00         0.00        10.00         0.00         0.00         0.00
+        0.00         0.00        10.00         0.00         0.00         0.00
+LIV2
+LIV3
+LIV4
+[INLINE]
+LIV1
+LIV2
+LIV3
+LIV4
+[BREAK]
+LIV1
+        0.00         0.00
+LIV2
+        0.00         0.00
+LIV3
+        0.00         0.00
+LIV4
+        0.00         0.00
+[HOLE]
+LIV1
+B   18.0       315.00      -111.00        10.00     0.00     0.00     0.00
+B   18.0       265.00      -111.00        10.00     0.00     0.00     0.00
+B   18.0       215.00      -111.00        10.00     0.00     0.00     0.00
+B   18.0       135.00      -111.00        10.00     0.00     0.00     0.00
+B   18.0        85.00      -111.00        10.00     0.00     0.00     0.00
+B   18.0        35.00      -111.00        10.00     0.00     0.00     0.00
+B   18.0        35.00       -24.00        10.00     0.00     0.00     0.00
+B   18.0        85.00       -24.00        10.00     0.00     0.00     0.00
+B   18.0       135.00       -24.00        10.00     0.00     0.00     0.00
+B   18.0       215.00       -24.00        10.00     0.00     0.00     0.00
+B   18.0       265.00       -24.00        10.00     0.00     0.00     0.00
+B   18.0       315.00       -24.00        10.00     0.00     0.00     0.00
+LIV2
+LIV3
+LIV4
+[MARK]
+LIV1
+LIV2
+LIV3
+LIV4
+[COMP]
+[CUTTING]
+[FOLD]
+LIV1
+LIV2
+[OPEN]
+LIV1
+LIV2
+[CUTTER]
+[WELD]
+LIV1
+LIV2
+LIV3
+LIV4
+[THREED]

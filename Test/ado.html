@@ -1,0 +1,222 @@
+<style>
+pre.small {
+           line-height:0.6;
+           background-color:#1a1a1a;
+           color:silver;
+          }
+</style>
+<pre class="small">
+<ol>
+<li><font color="red">(</font><font color="#0099ff">defun</font> ADOreadNorWndDB <font color="red">(</font> <font color="#0099ff">/</font> 	MDB_File SQLStatement ADO_DLLPath ConnectionObject</li>
+<li>							aCommandObject supp rsState</li>
+<li>							recno RecordSetObject aBOF aEOF fieldsObj reccnt afield i</li>
+<li>							fvalue coState<font color="red">)</font></li>
+<li></li>
+<li>	<font color="#00ff00">;; You'll Need To Change the Path to the Northwind.mdb file</font></li>
+<li>	<font color="#00ff00">;;  L:\Program Files\Microsoft Office\Office\Samples </font></li>
+<li>	<font color="#00ff00">;;; Set MDB_File to a locatable Access Database file -&gt;</font></li>
+<li>	 </li>
+<li>	<font color="red">(</font><font color="#0099ff">if</font> <font color="red">(</font><font color="#0099ff">setq</font> MDB_File <font color="red">(</font><font color="#0099ff">findfile</font> <font color="cyan">"C:\\EasyCut\\Dbase\\test.mdb"</font><font color="red">))</font></li>
+<li>		<font color="red">(</font><font color="#0099ff">setq</font> MDB_File <font color="cyan">"C:\\EasyCut\\Dbase\\test"</font><font color="red">)</font></li>
+<li>		<font color="red">(</font><font color="#0099ff">progn</font></li>
+<li>			<font color="red">(</font><font color="#0099ff">princ</font> <font color="cyan">"\nNorthWind Database was not found, Exiting."</font><font color="red">)</font></li>
+<li>			<font color="red">(</font><font color="#0099ff">exit</font><font color="red">)</font></li>
+<li>		<font color="red">)</font></li>
+<li>	<font color="red">)</font></li>
+<li>	   </li>
+<li>	<font color="#00ff00">;;; Setup a SQL statement -&gt;</font></li>
+<li>	<font color="red">(</font><font color="#0099ff">setq</font> SQLStatement <font color="cyan">"SELECT * FROM CUSTOMERS"</font><font color="red">)</font></li>
+<li></li>
+<li>	<font color="#00ff00">;;; Normal path to the ADO DLL, change as needed:</font></li>
+<li>	<font color="red">(</font><font color="#0099ff">setq</font> ADO_DLLPath <font color="cyan">"c:\\program files\\common files\\system\\ado\\"</font><font color="red">)</font></li>
+<li></li>
+<li>	<font color="red">(</font><font color="#0099ff">if</font> <font color="red">(</font><font color="#0099ff">null</font> adom-Append<font color="red">)</font></li>
+<li>		<font color="red">(</font><font color="#0099ff">if</font> <font color="red">(</font><font color="#0099ff">findfile</font> <font color="red">(</font><font color="#0099ff">strcat</font> ADO_DLLPath <font color="cyan">"msado15.dll"</font><font color="red">))</font></li>
+<li>			<font color="red">(</font><font color="#0099ff">vlax-import-type-library</font></li>
+<li>				<font color="#0099ff">:tlb-filename</font></li>
+<li>				<font color="red">(</font><font color="#0099ff">strcat</font> ADO_DLLPath <font color="cyan">"msado15.dll"</font><font color="red">)</font></li>
+<li>				<font color="#0099ff">:methods-prefix</font></li>
+<li>				<font color="cyan">"adom-"</font></li>
+<li>				<font color="#0099ff">:properties-prefix</font></li>
+<li>				<font color="cyan">"adop-"</font></li>
+<li>				<font color="#0099ff">:constants-prefix</font></li>
+<li>				<font color="cyan">"adok-"</font></li>
+<li>			<font color="red">)</font></li>
+<li>			<font color="red">(</font><font color="#0099ff">progn</font></li>
+<li>				<font color="red">(</font><font color="#0099ff">alert</font> <font color="red">(</font><font color="#0099ff">strcat</font> <font color="cyan">"Exiting - Can't find \""</font> ADO_DLLPath <font color="cyan">"msado15.dll\""</font><font color="red">))</font></li>
+<li>				<font color="red">(</font><font color="#0099ff">exit</font><font color="red">)</font></li>
+<li>			<font color="red">)</font></li>
+<li>		<font color="red">)</font></li>
+<li>	<font color="red">)</font></li>
+<li></li>
+<li>	<font color="#00ff00">;;; Proceed if Type Library has been loaded.</font></li>
+<li>	<font color="red">(</font><font color="#0099ff">if</font> adom-Append</li>
+<li>		<font color="red">(</font><font color="#0099ff">progn</font></li>
+<li>			<font color="#00ff00">;;; Create A Connection Object</font></li>
+<li>			<font color="red">(</font><font color="#0099ff">setq</font> ConnectionObject <font color="red">(</font><font color="#0099ff">vlax-create-object</font> <font color="cyan">"ADODB.Connection"</font><font color="red">))</font></li>
+<li></li>
+<li>			<font color="#00ff00">;;; Check the mode of the Connection Object</font></li>
+<li>			<font color="red">(</font><font color="#0099ff">setq</font> coMode <font color="red">(</font><font color="#0099ff">vlax-get-property</font> ConnectionObject <font color="#e33333">'</font>Mode<font color="red">))</font> <font color="#00ff00">; = 0</font></li>
+<li>			<font color="#00ff00">;;; Valid Mode values are:</font></li>
+<li>			<font color="#00ff00">;;;  adok-adModeUnknown = 0</font></li>
+<li>			<font color="#00ff00">;;;  adok-adModeRead = 1</font></li>
+<li>			<font color="#00ff00">;;;  adok-adModeWrite = 2</font></li>
+<li>			<font color="#00ff00">;;;  adok-adModeReadWrite = 3</font></li>
+<li>			<font color="#00ff00">;;;  adok-adModeShareDenyRead = 4</font></li>
+<li>			<font color="#00ff00">;;;  adok-adModeShareDenyWrite = 8</font></li>
+<li>			<font color="#00ff00">;;;  adok-adModeShareExclusive = 12</font></li>
+<li>			<font color="#00ff00">;;;  adok-adModeShareDenyNone = 16</font></li>
+<li></li>
+<li>			<font color="red">(</font><font color="#0099ff">setq</font> coState <font color="red">(</font><font color="#0099ff">vlax-get-property</font> ConnectionObject <font color="#e33333">'</font>State<font color="red">))</font></li>
+<li></li>
+<li>			<font color="red">(</font><font color="#0099ff">if</font> <font color="red">(</font><font color="#0099ff">=</font> coState adok-adStateClosed<font color="red">)</font></li>
+<li>				<font color="red">(</font><font color="#0099ff">vlax-put-property</font> ConnectionObject <font color="#e33333">'</font>Mode adok-adModeReadWrite<font color="red">)</font></li>
+<li>			<font color="red">)</font></li>
+<li> </li>
+<li>			<font color="#00ff00">;;; Use the direct Microsoft Access Drivers Creates a LDB Locking file here after this executes</font></li>
+<li>			<font color="#00ff00">;;;    (vlax-invoke-method</font></li>
+<li>			<font color="#00ff00">;;;     ConnectionObject</font></li>
+<li>			<font color="#00ff00">;;;    "Open"</font></li>
+<li>			<font color="#00ff00">;;;    (strcat "Driver={Microsoft Access Driver (*.mdb)};DBQ="</font></li>
+<li>			<font color="#00ff00">;;;       MDB_File</font></li>
+<li>			<font color="#00ff00">;;;    )</font></li>
+<li>			<font color="#00ff00">;;;    "admin"</font></li>
+<li>			<font color="#00ff00">;;;    ""</font></li>
+<li>			<font color="#00ff00">;;;    adok-adConnectUnspecified</font></li>
+<li>			<font color="#00ff00">;;;    )</font></li>
+<li></li>
+<li>			<font color="#00ff00">;;; Or Use a ODBC Connection, but set it up first -&gt;</font></li>
+<li>			<font color="red">(</font><font color="#0099ff">vlax-invoke-method</font> ConnectionObject</li>
+<li>				<font color="cyan">"Open"</font></li>
+<li>				<font color="cyan">"DSN=myMDB;"</font></li>
+<li>				<font color="cyan">"admin"</font></li>
+<li>				<font color="cyan">""</font></li>
+<li>				adok-adConnectUnspecified</li>
+<li>			<font color="red">)</font></li>
+<li></li>
+<li> </li>
+<li>			<font color="#00ff00">;;; Create the RecordSet Object</font></li>
+<li></li>
+<li>			<font color="red">(</font><font color="#0099ff">setq</font> RecordSetObject <font color="red">(</font><font color="#0099ff">vlax-create-object</font> <font color="cyan">"ADODB.RecordSet"</font><font color="red">))</font></li>
+<li></li>
+<li>			<font color="#00ff00">;;; Set the CursorType, and Locking Type</font></li>
+<li></li>
+<li>			<font color="red">(</font><font color="#0099ff">vlax-put-property</font> RecordSetObject <font color="#e33333">'</font>CursorType adok-adOpenDynamic<font color="red">)</font></li>
+<li>			<font color="#00ff00">;;; Where the property values are:</font></li>
+<li>     </li>
+<li>			<font color="#00ff00">;;;    adok-adOpenForwardOnly = 0</font></li>
+<li>			<font color="#00ff00">;;;    adok-adOpenKeyset = 1</font></li>
+<li>			<font color="#00ff00">;;;    adok-adOpenDynamic = 2</font></li>
+<li>			<font color="#00ff00">;;;    adok-adOpenStatic = 3</font></li>
+<li></li>
+<li>			<font color="red">(</font><font color="#0099ff">vlax-put-property</font> RecordSetObject <font color="#e33333">'</font>LockType   adok-adLockOptimistic<font color="red">)</font></li>
+<li>			<font color="#00ff00">;;; Where the property values are:</font></li>
+<li></li>
+<li>			<font color="#00ff00">;;;  adok-adLockReadOnly = 1</font></li>
+<li>			<font color="#00ff00">;;;  adok-adLockPessimistic = 2</font></li>
+<li>			<font color="#00ff00">;;;  adok-adLockOptimistic = 3</font></li>
+<li>			<font color="#00ff00">;;;  adok-adLockBatchOptimistic = 4</font></li>
+<li></li>
+<li>			<font color="#00ff00">;;; The following code will not work, do not use it.</font></li>
+<li>			<font color="#00ff00">;(setq RecordSetObject</font></li>
+<li>			<font color="#00ff00">;;; The following fails with a "Type mismatch" error</font></li>
+<li>			<font color="#00ff00">;      (vlax-invoke-method</font></li>
+<li>			<font color="#00ff00">;        ConnectionObject "Execute" SQLStatement 'RecordsAffected</font></li>
+<li>			<font color="#00ff00">;        adok-adCmdText</font></li>
+<li>			<font color="#00ff00">;       )</font></li>
+<li>			<font color="#00ff00">;  )</font></li>
+<li></li>
+<li>			<font color="#00ff00">;;; Create a Command Object and Connect it to the Connection Object</font></li>
+<li>			<font color="red">(</font><font color="#0099ff">setq</font> aCommandObject <font color="red">(</font><font color="#0099ff">vlax-create-object</font> <font color="cyan">"ADODB.Command"</font><font color="red">))</font></li>
+<li>			<font color="red">(</font><font color="#0099ff">vlax-put-property</font> aCommandObject <font color="#e33333">'</font>ActiveConnection ConnectionObject<font color="red">)</font></li>
+<li></li>
+<li>			<font color="#00ff00">;;; Setup the Command Object, and Execute the SQL query</font></li>
+<li>			<font color="red">(</font><font color="#0099ff">vlax-put-property</font> aCommandObject <font color="#e33333">'</font>CommandText SQLStatement<font color="red">)</font></li>
+<li>			<font color="red">(</font><font color="#0099ff">vlax-put-property</font> aCommandObject <font color="#e33333">'</font>CommandType adok-adCmdText<font color="red">)</font></li>
+<li>			<font color="#00ff00">;;; adok-adCmdText = 1</font></li>
+<li>			<font color="#00ff00">;;; adok-adCmdTable = 2</font></li>
+<li>			<font color="#00ff00">;;; adok-adCmdTableDirect = 512</font></li>
+<li>			<font color="#00ff00">;;; adok-adCmdStoredProc = 4</font></li>
+<li>			<font color="#00ff00">;;; adok-adCmdUnknown = 8</font></li>
+<li>			<font color="#00ff00">;;; adok-adCommandFile = nil</font></li>
+<li>			<font color="#00ff00">;;; adok-adExecuteNoRecords = 182</font></li>
+<li> </li>
+<li>			<font color="red">(</font><font color="#0099ff">setq</font> RecordSetObject <font color="red">(</font><font color="#0099ff">vlax-invoke-method</font> aCommandObject <font color="cyan">"Execute"</font> <font color="#0099ff">nil</font> <font color="#0099ff">nil</font> <font color="#0099ff">nil</font><font color="red">))</font></li>
+<li>			<font color="red">(</font><font color="#0099ff">setq</font> supp <font color="red">(</font><font color="#0099ff">vlax-invoke-method</font> RecordSetObject <font color="#e33333">'</font>Supports adok-adAddNew<font color="red">))</font></li>
+<li></li>
+<li>			<font color="#00ff00">;;; Check to see that the RecordSet is available here -&gt;</font></li>
+<li>			<font color="red">(</font><font color="#0099ff">setq</font> rsState <font color="red">(</font><font color="#0099ff">vlax-get-property</font> RecordSetObject <font color="#e33333">'</font>State<font color="red">))</font></li>
+<li>			<font color="#00ff00">;;;   adok-adStateClosed = 0</font></li>
+<li>			<font color="#00ff00">;;;   adok-adStateOpen = 1</font></li>
+<li>			<font color="#00ff00">;;;   adok-adStateConnecting = 2</font></li>
+<li>			<font color="#00ff00">;;;   adok-adStateExecuting = 4</font></li>
+<li>			<font color="#00ff00">;;;   adok-adStateFetching = 8</font></li>
+<li> </li>
+<li>			<font color="red">(</font><font color="#0099ff">if</font> <font color="red">(</font><font color="#0099ff">=</font> rsState adok-adStateOpen<font color="red">)</font></li>
+<li>				<font color="red">(</font><font color="#0099ff">progn</font></li>
+<li>					<font color="red">(</font><font color="#0099ff">setq</font> recno <font color="orange">0</font><font color="red">)</font></li>
+<li>					<font color="red">(</font><font color="#0099ff">while</font> <font color="red">(</font><font color="#0099ff">and</font> <font color="red">(</font><font color="#0099ff">=</font> <font color="red">(</font><font color="#0099ff">setq</font> aBOF <font color="red">(</font><font color="#0099ff">vlax-get-property</font> RecordSetObject <font color="#e33333">'</font>BOF<font color="red">))</font> <font color="#0099ff">:vlax-false</font><font color="red">)</font></li>
+<li>								<font color="red">(</font><font color="#0099ff">=</font> <font color="red">(</font><font color="#0099ff">setq</font> aEOF <font color="red">(</font><font color="#0099ff">vlax-get-property</font> RecordSetObject <font color="#e33333">'</font>EOF<font color="red">))</font> <font color="#0099ff">:vlax-false</font><font color="red">)</font></li>
+<li>							<font color="red">)</font></li>
+<li>							<font color="red">(</font><font color="#0099ff">setq</font> fieldsObj <font color="red">(</font><font color="#0099ff">vlax-get-property</font> RecordSetObject <font color="#e33333">'</font>Fields<font color="red">))</font></li>
+<li></li>
+<li>							<font color="red">(</font><font color="#0099ff">setq</font> reccnt <font color="red">(</font><font color="#0099ff">vlax-get-property</font> fieldsObj <font color="#e33333">'</font>Count<font color="red">)</font> i <font color="orange">0</font><font color="red">)</font></li>
+<li>							<font color="red">(</font><font color="#0099ff">princ</font> <font color="red">(</font><font color="#0099ff">strcat</font> <font color="cyan">"\nRecord "</font> <font color="red">(</font><font color="#0099ff">itoa</font> recno<font color="red">)</font> <font color="cyan">":\n"</font><font color="red">))</font></li>
+<li>				</li>
+<li>							<font color="red">(</font><font color="#0099ff">while</font> <font color="red">(</font><font color="#0099ff">&lt;</font> i reccnt<font color="red">)</font></li>
+<li>									<font color="red">(</font><font color="#0099ff">setq</font> afield <font color="red">(</font><font color="#0099ff">vlax-get-property</font> fieldsObj <font color="#e33333">'</font>Item i<font color="red">))</font></li>
+<li>									<font color="red">(</font><font color="#0099ff">princ</font> <font color="red">(</font><font color="#0099ff">setq</font> fvalue <font color="red">(</font><font color="#0099ff">vlax-variant-value</font> <font color="red">(</font><font color="#0099ff">vlax-get-property</font> afield <font color="#e33333">'</font>Value<font color="red">))))</font></li>
+<li>									<font color="red">(</font><font color="#0099ff">princ</font> <font color="cyan">"\t"</font><font color="red">)</font></li>
+<li>									<font color="red">(</font><font color="#0099ff">setq</font> i <font color="red">(</font><font color="#0099ff">1+</font> i<font color="red">))</font></li>
+<li>							<font color="red">)</font></li>
+<li>							<font color="red">(</font><font color="#0099ff">princ</font> <font color="cyan">"\n"</font><font color="red">)</font></li>
+<li>							<font color="red">(</font><font color="#0099ff">setq</font> recno <font color="red">(</font><font color="#0099ff">1+</font> recno<font color="red">))</font></li>
+<li>							<font color="red">(</font><font color="#0099ff">vlax-invoke-method</font> RecordSetObject <font color="#e33333">'</font>MoveNext<font color="red">)</font></li>
+<li>					<font color="red">)</font></li>
+<li>				<font color="red">)</font></li>
+<li>				<font color="red">(</font><font color="#0099ff">princ</font> <font color="red">(</font><font color="#0099ff">strcat</font> <font color="cyan">"\nRecord Set NOT Available, Record Set State = "</font> <font color="red">(</font><font color="#0099ff">itoa</font> rsState<font color="red">)))</font></li>
+<li>			<font color="red">)</font></li>
+<li></li>
+<li>			<font color="#00ff00">;;; Close only works if it's Opened !, this can usually be tested by checking if a LDB file exists.</font></li>
+<li>			<font color="#00ff00">;;; Check to see that the Connection Object is open here -&gt;</font></li>
+<li>			<font color="red">(</font><font color="#0099ff">setq</font> coState <font color="red">(</font><font color="#0099ff">vlax-get-property</font> ConnectionObject <font color="#e33333">'</font>State<font color="red">))</font></li>
+<li>			<font color="red">(</font><font color="#0099ff">if</font> <font color="red">(</font><font color="#0099ff">and</font> <font color="red">(</font><font color="#0099ff">findfile</font> <font color="red">(</font><font color="#0099ff">strcat</font> MDB_File <font color="cyan">".ldb"</font><font color="red">))</font> <font color="red">(</font><font color="#0099ff">=</font> coState adok-adStateOpen<font color="red">))</font></li>
+<li>					<font color="red">(</font><font color="#0099ff">vlax-invoke-method</font> ConnectionObject <font color="cyan">"Close"</font><font color="red">)</font></li>
+<li>					<font color="red">(</font><font color="#0099ff">princ</font> <font color="cyan">"\nConnection Object is not Open, please delete the LDB file if needed."</font><font color="red">)</font></li>
+<li>			<font color="red">)</font></li>
+<li>			<font color="red">(</font>Clean_Up<font color="red">)</font></li>
+<li>		<font color="red">)</font></li>
+<li>		<font color="#00ff00">;;; Exit if Type Library has NOT been loaded.</font></li>
+<li>		<font color="red">(</font><font color="#0099ff">progn</font></li>
+<li>			<font color="red">(</font><font color="#0099ff">alert</font> <font color="red">(</font><font color="#0099ff">strcat</font> <font color="cyan">"Exiting - Type Library was Not Loaded: \""</font> ADO_DLLPath <font color="cyan">"msado15.dll\""</font><font color="red">))</font></li>
+<li>			<font color="red">(</font><font color="#0099ff">exit</font><font color="red">)</font></li>
+<li>		<font color="red">)</font></li>
+<li>	<font color="red">)</font></li>
+<li><font color="red">)</font></li>
+<li></li>
+<li></li>
+<li><font color="red">(</font><font color="#0099ff">defun</font> Clean_Up <font color="red">()</font></li>
+<li>	<font color="red">(</font><font color="#0099ff">if</font> <font color="red">(</font><font color="#0099ff">and</font> aField <font color="red">(</font><font color="#0099ff">null</font> <font color="red">(</font><font color="#0099ff">vlax-object-released-p</font> aField<font color="red">)))</font></li>
+<li>		<font color="red">(</font><font color="#0099ff">vlax-release-object</font> aField<font color="red">)</font></li>
+<li>	<font color="red">)</font></li>
+<li>	<font color="red">(</font><font color="#0099ff">if</font> <font color="red">(</font><font color="#0099ff">and</font> fieldsObj <font color="red">(</font><font color="#0099ff">null</font> <font color="red">(</font><font color="#0099ff">vlax-object-released-p</font> fieldsObj<font color="red">)))</font></li>
+<li>		<font color="red">(</font><font color="#0099ff">vlax-release-object</font> fieldsObj<font color="red">)</font></li>
+<li>	<font color="red">)</font></li>
+<li>	<font color="red">(</font><font color="#0099ff">if</font> <font color="red">(</font><font color="#0099ff">and</font> aCommandObject <font color="red">(</font><font color="#0099ff">null</font> <font color="red">(</font><font color="#0099ff">vlax-object-released-p</font> aCommandObject<font color="red">)))</font></li>
+<li>		<font color="red">(</font><font color="#0099ff">vlax-release-object</font> aCommandObject<font color="red">)</font></li>
+<li>	<font color="red">)</font></li>
+<li>	<font color="red">(</font><font color="#0099ff">if</font> <font color="red">(</font><font color="#0099ff">and</font> RecordSetObject <font color="red">(</font><font color="#0099ff">null</font> <font color="red">(</font><font color="#0099ff">vlax-object-released-p</font> RecordSetObject<font color="red">)))</font></li>
+<li>		<font color="red">(</font><font color="#0099ff">vlax-release-object</font> RecordSetObject<font color="red">)</font></li>
+<li>	<font color="red">)</font></li>
+<li>	<font color="red">(</font><font color="#0099ff">if</font> <font color="red">(</font><font color="#0099ff">and</font> ConnectionObject <font color="red">(</font><font color="#0099ff">null</font> <font color="red">(</font><font color="#0099ff">vlax-object-released-p</font> ConnectionObject<font color="red">)))</font></li>
+<li>		<font color="red">(</font><font color="#0099ff">vlax-release-object</font> ConnectionObject<font color="red">)</font></li>
+<li>	<font color="red">)</font></li>
+<li>	<font color="red">(</font><font color="#0099ff">setq</font> ConnectionObject <font color="#0099ff">nil</font> RecordSetObject <font color="#0099ff">nil</font> aCommandObject <font color="#0099ff">nil</font> fieldsObj <font color="#0099ff">nil</font> aField <font color="#0099ff">nil</font><font color="red">)</font></li>
+<li>	<font color="red">(</font><font color="#0099ff">princ</font> <font color="cyan">"\n\nRemoving and Releasing Connection Objects."</font><font color="red">)</font></li>
+<li>	<font color="red">(</font><font color="#0099ff">princ</font><font color="red">)</font></li>
+<li><font color="red">)</font></li>
+<li></li>
+<li><font color="red">(</font><font color="#0099ff">princ</font> <font color="cyan">"\nADOreadNorWndDB loaded, type (ADOreadNorWndDB) to run."</font><font color="red">)</font></li>
+<li><font color="red">(</font><font color="#0099ff">princ</font><font color="red">)</font></li>
+</ol>
+</pre>

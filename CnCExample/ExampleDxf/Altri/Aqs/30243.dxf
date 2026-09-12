@@ -1,0 +1,567 @@
+999
+     *******************************************
+999
+     BOCAD Software GmbH   Rev.18.000   0202.22
+999
+     Filename:   c:\progetti21\danieli_aqs\b4\temp_11\30243.dxf
+999
+     Creator:    bocad
+999
+     Date:       20.01.2016
+999
+     Factor:     10.000000
+999
+     *******************************************
+  0
+SECTION
+  2
+HEADER
+  9
+$DWGCODEPAGE
+  3
+ANSI_1252
+  9
+$INSBASE
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$EXTMIN
+ 10
+-0.500000
+ 20
+-110.503206
+  9
+$EXTMAX
+ 10
+421.593895
+ 20
+110.503206
+  9
+$LIMMIN
+ 10
+-1.500000
+ 20
+-111.503206
+  9
+$LIMMAX
+ 10
+422.593895
+ 20
+111.503206
+  9
+$LTSCALE
+ 40
+10.000000
+  0
+ENDSEC
+  0
+SECTION
+  2
+TABLES
+  0
+TABLE
+  2
+LTYPE
+ 70
+4
+  0
+LTYPE
+  2
+CONTINUOUS
+ 70
+64
+  3
+____________________________________________
+ 72
+65
+ 73
+0
+ 40
+0.0
+  0
+LTYPE
+  2
+HIDDEN
+ 70
+64
+  3
+__ __ __ __ __ __ __ __ __ __ __ __ __ __ __
+ 72
+65
+ 73
+2
+ 40
+0.50
+ 49
+0.30
+ 49
+-0.20
+  0
+LTYPE
+  2
+DASHDOT
+ 70
+64
+  3
+____ _ ____ _ ____ _ ____ _ ____ _ ____ _ __
+ 72
+65
+ 73
+4
+ 40
+2.0
+ 49
+1.5
+ 49
+-0.25
+ 49
+0
+ 49
+-0.25
+  0
+LTYPE
+  2
+DOT
+ 70
+64
+  3
+............................................
+ 72
+65
+ 73
+2
+ 40
+0.30
+ 49
+0
+ 49
+-0.30
+  0
+ENDTAB
+  0
+TABLE
+  2
+LAYER
+ 70
+23
+  0
+LAYER
+  2
+UNTERSCHRIFT
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+TEILE
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+REST
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+MARKERPUNKTE
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+HILFSPUNKTE
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+PICKPUNKTE
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+SCHRAUBEN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+SCHWEISSEN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+GRAFIK
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEM_FREI
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEM_SYSTEM
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEM_KONTUR
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEM_ANBAU
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEM_SCHRAUBEN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEM_SCHWEISSEN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+FREIER_TEXT
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEZ_TEILE
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEZ_SCHRAUBEN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEZ_SCHWEISSEN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+SCHRAFFUREN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+SCHNITTSYMBOL
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+RASTER
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+LISTEN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+RAHMEN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+ENDTAB
+  0
+TABLE
+  2
+STYLE
+ 70
+1
+  0
+STYLE
+  2
+STANDARD
+ 70
+64
+ 40
+0
+ 41
+1
+ 50
+0.0
+ 71
+0
+ 42
+0.35
+  3
+ROMANS
+  0
+ENDTAB
+  0
+ENDSEC
+  0
+SECTION
+  2
+ENTITIES
+  0
+TEXT
+ 8
+UNTERSCHRIFT
+ 62
+2
+ 10
+131.246933
+ 20
+-108.003120
+ 40
+3.250000
+ 41
+0.800000
+ 51
+15.000000
+  1
+Project  DP0GN9  ,Qty. 16  , Pos. 
+  0
+TEXT
+ 8
+UNTERSCHRIFT
+ 62
+2
+ 10
+232.646927
+ 20
+-108.003052
+ 40
+3.250000
+ 41
+0.800000
+ 51
+15.000000
+  1
+  , Profi l PL220*15
+  0
+TEXT
+ 8
+UNTERSCHRIFT
+ 62
+2
+ 10
+219.646927
+ 20
+-108.003067
+ 40
+3.250000
+ 41
+0.800000
+ 51
+15.000000
+  1
+30243
+  0
+LINE
+  8
+TEILE
+ 62
+2
+ 10
+-0.000000
+ 20
+-110.003204
+ 11
+-0.000000
+ 21
+90.002899
+  0
+LINE
+  8
+TEILE
+ 62
+2
+ 10
+-0.000000
+ 20
+90.002899
+ 11
+20.000000
+ 21
+110.002914
+  0
+LINE
+  8
+TEILE
+ 62
+2
+ 10
+20.000000
+ 20
+110.002914
+ 11
+401.093903
+ 21
+110.003204
+  0
+LINE
+  8
+TEILE
+ 62
+2
+ 10
+401.093903
+ 20
+110.003204
+ 11
+421.093903
+ 21
+90.003220
+  0
+LINE
+  8
+TEILE
+ 62
+2
+ 10
+421.093903
+ 20
+90.003220
+ 11
+421.093872
+ 21
+-110.002930
+  0
+LINE
+  8
+TEILE
+ 62
+2
+ 10
+421.093872
+ 20
+-110.002930
+ 11
+-0.000000
+ 21
+-110.003204
+  0
+ENDSEC
+  0
+EOF
+

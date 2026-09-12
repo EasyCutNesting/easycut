@@ -1,0 +1,114 @@
+[ENTITY4]
+[HEAD]
+NUM_COM:2013011
+DES_COM:Rampa C
+LOT_COM:
+DLO_COM:
+CLI_COM:Cimolai
+IND_COM:
+DAT_COM:
+NUM_DIS:2013011DCD10400
+DES_DIS:
+DAT_DIS:27/08/13
+REV_DIS:
+NOM_DIS:
+TRA_PEZ:VERNICIATO
+SBA_PEZ:101
+TIP_PEZ:
+MAR_PEZ:1512
+DES_PEZ:ANGOLARE
+POS_PEZ:1512
+NOT_PEZ:
+ING_PEZ:120*120*150
+QTA_PEZ:160
+MCL_PEZ:
+COD_PEZ:
+COS_PEZ:
+NOM_PRO:L120*12
+TIP_PRO:D
+LUN_PRO:150
+LAR_PRO:
+SPE_PRO:
+MAT_PRO:S355JOW
+PES_PRO:21.6
+SUP_PRO:.47
+CPE_LIS:
+CSU_LIS:
+PUN_LIS:3.24
+SUN_LIS:.07
+CMP_MAR:
+PROGRAM:TecnoTRACE-T081339
+SPD_NOT:
+IDF_PEZ:45DEA93D89A34640A1DF34ACD4C95DD9
+FLG_DWG:TOTAL
+MAR_CMP:1512=1,
+CMP_TOT:1512=160,
+SBS_CMP:101=160,
+[SHAPE]
+D 4
+   120.00    120.00      0.00     12.00      0.00     13.00 
+     0.00      0.00      0.00      0.00      0.00      6.50      0.00 
+   150.00      0.00      0.00 
+[OUTLINE]
+LIV1
+     0.00   -120.00      0.00      0.00      0.00      0.00      0.00
+   150.00   -120.00      0.00      0.00      0.00      0.00      0.00
+   150.00      0.00      0.00      0.00      0.00      0.00      0.00
+     0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+LIV2
+     0.00      0.00   -120.00      0.00      0.00      0.00      0.00
+   150.00      0.00   -120.00      0.00      0.00      0.00      0.00
+   150.00      0.00      0.00      0.00      0.00      0.00      0.00
+     0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+LIV3
+LIV4
+[INLINE]
+LIV1
+LIV2
+LIV3
+LIV4
+[BREAK]
+LIV1
+     0.00      0.00
+LIV2
+     0.00      0.00
+LIV3
+     0.00      0.00
+LIV4
+     0.00      0.00
+[HOLE]
+LIV1
+H     26.00     40.00    -60.00      0.00     24.00     90.00      0.00
+H     26.00    109.99    -60.00      0.00     24.00     90.00      0.00
+LIV2
+B     26.00     40.00      0.00    -60.00     24.00     90.00      0.00
+B     26.00    109.99      0.00    -60.00     24.00     90.00      0.00
+LIV3
+LIV4
+[MARK]
+LIV1
+LIV2
+LIV3
+LIV4
+[COMP]
+[CUTTING]
+[FOLD]
+LIV1
+LIV2
+[OPEN]
+LIV1
+LIV2
+[CUTTER]
+[WELD]
+LIV1
+LIV2
+LIV3
+LIV4
+[THREED]
+[INLINE2]
+LIV1
+LIV2
+LIV3
+LIV4

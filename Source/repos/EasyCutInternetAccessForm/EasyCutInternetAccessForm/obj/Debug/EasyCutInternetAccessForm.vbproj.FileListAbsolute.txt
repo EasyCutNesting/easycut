@@ -1,0 +1,11 @@
+C:\EasyCutBeta\Source\repos\EasyCutInternetAccessForm\EasyCutInternetAccessForm\bin\Debug\EasyCutInternetAccessForm.exe.config
+C:\EasyCutBeta\Source\repos\EasyCutInternetAccessForm\EasyCutInternetAccessForm\bin\Debug\EasyCutInternetAccessForm.exe
+C:\EasyCutBeta\Source\repos\EasyCutInternetAccessForm\EasyCutInternetAccessForm\bin\Debug\EasyCutInternetAccessForm.pdb
+C:\EasyCutBeta\Source\repos\EasyCutInternetAccessForm\EasyCutInternetAccessForm\bin\Debug\EasyCutInternetAccessForm.xml
+C:\EasyCutBeta\Source\repos\EasyCutInternetAccessForm\EasyCutInternetAccessForm\obj\Debug\EasyCutInternetAccessForm.Form1.resources
+C:\EasyCutBeta\Source\repos\EasyCutInternetAccessForm\EasyCutInternetAccessForm\obj\Debug\EasyCutInternetAccessForm.Resources.resources
+C:\EasyCutBeta\Source\repos\EasyCutInternetAccessForm\EasyCutInternetAccessForm\obj\Debug\EasyCutInternetAccessForm.vbproj.GenerateResource.cache
+C:\EasyCutBeta\Source\repos\EasyCutInternetAccessForm\EasyCutInternetAccessForm\obj\Debug\EasyCutInternetAccessForm.vbproj.CoreCompileInputs.cache
+C:\EasyCutBeta\Source\repos\EasyCutInternetAccessForm\EasyCutInternetAccessForm\obj\Debug\EasyCutInternetAccessForm.exe
+C:\EasyCutBeta\Source\repos\EasyCutInternetAccessForm\EasyCutInternetAccessForm\obj\Debug\EasyCutInternetAccessForm.xml
+C:\EasyCutBeta\Source\repos\EasyCutInternetAccessForm\EasyCutInternetAccessForm\obj\Debug\EasyCutInternetAccessForm.pdb

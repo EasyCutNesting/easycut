@@ -1,0 +1,539 @@
+<pre>
+<font color="gray">;</font>
+<font color="red">(</font><font color="blue">defun</font> ShapeInside02 <font color="red">(</font>EnameShape <font color="blue">/</font> SortEnameByEname
+								 Shape Ename ChechZoom Rtn<font color="red">)</font>
+
+	<font color="red">(</font><font color="blue">defun</font> SortEnameByEname <font color="red">(</font>LstEname <font color="blue">/</font> itm AddLst Rtn<font color="red">)</font>
+		<font color="red">(</font><font color="blue">if</font> LstEname 
+			<font color="red">(</font><font color="blue">progn</font>
+				<font color="red">(</font><font color="blue">foreach</font> itm LstEname
+					<font color="red">(</font><font color="blue">setq</font> AddLst <font color="red">(</font><font color="blue">append</font> AddLst <font color="red">(</font><font color="blue">list</font> <font color="red">(</font><font color="blue">list</font> <font color="red">(</font><font color="blue">vl-prin1-to-string</font> itm<font color="red">)</font> itm<font color="red">))))</font>
+				<font color="red">)</font>
+				<font color="red">(</font><font color="blue">setq</font> AddLst <font color="red">(</font><font color="blue">vl-sort</font> AddLst <font color="red">(</font><font color="blue">function</font> <font color="red">(</font><font color="blue">lambda</font> <font color="red">(</font>e1 e2<font color="red">)</font>  <font color="red">(</font><font color="blue">&gt;</font> <font color="red">(</font><font color="blue">car</font> e1<font color="red">)</font> <font color="red">(</font><font color="blue">car</font> e2<font color="red">))))))</font>
+				<font color="red">(</font><font color="blue">foreach</font> itm AddLst
+					<font color="red">(</font><font color="blue">setq</font> Rtn <font color="red">(</font><font color="blue">append</font> Rtn <font color="red">(</font><font color="blue">list</font> <font color="red">(</font><font color="blue">cadr</font> itm<font color="red">))))</font>
+				<font color="red">)</font>
+			<font color="red">)</font>
+		<font color="red">)</font>
+		Rtn
+	<font color="red">)</font>
+	<font color="gray">;</font>
+	<font color="gray">;</font>
+	<font color="red">(</font><font color="blue">if</font> EnameShape
+		<font color="red">(</font><font color="blue">progn</font> 
+			<font color="red">(</font><font color="blue">setq</font> ChechZoom <font color="red">(</font><font color="blue">VisibleEname</font> EnameShape<font color="red">))</font>
+			<font color="red">(</font><font color="blue">cond</font> 
+				<font color="red">((</font><font color="blue">=</font> <font color="red">(</font><font color="blue">GetNameEname</font> EnameShape<font color="red">)</font> <font color="DarkOrchid">"LWPOLYLINE"</font><font color="red">)</font>
+					<font color="red">(</font><font color="blue">setq</font> Shape <font color="red">(</font><font color="blue">DiscretizeShape</font> EnameShape<font color="red">))</font>
+				<font color="red">)</font>
+				<font color="red">((</font><font color="blue">=</font> <font color="red">(</font><font color="blue">GetNameEname</font> EnameShape<font color="red">)</font> <font color="DarkOrchid">"CIRCLE"</font><font color="red">)</font>
+					 <font color="red">(</font><font color="blue">setq</font> Shape <font color="red">(</font><font color="blue">DiscretizeCircle</font> EnameShape<font color="red">))</font>
+				<font color="red">)</font>
+				<font color="red">((</font><font color="blue">=</font> <font color="red">(</font><font color="blue">GetNameEname</font> EnameShape<font color="red">)</font> <font color="DarkOrchid">"ELLIPSE"</font><font color="red">)</font>
+					<font color="red">(</font><font color="blue">setq</font> Ename <font color="red">(</font><font color="blue">Ellipse2LwPolyline</font> EnameShape <font color="blue">nil</font><font color="red">))</font>
+					<font color="red">(</font><font color="blue">if</font>  <font color="red">(</font><font color="blue">IsClosed</font> Ename <font color="blue">T</font><font color="red">)</font>
+						<font color="red">(</font><font color="blue">setq</font> Shape <font color="red">(</font><font color="blue">DiscretizeShape</font> Ename<font color="red">))</font>
+					<font color="red">)</font>
+					<font color="red">(</font><font color="blue">DeleteEntity</font> <font color="red">(</font><font color="blue">list</font> Ename<font color="red">))</font>
+				<font color="red">)</font>
+			<font color="red">)</font>
+			<font color="red">(</font><font color="blue">ZoomPrevius</font> ChechZoom<font color="red">)</font>
+			<font color="red">(</font><font color="blue">if</font> Shape 
+				<font color="red">(</font><font color="blue">setq</font> Rtn <font color="red">(</font>SortEnameByEname <font color="red">(</font><font color="blue">LM:RemoveOnce</font> EnameShape <font color="red">(</font><font color="blue">LM:ss-&gt;ent</font> <font color="red">(</font><font color="blue">ssget</font> <font color="DarkOrchid">"_CP"</font> Shape <font color="blue">$FilterList</font><font color="red">)))))</font>
+			<font color="red">)</font>
+			<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">null</font> Rtn<font color="red">)</font>
+				<font color="red">(</font><font color="blue">setq</font> Rtn <font color="red">(</font><font color="blue">list</font> EnameShape<font color="red">))</font>
+				<font color="red">(</font><font color="blue">setq</font> Rtn <font color="red">(</font><font color="blue">cons</font> EnameShape Rtn<font color="red">))</font>
+			<font color="red">)</font>
+		<font color="red">)</font>
+	<font color="red">)</font>
+	Rtn
+<font color="red">)</font>
+<font color="gray">;</font>
+<font color="gray">;</font>
+<font color="red">(</font><font color="blue">defun</font> ShapeInside <font color="red">(</font>EnameShape <font color="blue">/</font> SortEnameByEname
+								 Shape Ename ChechZoom Rtn<font color="red">)</font>
+
+	<font color="red">(</font><font color="blue">defun</font> SortEnameByEname <font color="red">(</font>LstEname <font color="blue">/</font> itm AddLst Rtn<font color="red">)</font>
+		<font color="red">(</font><font color="blue">if</font> LstEname 
+			<font color="red">(</font><font color="blue">progn</font>
+				<font color="red">(</font><font color="blue">foreach</font> itm LstEname
+					<font color="red">(</font><font color="blue">setq</font> AddLst <font color="red">(</font><font color="blue">append</font> AddLst <font color="red">(</font><font color="blue">list</font> <font color="red">(</font><font color="blue">list</font> <font color="red">(</font><font color="blue">vl-prin1-to-string</font> itm<font color="red">)</font> itm<font color="red">))))</font>
+				<font color="red">)</font>
+				<font color="red">(</font><font color="blue">setq</font> AddLst <font color="red">(</font><font color="blue">vl-sort</font> AddLst <font color="red">(</font><font color="blue">function</font> <font color="red">(</font><font color="blue">lambda</font> <font color="red">(</font>e1 e2<font color="red">)</font>  <font color="red">(</font><font color="blue">&gt;</font> <font color="red">(</font><font color="blue">car</font> e1<font color="red">)</font> <font color="red">(</font><font color="blue">car</font> e2<font color="red">))))))</font>
+				<font color="red">(</font><font color="blue">foreach</font> itm AddLst
+					<font color="red">(</font><font color="blue">setq</font> Rtn <font color="red">(</font><font color="blue">append</font> Rtn <font color="red">(</font><font color="blue">list</font> <font color="red">(</font><font color="blue">cadr</font> itm<font color="red">))))</font>
+				<font color="red">)</font>
+			<font color="red">)</font>
+		<font color="red">)</font>
+		Rtn
+	<font color="red">)</font>
+	<font color="gray">;</font>
+	<font color="gray">;</font>
+	<font color="red">(</font><font color="blue">if</font> EnameShape
+		<font color="red">(</font><font color="blue">progn</font> 
+			<font color="red">(</font><font color="blue">setq</font> ChechZoom <font color="red">(</font><font color="blue">VisibleEname</font> EnameShape<font color="red">))</font>
+			<font color="red">(</font><font color="blue">cond</font> 
+				<font color="red">((</font><font color="blue">=</font> <font color="red">(</font><font color="blue">GetNameEname</font> EnameShape<font color="red">)</font> <font color="DarkOrchid">"LWPOLYLINE"</font><font color="red">)</font>
+					<font color="red">(</font><font color="blue">setq</font> Shape <font color="red">(</font><font color="blue">DiscretizeShape</font> EnameShape<font color="red">))</font>
+				<font color="red">)</font>
+				<font color="red">((</font><font color="blue">=</font> <font color="red">(</font><font color="blue">GetNameEname</font> EnameShape<font color="red">)</font> <font color="DarkOrchid">"CIRCLE"</font><font color="red">)</font>
+					 <font color="red">(</font><font color="blue">setq</font> Shape <font color="red">(</font><font color="blue">DiscretizeCircle</font> EnameShape<font color="red">))</font>
+				<font color="red">)</font>
+				<font color="red">((</font><font color="blue">=</font> <font color="red">(</font><font color="blue">GetNameEname</font> EnameShape<font color="red">)</font> <font color="DarkOrchid">"ELLIPSE"</font><font color="red">)</font>
+					<font color="red">(</font><font color="blue">setq</font> Ename <font color="red">(</font><font color="blue">Ellipse2LwPolyline</font> EnameShape <font color="blue">nil</font><font color="red">))</font>
+					<font color="red">(</font><font color="blue">if</font>  <font color="red">(</font><font color="blue">IsClosed</font> Ename <font color="blue">T</font><font color="red">)</font>
+						<font color="red">(</font><font color="blue">setq</font> Shape <font color="red">(</font><font color="blue">DiscretizeShape</font> Ename<font color="red">))</font>
+					<font color="red">)</font>
+					<font color="red">(</font><font color="blue">DeleteEntity</font> <font color="red">(</font><font color="blue">list</font> Ename<font color="red">))</font>
+				<font color="red">)</font>
+			<font color="red">)</font>
+			<font color="red">(</font><font color="blue">ZoomPrevius</font> ChechZoom<font color="red">)</font>
+			<font color="red">(</font><font color="blue">if</font> Shape 
+				<font color="red">(</font><font color="blue">setq</font> Rtn <font color="red">(</font>SortEnameByEname <font color="red">(</font><font color="blue">LM:RemoveOnce</font> EnameShape <font color="red">(</font><font color="blue">LM:ss-&gt;ent</font> <font color="red">(</font><font color="blue">ssget</font> <font color="DarkOrchid">"_CP"</font> Shape <font color="blue">$FilterList</font><font color="red">)))))</font>
+			<font color="red">)</font>
+		<font color="red">)</font>
+	<font color="red">)</font>
+	Rtn
+<font color="red">)</font>
+<font color="gray">;</font>
+<font color="gray">;</font>
+<font color="red">(</font><font color="blue">defun</font> InsIns <font color="red">(</font>EnameShape <font color="blue">/</font> SearchDownLevel RemoveDownLevelToOneLevel UpdateOneLevel
+							LstEnameInside LstHimSelf itm EnamesHimSelf LevelOne NewLevelOne NewNewLevelOne LstDownLevel
+							TmpLst LevelTwo Rtn<font color="red">)</font>
+	
+	<font color="red">(</font><font color="blue">defun</font> SearchDownLevel <font color="red">(</font>LevelOne LstHimSelf <font color="blue">/</font> itm Rtn<font color="red">)</font>
+		<font color="gray">; LevelOne   (&lt;Entity name: 28ba49f78c0&gt; (&lt;Entity name: 28ba49f7950&gt; &lt;Entity name: 28ba49f7930&gt; &lt;Entity name: 28ba49f78e0&gt;))</font>
+		<font color="gray">; LstHimSelf (&lt;Entity name: 28ba49f7950&gt; &lt;Entity name: 28ba49f7930&gt; &lt;Entity name: 28ba49f78e0&gt;)</font>
+		<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">and</font> LevelOne LstHimSelf<font color="red">)</font>
+			<font color="red">(</font><font color="blue">progn</font>
+				<font color="red">(</font><font color="blue">setq</font> Rtn <font color="blue">T</font><font color="red">)</font>
+				<font color="red">(</font><font color="blue">foreach</font> itm <font color="red">(</font><font color="blue">cadr</font> LevelOne<font color="red">)</font>
+					<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">not</font> <font color="red">(</font><font color="blue">member</font> itm LstHimSelf<font color="red">))</font>
+						<font color="red">(</font><font color="blue">setq</font> Rtn <font color="blue">nil</font><font color="red">)</font>
+					<font color="red">)</font>
+				<font color="red">)</font>
+			<font color="red">)</font>
+		<font color="red">)</font>
+		Rtn
+	<font color="red">)</font>
+	<font color="gray">;</font>
+	<font color="red">(</font><font color="blue">defun</font> RemoveDownLevelToOneLevel <font color="red">(</font>LevelOne LstDownLevel <font color="blue">/</font> itm Rtn<font color="red">)</font>
+	
+		<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">and</font> LevelOne LstDownLevel<font color="red">)</font>
+			<font color="red">(</font><font color="blue">progn</font>
+				<font color="red">(</font><font color="blue">foreach</font> itm <font color="red">(</font><font color="blue">cadr</font> LevelOne<font color="red">)</font>
+					<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">not</font> <font color="red">(</font><font color="blue">member</font> itm LstDownLevel<font color="red">))</font>
+						<font color="red">(</font><font color="blue">setq</font> Rtn <font color="red">(</font><font color="blue">append</font> Rtn <font color="red">(</font><font color="blue">list</font> itm<font color="red">)))</font>
+					<font color="red">)</font>
+				<font color="red">)</font>
+				<font color="red">(</font><font color="blue">if</font> Rtn 
+					<font color="red">(</font><font color="blue">setq</font> Rtn <font color="red">(</font><font color="blue">cons</font> <font color="red">(</font><font color="blue">car</font> LevelOne<font color="red">)</font> <font color="red">(</font><font color="blue">list</font> Rtn<font color="red">)))</font>
+					<font color="red">(</font><font color="blue">setq</font> Rtn LevelOne<font color="red">)</font>
+				<font color="red">)</font>
+			<font color="red">)</font>
+		<font color="red">)</font>
+		Rtn
+	<font color="red">)</font>
+	<font color="gray">;</font>
+	<font color="red">(</font><font color="blue">defun</font> UpdateOneLevel <font color="red">(</font>LevelOne LstDownLevel <font color="blue">/</font> LevelOneCadr itm EnameChk Rtn<font color="red">)</font>
+		<font color="gray">;LstDownLevel ((&lt;Entity name: 28ba4a0ec10&gt; (&lt;Entity name: 28ba4a0ec50&gt; &lt;Entity name: 28ba4a0ec30&gt;)) (&lt;Entity name: 28ba4a0ebb0&gt; (&lt;Entity name: 28ba4a0ebf0&gt; &lt;Entity name: 28ba4a0ebd0&gt;)))</font>
+		<font color="gray">;LevelOne 	   (&lt;Entity name: 28ba4a0eb40&gt; (&lt;Entity name: 28ba4a0ec10&gt; &lt;Entity name: 28ba4a0ebb0&gt; &lt;Entity name: 28ba4a0eb50&gt;))</font>
+		
+		<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">and</font> LevelOne LstDownLevel<font color="red">)</font>
+			<font color="red">(</font><font color="blue">progn</font>
+				<font color="red">(</font><font color="blue">setq</font> LevelOneCadr <font color="red">(</font><font color="blue">cadr</font> LevelOne<font color="red">))</font> 
+				<font color="red">(</font><font color="blue">foreach</font> itm LstDownLevel
+					<font color="red">(</font><font color="blue">setq</font> EnameChk <font color="red">(</font><font color="blue">car</font> itm<font color="red">))</font> 
+					<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">member</font> EnameChk LevelOneCadr<font color="red">)</font>
+						<font color="red">(</font><font color="blue">setq</font> LevelOneCadr <font color="red">(</font><font color="blue">subst</font> itm EnameChk LevelOneCadr<font color="red">))</font> 
+					<font color="red">)</font>
+				<font color="red">)</font>
+				<font color="red">(</font><font color="blue">setq</font> Rtn <font color="red">(</font><font color="blue">cons</font> <font color="red">(</font><font color="blue">car</font> LevelOne<font color="red">)</font> <font color="red">(</font><font color="blue">list</font> LevelOneCadr<font color="red">)))</font>
+			<font color="red">)</font>
+		<font color="red">)</font>
+		Rtn
+	<font color="red">)</font>
+	<font color="gray">;</font>
+	<font color="gray">; Main</font>
+	<font color="gray">;</font>
+	<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">and</font> EnameShape<font color="red">)</font>
+		<font color="red">(</font><font color="blue">progn</font>
+			<font color="red">(</font><font color="blue">setq</font> LstEnameInside <font color="red">(</font>ShapeInside EnameShape<font color="red">))</font>
+			<font color="gray">; search composed himself ++++++++++++++++++++++++++++++++</font>
+			<font color="red">(</font><font color="blue">foreach</font> itm LstEnameInside
+				<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">null</font> <font color="red">(</font><font color="blue">setq</font> EnamesHimSelf <font color="red">(</font>ShapeInside itm<font color="red">)))</font>
+				 	<font color="red">(</font><font color="blue">setq</font> LstHimSelf <font color="red">(</font><font color="blue">append</font> LstHimSelf <font color="red">(</font><font color="blue">list</font> itm<font color="red">)))</font>
+				<font color="red">)</font>
+			<font color="red">)</font>
+			<font color="red">(</font><font color="blue">princ</font> <font color="DarkOrchid">"\n Se stessi "</font><font color="red">)</font> <font color="red">(</font><font color="blue">princ</font> LstHimSelf<font color="red">)</font> <font color="red">(</font><font color="blue">princ</font> <font color="DarkOrchid">"\n"</font><font color="red">)</font>
+			<font color="gray">; ++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+			<font color="gray">; set first level [insieme primo livello]</font>
+			<font color="red">(</font><font color="blue">foreach</font> itm LstEnameInside
+				<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">not</font> <font color="red">(</font><font color="blue">member</font> itm LstHimSelf<font color="red">))</font>
+					<font color="red">(</font><font color="blue">setq</font> LevelOne <font color="red">(</font><font color="blue">append</font> LevelOne <font color="red">(</font><font color="blue">list</font> <font color="red">(</font><font color="blue">list</font> itm <font color="red">(</font>ShapeInside itm<font color="red">)))))</font>
+				<font color="red">)</font>
+			<font color="red">)</font>
+			<font color="red">(</font><font color="blue">setq</font> LevelOne <font color="red">(</font><font color="blue">append</font> LevelOne <font color="red">(</font><font color="blue">list</font> <font color="red">(</font><font color="blue">list</font> EnameShape LstEnameInside<font color="red">))))</font>
+			<font color="red">(</font><font color="blue">princ</font> <font color="DarkOrchid">"\n 1° livello "</font><font color="red">)</font> <font color="red">(</font><font color="blue">princ</font> LevelOne<font color="red">)</font> <font color="red">(</font><font color="blue">princ</font> <font color="DarkOrchid">"\n"</font><font color="red">)</font>
+			<font color="gray">; ++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+			<font color="gray">; filtro gli insiemi non scomponibili</font>
+			<font color="red">(</font><font color="blue">setq</font> NewLevelOne LevelOne<font color="red">)</font>
+			<font color="red">(</font><font color="blue">foreach</font> itm NewLevelOne
+				<font color="red">(</font><font color="blue">if</font> <font color="red">(</font>SearchDownLevel itm LstHimSelf<font color="red">)</font>
+					<font color="red">(</font><font color="blue">progn</font>
+						<font color="red">(</font><font color="blue">setq</font> LstDownLevel   <font color="red">(</font><font color="blue">append</font> LstDownLevel <font color="red">(</font><font color="blue">list</font> itm<font color="red">)))</font>
+						<font color="red">(</font><font color="blue">setq</font> NewLevelOne    <font color="red">(</font><font color="blue">LM:RemoveOnce</font> itm NewLevelOne<font color="red">))</font>
+					<font color="red">)</font>
+				<font color="red">)</font>
+			<font color="red">)</font>
+			<font color="red">(</font><font color="blue">princ</font> <font color="DarkOrchid">"\n non scomponibili "</font><font color="red">)</font> <font color="red">(</font><font color="blue">princ</font> LstDownLevel<font color="red">)</font> <font color="red">(</font><font color="blue">princ</font> <font color="DarkOrchid">"\n"</font><font color="red">)</font>
+			<font color="red">(</font><font color="blue">princ</font> <font color="DarkOrchid">"\n 1° livello nuovo "</font><font color="red">)</font> <font color="red">(</font><font color="blue">princ</font> NewLevelOne<font color="red">)</font>  <font color="red">(</font><font color="blue">princ</font> <font color="DarkOrchid">"\n"</font><font color="red">)</font>
+
+			<font color="gray">; ++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+			<font color="gray">; elimino dal primo livello i non scomponibili</font>
+			<font color="red">(</font><font color="blue">if</font> NewLevelOne
+				<font color="red">(</font><font color="blue">progn</font>
+					<font color="red">(</font><font color="blue">foreach</font> itm LstDownLevel
+						<font color="red">(</font><font color="blue">setq</font> TmpLst <font color="red">(</font><font color="blue">append</font> TmpLst <font color="red">(</font><font color="blue">car</font> <font color="red">(</font><font color="blue">cdr</font> itm<font color="red">))))</font>
+					<font color="red">)</font>
+					<font color="red">(</font><font color="blue">princ</font> <font color="DarkOrchid">"\n non scomponibili base "</font><font color="red">)</font> <font color="red">(</font><font color="blue">princ</font> TmpLst<font color="red">)</font> <font color="red">(</font><font color="blue">princ</font> <font color="DarkOrchid">"\n"</font><font color="red">)</font>
+					<font color="red">(</font><font color="blue">foreach</font> itm NewLevelOne
+						<font color="red">(</font><font color="blue">setq</font> NewNewLevelOne <font color="red">(</font><font color="blue">append</font> NewNewLevelOne <font color="red">(</font><font color="blue">list</font> <font color="red">(</font>RemoveDownLevelToOneLevel itm TmpLst<font color="red">))))</font>
+					<font color="red">)</font>
+					<font color="red">(</font><font color="blue">princ</font> <font color="DarkOrchid">"\n 1° livello nuovo nuovo "</font><font color="red">)</font> <font color="red">(</font><font color="blue">princ</font> NewNewLevelOne<font color="red">)</font> <font color="red">(</font><font color="blue">princ</font> <font color="DarkOrchid">"\n"</font><font color="red">)</font>
+
+					<font color="red">(</font><font color="blue">foreach</font> itm NewNewLevelOne
+						<font color="red">(</font><font color="blue">setq</font> LevelTwo <font color="red">(</font><font color="blue">append</font> LevelTwo <font color="red">(</font><font color="blue">list</font> <font color="red">(</font>UpdateOneLevel itm  LstDownLevel<font color="red">))))</font>
+					<font color="red">)</font>
+					<font color="red">(</font><font color="blue">princ</font> <font color="DarkOrchid">"\n 2° livello "</font><font color="red">)</font> <font color="red">(</font><font color="blue">princ</font> LevelTwo<font color="red">)</font> <font color="red">(</font><font color="blue">princ</font> <font color="DarkOrchid">"\n"</font><font color="red">)</font>
+					
+					<font color="gray">; ++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+					<font color="gray">; resolution system</font>
+					<font color="gray">; ++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+					<font color="red">(</font><font color="blue">setq</font> Rtn <font color="red">(</font>SystemResolution LevelTwo<font color="red">))</font>
+				<font color="red">)</font>
+				<font color="red">(</font><font color="blue">setq</font> Rtn LevelOne<font color="red">)</font>
+			<font color="red">)</font>
+		<font color="red">)</font>
+	<font color="red">)</font>
+	Rtn
+<font color="red">)</font>
+<font color="gray">;</font>
+<font color="gray">;</font>
+<font color="red">(</font><font color="blue">defun</font> SystemResolution <font color="red">(</font>ListSystem <font color="blue">/</font> SortSystem
+									  Loop Num Pos Rtn<font color="red">)</font>
+
+	<font color="red">(</font><font color="blue">defun</font> SortSystem <font color="red">(</font>ListSystem <font color="blue">/</font> itm Flat Rtn<font color="red">)</font>
+		<font color="red">(</font><font color="blue">foreach</font> itm ListSystem
+			<font color="red">(</font><font color="blue">setq</font> Flat <font color="red">(</font><font color="blue">append</font> Flat <font color="red">(</font><font color="blue">list</font> <font color="red">(</font><font color="blue">list</font> <font color="red">(</font><font color="blue">length</font> <font color="red">(</font><font color="blue">LM:flatten</font> itm<font color="red">))</font>
+										        itm<font color="red">))))</font>
+		<font color="red">)</font>
+		<font color="red">(</font><font color="blue">if</font> Flat
+			<font color="red">(</font><font color="blue">foreach</font> itm <font color="red">(</font><font color="blue">vl-sort</font> Flat <font color="red">(</font><font color="blue">function</font> <font color="red">(</font><font color="blue">lambda</font> <font color="red">(</font>e1 e2<font color="red">)</font>  <font color="red">(</font><font color="blue">&lt;</font> <font color="red">(</font><font color="blue">car</font> e1<font color="red">)</font> <font color="red">(</font><font color="blue">car</font> e2<font color="red">)))))</font>
+				<font color="red">(</font><font color="blue">setq</font> Rtn <font color="red">(</font><font color="blue">append</font> Rtn <font color="red">(</font><font color="blue">list</font> <font color="red">(</font><font color="blue">cadr</font> itm<font color="red">))))</font>
+			<font color="red">)</font>
+		<font color="red">)</font>
+		Rtn
+	<font color="red">)</font>
+	<font color="gray">;</font>
+	<font color="gray">; Main</font>
+	<font color="gray">;</font>
+	<font color="red">(</font><font color="blue">if</font> ListSystem
+		<font color="red">(</font><font color="blue">progn</font>
+			<font color="red">(</font><font color="blue">setq</font> ListSystem <font color="red">(</font>SortSystem ListSystem<font color="red">))</font>
+			<font color="red">(</font><font color="blue">setq</font> Loop <font color="blue">T</font><font color="red">)</font>
+			<font color="red">(</font><font color="blue">setq</font> Pos <font color="green">0</font><font color="red">)</font>
+			<font color="red">(</font><font color="blue">setq</font> Num <font color="red">(</font><font color="blue">1+</font> Pos<font color="red">))</font>
+			<font color="red">(</font><font color="blue">while</font> Loop
+				<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">setq</font> TmpLst <font color="red">(</font>RebuildList <font color="red">(</font><font color="blue">nth</font> Pos ListSystem<font color="red">)</font> <font color="red">(</font><font color="blue">nth</font> Num ListSystem<font color="red">)))</font>
+					<font color="red">(</font><font color="blue">setq</font> ListSystem <font color="red">(</font><font color="blue">subst</font> TmpLst <font color="red">(</font><font color="blue">nth</font> Num ListSystem<font color="red">)</font> ListSystem<font color="red">))</font>
+				<font color="red">)</font>
+				<font color="red">(</font><font color="blue">setq</font> Num <font color="red">(</font><font color="blue">1+</font> Num<font color="red">))</font>
+					
+				<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">&gt;</font> Num <font color="red">(</font><font color="blue">-</font> <font color="red">(</font><font color="blue">length</font> ListSystem<font color="red">)</font> <font color="green">1</font><font color="red">))</font>
+					<font color="red">(</font><font color="blue">progn</font>
+						<font color="red">(</font><font color="blue">setq</font> Pos <font color="red">(</font><font color="blue">1+</font> Pos<font color="red">))</font>
+						<font color="red">(</font><font color="blue">setq</font> Num <font color="red">(</font><font color="blue">1+</font> Pos<font color="red">))</font>
+					<font color="red">)</font>
+				<font color="red">)</font>
+				<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">=</font> Pos <font color="red">(</font><font color="blue">-</font> <font color="red">(</font><font color="blue">length</font> ListSystem<font color="red">)</font> <font color="green">1</font><font color="red">))</font>
+					<font color="red">(</font><font color="blue">setq</font> Loop <font color="blue">nil</font><font color="red">)</font>
+				<font color="red">)</font>
+			<font color="red">)</font>
+			<font color="red">(</font><font color="blue">setq</font> Rtn <font color="red">(</font><font color="blue">nth</font> Pos ListSystem<font color="red">))</font>
+		<font color="red">)</font>
+	<font color="red">)</font>
+	Rtn
+<font color="red">)</font>
+<font color="gray">;</font>
+<font color="gray">;</font>
+<font color="red">(</font><font color="blue">defun</font> RebuildList <font color="red">(</font>List1 List2 <font color="blue">/</font> MyMember RemoveEach FormatList RemoveExtraParent
+								  Flag itm RtnLst Rtn<font color="red">)</font>
+
+	<font color="gray">; (setq List1 '(   "A" (( "H" ( "I" "L" ))                                  )))</font>
+	<font color="gray">; (setq List2 '(   "B" (( "H" ( "I" "L" )) ( "D" ( "E" "F" )) "A"           )))</font>
+	<font color="gray">;  Rtn -----&gt; '(   "B" (( "D" ( "E" "F" )) ( "A" (("H"  ( "I" "L" )))       ))))</font>
+	
+	<font color="gray">; (setq List1 '(   "B" (( "D" ( "E" "F" )) ( "A" (( "H" ( "I" "L" ))))                            )))</font>
+	<font color="gray">; (setq List2 '(   "C" (( "H" ( "I" "L" )) "G" ("D" ( "E" "F" ))  ( "A" (( "H" ( "I" "L" )))) "B" )))</font>
+	<font color="gray">;  Rtn  ----&gt; '(   "C" ("G"  ("B" (("D" ("E" "F")) ("A" (("H" ("I" "L"))))))))</font>
+	<font color="gray">;              </font>
+
+	
+	<font color="red">(</font><font color="blue">defun</font> MyMember <font color="red">(</font>xEname lEname <font color="blue">/</font> L1 L2 Loop Num Rtn<font color="red">)</font>
+		<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">and</font> xEname lEname<font color="red">)</font>
+			<font color="red">(</font><font color="blue">progn</font>
+				<font color="red">(</font><font color="blue">setq</font> L1 <font color="red">(</font><font color="blue">LM:flatten</font> xEname<font color="red">))</font>
+				<font color="red">(</font><font color="blue">setq</font> L2 <font color="red">(</font><font color="blue">LM:flatten</font> lEname<font color="red">))</font>
+				<font color="red">(</font><font color="blue">setq</font> Loop <font color="blue">T</font><font color="red">)</font>
+				<font color="red">(</font><font color="blue">setq</font> Num  <font color="green">0</font><font color="red">)</font>
+				<font color="red">(</font><font color="blue">setq</font> Rtn  <font color="blue">T</font><font color="red">)</font>
+				<font color="red">(</font><font color="blue">while</font> Loop
+					<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">not</font> <font color="red">(</font><font color="blue">member</font> <font color="red">(</font><font color="blue">nth</font> Num L1<font color="red">)</font> L2<font color="red">))</font>
+						<font color="red">(</font><font color="blue">setq</font> Rtn <font color="blue">nil</font>
+						      Loop <font color="blue">nil</font>
+						<font color="red">)</font>
+					<font color="red">)</font>
+					<font color="red">(</font><font color="blue">setq</font> Num <font color="red">(</font><font color="blue">1+</font> Num<font color="red">))</font>
+					<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">&gt;</font> Num <font color="red">(</font><font color="blue">-</font> <font color="red">(</font><font color="blue">length</font> L1<font color="red">)</font> <font color="green">1</font><font color="red">))</font>
+						<font color="red">(</font><font color="blue">setq</font> Loop <font color="blue">nil</font><font color="red">)</font>
+					<font color="red">)</font>
+				<font color="red">)</font>
+			<font color="red">)</font>
+		<font color="red">)</font>
+		Rtn
+	<font color="red">)</font>
+	<font color="gray">;</font>
+	<font color="gray">;</font>
+	<font color="red">(</font><font color="blue">defun</font> RemoveEach <font color="red">(</font>a l <font color="blue">/</font> Remove 
+							 itm Rtn<font color="red">)</font>
+	
+		<font color="red">(</font><font color="blue">defun</font> Remove <font color="red">(</font>itm l<font color="red">)</font>
+			<font color="red">(</font><font color="blue">cond</font> 
+				<font color="red">((</font><font color="blue">null</font> l<font color="red">)</font> 
+					<font color="blue">nil</font>
+				<font color="red">)</font>
+				<font color="red">((</font><font color="blue">atom</font> <font color="red">(</font><font color="blue">car</font> l<font color="red">))</font>
+					<font color="red">(</font><font color="blue">cond</font> 
+						<font color="red">((</font><font color="blue">equal</font> itm <font color="red">(</font><font color="blue">car</font> l<font color="red">))</font>
+							<font color="red">(</font>Remove itm <font color="red">(</font><font color="blue">cdr</font> l<font color="red">)))</font>
+						<font color="red">(</font><font color="blue">t</font> 
+							<font color="red">(</font><font color="blue">cons</font> <font color="red">(</font><font color="blue">car</font> l<font color="red">)</font> <font color="red">(</font>Remove itm <font color="red">(</font><font color="blue">cdr</font> l<font color="red">)))</font>
+						<font color="red">)</font>
+					<font color="red">)</font>
+				<font color="red">)</font>
+				<font color="red">(</font><font color="blue">t</font> 
+					<font color="red">(</font><font color="blue">cons</font> <font color="red">(</font>Remove itm <font color="red">(</font><font color="blue">car</font> l<font color="red">))</font> <font color="red">(</font>Remove itm <font color="red">(</font><font color="blue">cdr</font> l<font color="red">)))</font>
+				<font color="red">)</font>
+			<font color="red">)</font>
+		<font color="red">)</font>
+		<font color="gray">;</font>
+		<font color="gray">; Main</font>
+		<font color="gray">;</font>
+		<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">and</font> a l<font color="red">)</font>
+			<font color="red">(</font><font color="blue">progn</font>
+				<font color="red">(</font><font color="blue">setq</font> Rtn l<font color="red">)</font>
+				<font color="red">(</font><font color="blue">foreach</font> itm <font color="red">(</font><font color="blue">LM:flatten</font> a<font color="red">)</font>
+					<font color="red">(</font><font color="blue">setq</font> Rtn <font color="red">(</font>Remove itm Rtn<font color="red">))</font>
+				<font color="red">)</font>
+			<font color="red">)</font>
+		<font color="red">)</font>
+		Rtn
+	<font color="red">)</font>
+	<font color="gray">;</font>
+	<font color="gray">;</font>
+	<font color="red">(</font><font color="blue">defun</font> RemoveExtraParent <font color="red">(</font>Lst <font color="blue">/</font> Strip<font color="red">)</font>
+
+		<font color="gray">; (((A)) ((D ((E F))))) -&gt; ((A) (D (E F)))</font>
+		
+		<font color="red">(</font><font color="blue">defun</font> Strip <font color="red">(</font>lst<font color="red">)</font>
+			<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">or</font> <font color="red">(</font><font color="blue">null</font> lst<font color="red">)</font> <font color="red">(</font><font color="blue">atom</font> lst<font color="red">)</font> <font color="red">(</font><font color="blue">not</font> <font color="red">(</font><font color="blue">null</font> <font color="red">(</font><font color="blue">cdr</font> lst<font color="red">))))</font>
+				lst
+				<font color="red">(</font>Strip <font color="red">(</font><font color="blue">car</font> lst<font color="red">))</font>
+			<font color="red">)</font>
+		<font color="red">)</font>
+		
+		<font color="red">(</font><font color="blue">cond</font> 
+			<font color="red">((</font><font color="blue">or</font> <font color="red">(</font><font color="blue">null</font> lst<font color="red">)</font> <font color="red">(</font><font color="blue">atom</font> lst<font color="red">))</font>
+				lst
+			<font color="red">)</font>
+			<font color="red">((</font><font color="blue">null</font> <font color="red">(</font>Strip <font color="red">(</font><font color="blue">car</font> lst<font color="red">)))</font>
+				<font color="red">(</font>RemoveExtraParent <font color="red">(</font><font color="blue">cdr</font> lst<font color="red">))</font>
+			<font color="red">)</font>
+			<font color="red">(</font><font color="blue">t</font>
+				<font color="red">(</font>Strip <font color="red">(</font><font color="blue">cons</font> <font color="red">(</font>RemoveExtraParent <font color="red">(</font>Strip <font color="red">(</font><font color="blue">car</font> lst<font color="red">)))</font> <font color="red">(</font>RemoveExtraParent <font color="red">(</font><font color="blue">cdr</font> lst<font color="red">))))</font>
+			<font color="red">)</font>
+		<font color="red">)</font>
+	<font color="red">)</font>
+	<font color="gray">;</font>
+	<font color="gray">;</font>
+	<font color="red">(</font><font color="blue">defun</font> FormatList <font color="red">(</font>l <font color="blue">/</font> itm Tmp Rtn<font color="red">)</font>
+		<font color="gray">; (FormatList '("C" ((nil) "G" (nil) (((nil)))))) 	---&gt; ("C" ("G"))</font>
+		<font color="gray">;</font>
+		<font color="gray">; Main</font>
+		<font color="gray">;</font>
+		<font color="red">(</font><font color="blue">foreach</font> itm l
+			<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">=</font> <font color="red">(</font><font color="blue">type</font> itm<font color="red">)</font> <font color="black">'</font><font color="blue">LIST</font><font color="red">)</font>
+				<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">setq</font> Tmp <font color="red">(</font>FormatList itm<font color="red">))</font>
+					<font color="red">(</font><font color="blue">setq</font> Rtn <font color="red">(</font><font color="blue">append</font> Rtn <font color="red">(</font><font color="blue">list</font> Tmp<font color="red">)))</font>
+				<font color="red">)</font>
+				<font color="red">(</font><font color="blue">if</font> itm
+					<font color="red">(</font><font color="blue">setq</font> Rtn <font color="red">(</font><font color="blue">append</font> Rtn <font color="red">(</font><font color="blue">list</font> itm<font color="red">)))</font>
+				<font color="red">)</font>
+			<font color="red">)</font>
+		<font color="red">)</font>
+		Rtn
+	<font color="red">)</font>	
+	<font color="gray">;</font>
+	<font color="gray">; Main</font>
+	<font color="gray">;</font>
+	<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">and</font> List1 List2<font color="red">)</font>
+		<font color="red">(</font><font color="blue">progn</font>
+			<font color="red">(</font><font color="blue">if</font> <font color="red">(</font>MyMember List1 List2<font color="red">)</font>
+				<font color="red">(</font><font color="blue">progn</font>
+					<font color="red">(</font><font color="blue">setq</font> Spy <font color="red">(</font><font color="blue">car</font> List1<font color="red">))</font>
+					<font color="red">(</font><font color="blue">setq</font> Rtn    <font color="red">(</font>RemoveEach <font color="red">(</font><font color="blue">cdr</font> List1<font color="red">)</font> <font color="red">(</font><font color="blue">cdr</font> List2<font color="red">)))</font>
+					<font color="red">(</font><font color="blue">princ</font> <font color="DarkOrchid">"\n**************************\n"</font><font color="red">)</font>
+					<font color="red">(</font><font color="blue">princ</font> <font color="DarkOrchid">"RemoveEach         "</font><font color="red">)</font> <font color="red">(</font><font color="blue">princ</font> Rtn<font color="red">)</font>
+					<font color="red">(</font><font color="blue">setq</font> Rtn    <font color="red">(</font>FormatList Rtn<font color="red">))</font>
+					<font color="red">(</font><font color="blue">princ</font> <font color="DarkOrchid">"\n**************************\n"</font><font color="red">)</font>
+					<font color="red">(</font><font color="blue">princ</font> <font color="DarkOrchid">"FormatList         "</font><font color="red">)</font> <font color="red">(</font><font color="blue">princ</font> Rtn<font color="red">)</font>
+					<font color="red">(</font><font color="blue">setq</font> Rtn    <font color="red">(</font>RemoveExtraParent Rtn<font color="red">))</font>
+					<font color="red">(</font><font color="blue">princ</font> <font color="DarkOrchid">"\n**************************\n"</font><font color="red">)</font>
+					<font color="red">(</font><font color="blue">princ</font> <font color="DarkOrchid">"RemoveExtraParent  "</font><font color="red">)</font> <font color="red">(</font><font color="blue">princ</font> Rtn<font color="red">)</font>
+					<font color="red">(</font><font color="blue">princ</font> <font color="DarkOrchid">"\n**************************\n"</font><font color="red">)</font>
+
+					<font color="red">(</font><font color="blue">setq</font> Rtn    <font color="red">(</font><font color="blue">cons</font> <font color="red">(</font><font color="blue">car</font> List2<font color="red">)</font> <font color="red">(</font><font color="blue">list</font> <font color="red">(</font><font color="blue">append</font> Rtn <font color="red">(</font><font color="blue">list</font> List1<font color="red">)))))</font>
+					<font color="gray">;(setq Rtn     (append (list (car List2)) (append Rtn (list List1))))</font>
+				<font color="red">)</font>
+			<font color="red">)</font>
+		<font color="red">)</font>
+	<font color="red">)</font>
+	Rtn
+<font color="red">)</font>
+<font color="gray">;</font>
+<font color="gray">;</font>
+<font color="red">(</font><font color="blue">defun</font> InsIns02 <font color="red">(</font>EnameShape <font color="blue">/</font> SearchDownLevel RemoveDownLevelToOneLevel UpdateOneLevel
+							  LstEnameInside Rtn itm
+							  <font color="red">)</font>
+	
+	<font color="red">(</font><font color="blue">defun</font> SearchDownLevel <font color="red">(</font>LevelOne LstHimSelf <font color="blue">/</font> itm Rtn<font color="red">)</font>
+		<font color="gray">; LevelOne   (&lt;Entity name: 28ba49f78c0&gt; (&lt;Entity name: 28ba49f7950&gt; &lt;Entity name: 28ba49f7930&gt; &lt;Entity name: 28ba49f78e0&gt;))</font>
+		<font color="gray">; LstHimSelf (&lt;Entity name: 28ba49f7950&gt; &lt;Entity name: 28ba49f7930&gt; &lt;Entity name: 28ba49f78e0&gt;)</font>
+		<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">and</font> LevelOne LstHimSelf<font color="red">)</font>
+			<font color="red">(</font><font color="blue">progn</font>
+				<font color="red">(</font><font color="blue">setq</font> Rtn <font color="blue">T</font><font color="red">)</font>
+				<font color="red">(</font><font color="blue">foreach</font> itm <font color="red">(</font><font color="blue">cadr</font> LevelOne<font color="red">)</font>
+					<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">not</font> <font color="red">(</font><font color="blue">member</font> itm LstHimSelf<font color="red">))</font>
+						<font color="red">(</font><font color="blue">setq</font> Rtn <font color="blue">nil</font><font color="red">)</font>
+					<font color="red">)</font>
+				<font color="red">)</font>
+			<font color="red">)</font>
+		<font color="red">)</font>
+		Rtn
+	<font color="red">)</font>
+	<font color="gray">;</font>
+	<font color="red">(</font><font color="blue">defun</font> RemoveDownLevelToOneLevel <font color="red">(</font>LevelOne LstDownLevel <font color="blue">/</font> itm Rtn<font color="red">)</font>
+	
+		<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">and</font> LevelOne LstDownLevel<font color="red">)</font>
+			<font color="red">(</font><font color="blue">progn</font>
+				<font color="red">(</font><font color="blue">foreach</font> itm <font color="red">(</font><font color="blue">cadr</font> LevelOne<font color="red">)</font>
+					<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">not</font> <font color="red">(</font><font color="blue">member</font> itm LstDownLevel<font color="red">))</font>
+						<font color="red">(</font><font color="blue">setq</font> Rtn <font color="red">(</font><font color="blue">append</font> Rtn <font color="red">(</font><font color="blue">list</font> itm<font color="red">)))</font>
+					<font color="red">)</font>
+				<font color="red">)</font>
+				<font color="red">(</font><font color="blue">if</font> Rtn 
+					<font color="red">(</font><font color="blue">setq</font> Rtn <font color="red">(</font><font color="blue">cons</font> <font color="red">(</font><font color="blue">car</font> LevelOne<font color="red">)</font> <font color="red">(</font><font color="blue">list</font> Rtn<font color="red">)))</font>
+					<font color="red">(</font><font color="blue">setq</font> Rtn LevelOne<font color="red">)</font>
+				<font color="red">)</font>
+			<font color="red">)</font>
+		<font color="red">)</font>
+		Rtn
+	<font color="red">)</font>
+	<font color="gray">;</font>
+	<font color="red">(</font><font color="blue">defun</font> UpdateOneLevel <font color="red">(</font>LevelOne LstDownLevel <font color="blue">/</font> LevelOneCadr itm EnameChk Rtn<font color="red">)</font>
+		<font color="gray">;LstDownLevel ((&lt;Entity name: 28ba4a0ec10&gt; (&lt;Entity name: 28ba4a0ec50&gt; &lt;Entity name: 28ba4a0ec30&gt;)) (&lt;Entity name: 28ba4a0ebb0&gt; (&lt;Entity name: 28ba4a0ebf0&gt; &lt;Entity name: 28ba4a0ebd0&gt;)))</font>
+		<font color="gray">;LevelOne 	   (&lt;Entity name: 28ba4a0eb40&gt; (&lt;Entity name: 28ba4a0ec10&gt; &lt;Entity name: 28ba4a0ebb0&gt; &lt;Entity name: 28ba4a0eb50&gt;))</font>
+		
+		<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">and</font> LevelOne LstDownLevel<font color="red">)</font>
+			<font color="red">(</font><font color="blue">progn</font>
+				<font color="red">(</font><font color="blue">setq</font> LevelOneCadr <font color="red">(</font><font color="blue">cadr</font> LevelOne<font color="red">))</font> 
+				<font color="red">(</font><font color="blue">foreach</font> itm LstDownLevel
+					<font color="red">(</font><font color="blue">setq</font> EnameChk <font color="red">(</font><font color="blue">car</font> itm<font color="red">))</font> 
+					<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">member</font> EnameChk LevelOneCadr<font color="red">)</font>
+						<font color="red">(</font><font color="blue">setq</font> LevelOneCadr <font color="red">(</font><font color="blue">subst</font> itm EnameChk LevelOneCadr<font color="red">))</font> 
+					<font color="red">)</font>
+				<font color="red">)</font>
+				<font color="red">(</font><font color="blue">setq</font> Rtn <font color="red">(</font><font color="blue">cons</font> <font color="red">(</font><font color="blue">car</font> LevelOne<font color="red">)</font> <font color="red">(</font><font color="blue">list</font> LevelOneCadr<font color="red">)))</font>
+			<font color="red">)</font>
+		<font color="red">)</font>
+		Rtn
+	<font color="red">)</font>
+	<font color="gray">;</font>
+	<font color="gray">; Main</font>
+	<font color="gray">;</font>
+	<font color="red">(</font><font color="blue">if</font> EnameShape
+		<font color="red">(</font><font color="blue">progn</font>
+			<font color="red">(</font><font color="blue">setq</font> LstEnameInside <font color="red">(</font>ShapeInside02 EnameShape<font color="red">))</font>
+			<font color="red">(</font><font color="blue">setq</font> Rtn <font color="red">(</font><font color="blue">list</font> LstEnameInside<font color="red">))</font>
+			<font color="gray">; search composed ++++++++++++++++++++++++++++++++++++++</font>
+			<font color="red">(</font><font color="blue">foreach</font> itm <font color="red">(</font><font color="blue">cdr</font> LstEnameInside<font color="red">)</font>
+			 	<font color="red">(</font><font color="blue">setq</font> Rtn <font color="red">(</font><font color="blue">append</font> Ryn <font color="red">(</font><font color="blue">list</font> <font color="red">(</font>ShapeInside02 itm<font color="red">))))</font>
+			<font color="red">)</font>
+			<font color="red">(</font><font color="blue">princ</font> <font color="DarkOrchid">"\n Nested List \n"</font><font color="red">)</font> <font color="red">(</font><font color="blue">princ</font> Rtn<font color="red">)</font> <font color="red">(</font><font color="blue">princ</font> <font color="DarkOrchid">"\nEnd\n"</font><font color="red">)</font>
+			<font color="gray">; ++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+		<font color="red">)</font>
+	<font color="red">)</font>
+	Rtn
+<font color="red">)</font>
+<font color="gray">;</font>
+<font color="gray">;</font>
+<font color="red">(</font><font color="blue">defun</font> SystemResolution02 <font color="red">(</font>ListSystem <font color="blue">/</font> SortSystem
+									    Loop Num Pos Rtn<font color="red">)</font>
+
+	<font color="red">(</font><font color="blue">defun</font> SortSystem <font color="red">(</font>ListSystem <font color="blue">/</font> itm Flat Rtn<font color="red">)</font>
+		<font color="red">(</font><font color="blue">foreach</font> itm ListSystem
+			<font color="red">(</font><font color="blue">setq</font> Flat <font color="red">(</font><font color="blue">append</font> Flat <font color="red">(</font><font color="blue">list</font> <font color="red">(</font><font color="blue">list</font> <font color="red">(</font><font color="blue">length</font> <font color="red">(</font><font color="blue">LM:flatten</font> itm<font color="red">))</font>
+										        itm<font color="red">))))</font>
+		<font color="red">)</font>
+		<font color="red">(</font><font color="blue">if</font> Flat
+			<font color="red">(</font><font color="blue">foreach</font> itm <font color="red">(</font><font color="blue">vl-sort</font> Flat <font color="red">(</font><font color="blue">function</font> <font color="red">(</font><font color="blue">lambda</font> <font color="red">(</font>e1 e2<font color="red">)</font>  <font color="red">(</font><font color="blue">&lt;</font> <font color="red">(</font><font color="blue">car</font> e1<font color="red">)</font> <font color="red">(</font><font color="blue">car</font> e2<font color="red">)))))</font>
+				<font color="red">(</font><font color="blue">setq</font> Rtn <font color="red">(</font><font color="blue">append</font> Rtn <font color="red">(</font><font color="blue">list</font> <font color="red">(</font><font color="blue">cadr</font> itm<font color="red">))))</font>
+			<font color="red">)</font>
+		<font color="red">)</font>
+		Rtn
+	<font color="red">)</font>
+	<font color="gray">;</font>
+	<font color="gray">; Main</font>
+	<font color="gray">;</font>
+	<font color="red">(</font><font color="blue">if</font> ListSystem
+		<font color="red">(</font><font color="blue">progn</font>
+			<font color="red">(</font><font color="blue">setq</font> ListSystem <font color="red">(</font>SortSystem ListSystem<font color="red">))</font>
+			<font color="red">(</font><font color="blue">setq</font> Loop <font color="blue">T</font><font color="red">)</font>
+			<font color="red">(</font><font color="blue">setq</font> Pos <font color="green">0</font><font color="red">)</font>
+			<font color="red">(</font><font color="blue">setq</font> Num <font color="red">(</font><font color="blue">1+</font> Pos<font color="red">))</font>
+			<font color="red">(</font><font color="blue">while</font> Loop
+				<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">setq</font> TmpLst <font color="red">(</font>RebuildList <font color="red">(</font><font color="blue">nth</font> Pos ListSystem<font color="red">)</font> <font color="red">(</font><font color="blue">nth</font> Num ListSystem<font color="red">)))</font>
+					<font color="red">(</font><font color="blue">setq</font> ListSystem <font color="red">(</font><font color="blue">subst</font> TmpLst <font color="red">(</font><font color="blue">nth</font> Num ListSystem<font color="red">)</font> ListSystem<font color="red">))</font>
+				<font color="red">)</font>
+				<font color="red">(</font><font color="blue">setq</font> Num <font color="red">(</font><font color="blue">1+</font> Num<font color="red">))</font>
+					
+				<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">&gt;</font> Num <font color="red">(</font><font color="blue">-</font> <font color="red">(</font><font color="blue">length</font> ListSystem<font color="red">)</font> <font color="green">1</font><font color="red">))</font>
+					<font color="red">(</font><font color="blue">progn</font>
+						<font color="red">(</font><font color="blue">setq</font> Pos <font color="red">(</font><font color="blue">1+</font> Pos<font color="red">))</font>
+						<font color="red">(</font><font color="blue">setq</font> Num <font color="red">(</font><font color="blue">1+</font> Pos<font color="red">))</font>
+					<font color="red">)</font>
+				<font color="red">)</font>
+				<font color="red">(</font><font color="blue">if</font> <font color="red">(</font><font color="blue">=</font> Pos <font color="red">(</font><font color="blue">-</font> <font color="red">(</font><font color="blue">length</font> ListSystem<font color="red">)</font> <font color="green">1</font><font color="red">))</font>
+					<font color="red">(</font><font color="blue">setq</font> Loop <font color="blue">nil</font><font color="red">)</font>
+				<font color="red">)</font>
+			<font color="red">)</font>
+			<font color="red">(</font><font color="blue">setq</font> Rtn <font color="red">(</font><font color="blue">nth</font> Pos ListSystem<font color="red">))</font>
+		<font color="red">)</font>
+	<font color="red">)</font>
+	Rtn
+<font color="red">)</font>
+<font color="gray">;</font>
+<font color="gray">;</font>
+</pre>

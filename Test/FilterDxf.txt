@@ -1,0 +1,93 @@
+(defun c:LeggiDxfCompleto ( / file_percorso fp linea tipo x1 y1 z1 x2 y2 z2 raggio vertici coordinate_vertice vx vy)
+  (vl-load-com)
+  
+  ;; 1. Richiede la selezione del file DXF
+  (setq file_percorso (getfiled "Seleziona il file DXF da leggere" "" "dxf" 0))
+  
+  (if file_percorso
+    (progn
+      (setq fp (open file_percorso "r"))
+      (princ "\n--- ANALISI FILE DXF (LINEE, CERCHI, POLILINEE) ---")
+      
+      ;; 2. Scansione del file riga per riga
+      (while (setq linea (read-line fp))
+        (setq linea (vl-string-trim " " linea))
+        
+        (if (= linea "0")
+          (progn
+            (setq tipo (vl-string-trim " " (read-line fp)))
+            
+            ;; --- CASO LINEA ---
+            (if (= tipo "LINE")
+              (progn
+                (while (and (setq linea (read-line fp)) (/= (vl-string-trim " " linea) "0"))
+                  (cond
+                    ((= (vl-string-trim " " linea) "10") (setq x1 (atof (read-line fp))))
+                    ((= (vl-string-trim " " linea) "20") (setq y1 (atof (read-line fp))))
+                    ((= (vl-string-trim " " linea) "30") (setq z1 (atof (read-line fp))))
+                    ((= (vl-string-trim " " linea) "11") (setq x2 (atof (read-line fp))))
+                    ((= (vl-string-trim " " linea) "21") (setq y2 (atof (read-line fp))))
+                    ((= (vl-string-trim " " linea) "31") (setq z2 (atof (read-line fp))))
+                  )
+                )
+                (princ (strcat "\n[LINEA] Inizio: (" (rtos x1) "," (rtos y1) "," (rtos z1) ") -> Fine: (" (rtos x2) "," (rtos y2) "," (rtos z2) ")"))
+                (if (= (vl-string-trim " " linea) "0") (setq tipo (vl-string-trim " " (read-line fp))))
+              )
+            )
+            
+            ;; --- CASO CERCHIO ---
+            (if (= tipo "CIRCLE")
+              (progn
+                (while (and (setq linea (read-line fp)) (/= (vl-string-trim " " linea) "0"))
+                  (cond
+                    ((= (vl-string-trim " " linea) "10") (setq x1 (atof (read-line fp))))
+                    ((= (vl-string-trim " " linea) "20") (setq y1 (atof (read-line fp))))
+                    ((= (vl-string-trim " " linea) "30") (setq z1 (atof (read-line fp))))
+                    ((= (vl-string-trim " " linea) "40") (setq raggio (atof (read-line fp))))
+                  )
+                )
+                (princ (strcat "\n[CERCHIO] Centro: (" (rtos x1) "," (rtos y1) "," (rtos z1) ") | Raggio: " (rtos raggio)))
+                (if (= (vl-string-trim " " linea) "0") (setq tipo (vl-string-trim " " (read-line fp))))
+              )
+            )
+
+            ;; --- CASO POLILINEA (LWPOLYLINE / POLYLINE) ---
+            (if (or (= tipo "LWPOLYLINE") (= tipo "POLYLINE"))
+              (progn
+                (setq vertici '()) ; Inizializza la lista dei vertici per questa polilinea
+                (while (and (setq linea (read-line fp)) (/= (vl-string-trim " " linea) "0"))
+                  (cond
+                    ;; Ogni volta che trova il codice 10, legge la X e la riga dopo la Y (codice 20)
+                    ((= (vl-string-trim " " linea) "10")
+                      (setq vx (atof (read-line fp)))
+                      ;; Avanza per cercare il codice 20 della coordinata Y
+                      (setq linea (read-line fp)) 
+                      (setq vy (atof (read-line fp)))
+                      ;; Salva il vertice nella lista
+                      (setq vertici (cons (list vx vy) vertici))
+                    )
+                  )
+                )
+                ;; Inverte la lista per avere i vertici nell'ordine corretto di disegno
+                (setq vertici (reverse vertici))
+                
+                ;; Stampa i vertici estratti della polilinea
+                (princ (strcat "\n[POLILINEA] Numero vertici: " (itoa (length vertici)) " -> Punti: "))
+                (foreach v vertici
+                  (princ (strcat "(" (rtos (car v)) "," (rtos (cadr v)) ") "))
+                )
+                
+                (if (= (vl-string-trim " " linea) "0") (setq tipo (vl-string-trim " " (read-line fp))))
+              )
+            )
+            
+          )
+        )
+      )
+      (close fp)
+      (princ "\n--- FINE LETTURA FILE ---")
+    )
+    (princ "\nNessun file selezionato.")
+  )
+  (princ)
+)

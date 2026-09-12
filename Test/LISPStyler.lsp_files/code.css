@@ -1,0 +1,96 @@
+body
+{
+    padding: 0;
+    margin: 0;
+}
+
+ol
+{
+    list-style-type: decimal;
+    list-style-position: outside;
+    font-family: "courier new", monospace, "lucida console", monaco, "lucida sans typewriter", courier;
+    font-size: 12px;
+    margin: 1em;
+    margin-top: 3em;
+}
+
+div.container
+{
+    position: fixed;
+    padding: 0;
+    margin: 0;
+    top: 0;
+    width: 100%;
+}
+
+div.header
+{
+    color: white;
+    text-align: center;
+    font-family: georgia, verdana;
+    letter-spacing: 0.2em;
+    background: #0a0a0a;
+    background: -moz-linear-gradient(-90deg,#202020,#0a0a0a);
+    background: -webkit-gradient(linear, left top, left bottom, from(#202020), to(#0a0a0a));
+    margin: 0;
+    padding: 0.4em;
+    font-size: 0.8em;
+    border-bottom: 1px solid silver;
+}
+
+div.theme
+{
+    font-family: georgia, verdana;
+    position: absolute;
+    top: -1em;
+    left: 1em;
+    margin: 0;
+    padding: 0;
+}
+
+div.theme ul
+{
+    list-style: none;
+}
+
+div.theme ul li
+{
+    display: inline;
+}
+
+div.theme ul a
+{
+    display: inline-block;
+    color: white;
+    width: 5em;
+    text-align: center;
+    margin: 0;
+    padding: 0.4em;
+    cursor: pointer;
+    border-left: 1px solid silver;
+    font-size: 0.8em;
+    outline: none;
+    -moz-transition-property: background-color, color;
+    -moz-transition-duration: 0.3s;
+    -webkit-transition-property: background-color, color;
+    -webkit-transition-duration: 0.3s;
+    -o-transition-property: background-color, color;
+    -o-transition-duration: 0.3s;
+}
+
+div.theme ul a.vlide
+{
+    border-right: 1px solid silver;
+}
+
+div.theme ul a:hover
+{
+    background: #ddd !important;
+    color: black;
+    -moz-transition-property: background-color, color;
+    -moz-transition-duration: 0.3s;
+    -webkit-transition-property: background-color, color;
+    -webkit-transition-duration: 0.3s;
+    -o-transition-property: background-color, color;
+    -o-transition-duration: 0.3s;
+}

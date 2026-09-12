@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  This standard is developed by HGG Profiling Equipment software development.
+  Name: ProCAM XML
+  Year: 2011
+  Internet: www.hgg.nl
+  Address: P.O. Box 66
+           1775 ZH Middenmeer
+           The Netherlands
+           info@hgg.nl
+-->
+<dnc xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  version="3.2" xmlns="http://www.hgg.nl/schemas/procam/v3.2">
+  <projects>
+    <project id="pipe1" name="XX" >
+      <source type="CAD" name="AVEVA Bocad" version="24.174_130308" />
+      <assemblies>
+        <assembly id="Phase1" name="" >
+          <parts>
+            <part profile="tube" id="100012" name="1" selected="true" >
+            <source type="CAD" name="AVEVA Bocad" version="24.174_130308" />
+              <startpoint  x="625.0000" y="3890.4228" z="0.0000" />
+              <endpoint  x="625.0000" y="4914.0576" z="0.0000" />
+              <materialrotation  x="1000.0000" y="0.0000" z="0.0000" />
+              <outerdiameter unit="mm">100.0000</outerdiameter>
+              <wallthickness unit="mm">10.0000</wallthickness>
+              <material>S235JR</material>
+              <maxlength>1023.6345</maxlength>
+              <macros>
+                <saddle id="1_S1" name="1_S1" refId="100012_S1" >
+                  <bevel1 unit="deg">45.0000</bevel1>
+                  <rootopening unit="mm">0.0000</rootopening>
+                  <shrinkage unit="mm">0.0000</shrinkage>
+                  <through>true</through>
+                  <side>START</side>
+                </saddle>
+                <saddle id="1_S2" name="1_S2" refId="100012_S2" >
+                  <bevel1 unit="deg">45.0000</bevel1>
+                  <rootopening unit="mm">0.0000</rootopening>
+                  <shrinkage unit="mm">0.0000</shrinkage>
+                  <through>false</through>
+                  <side>END</side>
+                </saddle>
+              </macros>
+            </part>
+            <part profile="tube" id="100012_S1" name="100012_S1" selected="false" >
+              <startpoint  x="0.0000" y="5000.0000" z="0.0000" />
+              <endpoint  x="1250.0000" y="5000.0000" z="0.0000" />
+              <materialrotation  x="585.0000" y="-100.0000" z="0.0000" />
+              <outerdiameter unit="mm">200.0000</outerdiameter>
+              <wallthickness unit="mm">10.0000</wallthickness>
+              <maxlength>1250.0000</maxlength>
+            </part>
+            <part profile="tube" id="100012_S2" name="100012_S2" selected="false" >
+              <startpoint  x="0.0000" y="3750.0000" z="0.0000" />
+              <endpoint  x="1250.0000" y="3750.0000" z="0.0000" />
+              <materialrotation  x="585.0000" y="150.0000" z="0.0000" />
+              <outerdiameter unit="mm">300.0000</outerdiameter>
+              <wallthickness unit="mm">10.0000</wallthickness>
+              <maxlength>1250.0000</maxlength>
+            </part>
+          </parts>
+          <parts>
+            <part profile="tube" id="100014" name="1" selected="true" >
+            <source type="CAD" name="AVEVA Bocad" version="24.174_130308" />
+              <startpoint  x="1222.6247" y="3695.2495" z="0.0000" />
+              <endpoint  x="1836.5557" y="4923.1118" z="0.0000" />
+              <materialrotation  x="894.4272" y="-447.2136" z="0.0000" />
+              <outerdiameter unit="mm">100.0000</outerdiameter>
+              <wallthickness unit="mm">10.0000</wallthickness>
+              <material>S235JR</material>
+              <maxlength>1372.7913</maxlength>
+              <macros>
+                <saddle id="1_S1" name="1_S1" refId="100014_S1" >
+                  <bevel1 unit="deg">45.0000</bevel1>
+                  <rootopening unit="mm">0.0000</rootopening>
+                  <shrinkage unit="mm">0.0000</shrinkage>
+                  <through>true</through>
+                  <side>START</side>
+                </saddle>
+                <chamfer id="1_C2" name="1_C2" refId="100014_C2" >
+                  <bevel1 unit="deg">45.0000</bevel1>
+                  <rootopening unit="mm">0.0000</rootopening>
+                  <shrinkage unit="mm">0.0000</shrinkage>
+                  <side>END</side>
+                </chamfer>
+              </macros>
+            </part>
+            <part profile="tube" id="100014_S1" name="100014_S1" selected="false" >
+              <startpoint  x="1250.0000" y="5000.0000" z="0.0000" />
+              <endpoint  x="2500.0000" y="5000.0000" z="0.0000" />
+              <materialrotation  x="619.7214" y="-100.0000" z="0.0000" />
+              <outerdiameter unit="mm">200.0000</outerdiameter>
+              <wallthickness unit="mm">10.0000</wallthickness>
+              <maxlength>1250.0000</maxlength>
+            </part>
+            <part profile="plate" id="100014_C2" name="100014_C2" selected="false" >
+              <startpoint  x="1322.6362" y="3818.3476" z="-82.4898" />
+              <endpoint  x="1177.3637" y="3667.5102" z="68.3477" />
+              <materialrotation  x="-106.6583" y="51.3615" z="-51.3615" />
+              <thickness unit="mm">20.0000</thickness>
+              <height unit="mm">258.0852</height>
+            </part>
+          </parts>
+          <parts>
+            <part profile="tube" id="100016" name="1" selected="true" >
+            <source type="CAD" name="AVEVA Bocad" version="24.174_130308" />
+              <startpoint  x="3125.0000" y="3750.0000" z="0.0000" />
+              <endpoint  x="3125.0000" y="4913.8598" z="0.0000" />
+              <materialrotation  x="1000.0000" y="0.0000" z="0.0000" />
+              <outerdiameter unit="mm">100.0000</outerdiameter>
+              <wallthickness unit="mm">10.0000</wallthickness>
+              <material>S235JR</material>
+              <maxlength>1163.8599</maxlength>
+              <macros>
+                <saddle id="1_S1" name="1_S1" refId="100016_S1" >
+                  <bevel1 unit="deg">45.0000</bevel1>
+                  <rootopening unit="mm">0.0000</rootopening>
+                  <shrinkage unit="mm">0.0000</shrinkage>
+                  <through>true</through>
+                  <side>START</side>
+                </saddle>
+                <chamfer id="-1" name="auto" refId="-1" >
+                  <clturn unit="deg">0.0000</clturn>
+                  <clorigin unit="mm">1163.8590</clorigin>
+                  <slope unit="deg">90.0000</slope>
+                  <bevel1 unit="deg">0.0000</bevel1>
+                  <rootopening unit="mm">0.0000</rootopening>
+                  <shrinkage unit="mm">0.0000</shrinkage>
+                  <side>END</side>
+                </chamfer>
+              </macros>
+            </part>
+            <part profile="tube" id="100016_S1" name="100016_S1" selected="false" >
+              <startpoint  x="2683.0583" y="5000.0000" z="-441.9418" />
+              <endpoint  x="3566.9416" y="5000.0000" z="441.9418" />
+              <materialrotation  x="413.6575" y="-100.0000" z="413.6575" />
+              <outerdiameter unit="mm">200.0000</outerdiameter>
+              <wallthickness unit="mm">10.0000</wallthickness>
+              <maxlength>1250.0000</maxlength>
+            </part>
+          </parts>
+        </assembly>
+      </assemblies>
+    </project>
+  </projects>
+</dnc>

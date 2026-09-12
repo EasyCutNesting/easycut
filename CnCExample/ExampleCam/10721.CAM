@@ -1,0 +1,118 @@
+[ENTITY4]
+[HEAD]
+NUM_COM:04TP2010
+DES_COM:
+LOT_COM:
+DLO_COM:
+CLI_COM:
+IND_COM:
+DAT_COM:20/05/10
+NUM_DIS:PIPPO
+DES_DIS:
+DAT_DIS:21/06/10
+REV_DIS:
+NOM_DIS:
+TRA_PEZ:ZINCATO
+SBA_PEZ:
+TIP_PEZ:
+MAR_PEZ:1_40_0200
+DES_PEZ:
+POS_PEZ:10721
+NOT_PEZ:
+ING_PEZ:
+QTA_PEZ:5
+MCL_PEZ:
+COD_PEZ:
+COS_PEZ:
+IDF_PEZ:2BE9BB3D49574CFF99EFDC344003C127
+CMP_MAR:
+NOM_PRO:plate 18
+TIP_PRO:R
+LUN_PRO:1949.98
+LAR_PRO:400
+SPE_PRO:18
+MAT_PRO:S355-J0
+PES_PRO:
+SUP_PRO:
+CPE_LIS:1
+CSU_LIS:1
+PRE_LIS:plate
+PUN_LIS:110.213
+SUN_LIS:1.64458
+PROGRAM:TecnoMETAL_4D T080642
+SPD_NOT:
+COD_MAG:
+PUN_NET:106.2833
+PUN_NET2:106.6505
+[SHAPE]
+R 4
+     0.00      0.00      0.00      0.00      0.00      0.00 
+     0.00      0.00      0.00      0.00      0.00      0.00      0.00 
+  1949.98    400.00     18.00 
+[OUTLINE]
+LIV1
+  1949.98      0.00      9.00      0.00      0.00      0.00      0.00
+   100.00      0.00      9.00      0.00      0.00      0.00      0.00
+     0.00   -100.00      9.00      0.00      0.00      0.00      0.00
+     0.00   -191.00      9.00      0.00      0.00      0.00      0.00
+   691.87   -191.00      9.00      0.00      0.00      0.00      0.00
+   720.49   -200.00      9.00     30.00   -162.54    162.54      0.00
+   691.87   -209.00      9.00      0.00      0.00      0.00      0.00
+     0.00   -209.00      9.00      0.00      0.00      0.00      0.00
+     0.00   -300.00      9.00      0.00      0.00      0.00      0.00
+   100.00   -400.00      9.00      0.00      0.00      0.00      0.00
+  1949.98   -400.00      9.00      0.00      0.00      0.00      0.00
+  1949.98      0.00      9.00      0.00      0.00      0.00      0.00
+
+LIV2
+LIV3
+LIV4
+[INLINE]
+LIV1
+LIV2
+LIV3
+LIV4
+[BREAK]
+LIV1
+     0.00      0.00
+LIV2
+     0.00      0.00
+LIV3
+     0.00      0.00
+LIV4
+     0.00      0.00
+[HOLE]
+LIV1
+H     29.00   1748.98    -60.00      9.00      0.00      0.00      0.00
+H     29.00   1838.98    -60.00      9.00      0.00      0.00      0.00
+H     29.00   1748.98   -340.00      9.00      0.00      0.00      0.00
+H     29.00   1838.98   -340.00      9.00      0.00      0.00      0.00
+LIV2
+LIV3
+LIV4
+[MARK]
+LIV1
+LIV2
+LIV3
+LIV4
+[COMP]
+[CUTTING]
+[FOLD]
+LIV1
+LIV2
+[OPEN]
+LIV1
+LIV2
+[CUTTER]
+[WELD]
+LIV1
+  1949.98   -400.00      9.00   1949.98      0.00      9.00 W06     18.00      2.00      0.00      0.00      0.00     45.00 
+LIV2
+LIV3
+LIV4
+[THREED]
+[INLINE2]
+LIV1
+LIV2
+LIV3
+LIV4

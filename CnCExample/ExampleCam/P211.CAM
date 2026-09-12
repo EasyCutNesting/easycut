@@ -1,0 +1,105 @@
+[ENTIT3]
+[HEAD]
+NUM_COM:c450
+DES_COM:
+LOT_COM:4
+DLO_COM:
+CLI_COM:
+IND_COM:
+DAT_COM:
+NUM_DIS:
+DES_DIS:
+PRE_DIS:
+FAB_DIS:
+NOM_DIS:
+TRA_PEZ:
+SBA_PEZ:4
+TIP_PEZ:
+MAR_PEZ:p211
+DES_PEZ:
+POS_PEZ:p211
+NOT_PEZ:
+ING_PEZ:633.6*376.2*20.0
+QTA_PEZ:1
+MCL_PEZ:
+COD_PEZ:
+COS_PEZ:
+TIP_PRO:R
+LUN_PRO:633.643
+MAT_PRO:s355j0
+PES_PRO:
+SUP_PRO:
+NOM_PRO:LAM.20
+LAR_PRO:376.192
+SPE_PRO:20
+PRE_LIS:LAM.
+CPE_LIS:1
+CSU_LIS:1
+PUN_LIS:37.42
+SUN_LIS:0.501
+PRE_LIS:LAM.
+CMP_MAR:
+PROGRAM:
+IDF_PEZ:
+[SHAPE]
+R 1
+   0.00   0.00   0.00   0.00    0.00   0.00   0.00
+   0.00   0.00   0.00   0.00    0.00   0.00   0.00
+      633.64      376.19       20.00
+[OUTLINE]
+LIV1
+       52.65      -376.19        20.00         0.00         0.00         0.00
+      404.73      -360.77        20.00         0.00         0.00         0.00
+      633.64      -118.87        20.00         0.00         0.00         0.00
+      581.02         0.00        20.00         0.00         0.00         0.00
+      228.93       -15.42        20.00         0.00         0.00         0.00
+        0.00      -257.33        20.00         0.00         0.00         0.00
+LIV2
+LIV3
+LIV4
+[INLINE]
+LIV1
+LIV2
+LIV3
+LIV4
+[BREAK]
+LIV1
+        0.00         0.00
+LIV2
+        0.00         0.00
+LIV3
+        0.00         0.00
+LIV4
+        0.00         0.00
+[HOLE]
+LIV1
+B   29.0       224.20      -100.43        20.00     0.00     0.00     0.00
+B   29.0       316.83      -188.09        20.00     0.00     0.00     0.00
+B   29.0       409.46      -275.75        20.00     0.00     0.00     0.00
+B   29.0       482.97      -114.48        20.00     0.00     0.00     0.00
+B   29.0       557.04       -81.70        20.00     0.00     0.00     0.00
+B   29.0       150.67      -261.68        20.00     0.00     0.00     0.00
+B   29.0        76.61      -294.48        20.00     0.00     0.00     0.00
+LIV2
+LIV3
+LIV4
+[MARK]
+LIV1
+LIV2
+LIV3
+LIV4
+[COMP]
+[CUTTING]
+[FOLD]
+LIV1
+LIV2
+[OPEN]
+LIV1
+LIV2
+[CUTTER]
+[WELD]
+LIV1
+LIV2
+LIV3
+LIV4
+[THREED]

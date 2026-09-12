@@ -1,0 +1,643 @@
+999
+     *******************************************
+999
+     BOCAD Software GmbH   Rev.18.000   0202.22
+999
+     Filename:   c:\progetti21\danieli_aqs\b4\temp_11\4_11_2166.dxf
+999
+     Creator:    bocad
+999
+     Date:       20.01.2016
+999
+     Factor:     10.000000
+999
+     *******************************************
+  0
+SECTION
+  2
+HEADER
+  9
+$DWGCODEPAGE
+  3
+ANSI_1252
+  9
+$INSBASE
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$EXTMIN
+ 10
+-0.500000
+ 20
+-45.536847
+  9
+$EXTMAX
+ 10
+195.499992
+ 20
+45.469017
+  9
+$LIMMIN
+ 10
+-1.500000
+ 20
+-46.536847
+  9
+$LIMMAX
+ 10
+196.499992
+ 20
+46.469017
+  9
+$LTSCALE
+ 40
+10.000000
+  0
+ENDSEC
+  0
+SECTION
+  2
+TABLES
+  0
+TABLE
+  2
+LTYPE
+ 70
+4
+  0
+LTYPE
+  2
+CONTINUOUS
+ 70
+64
+  3
+____________________________________________
+ 72
+65
+ 73
+0
+ 40
+0.0
+  0
+LTYPE
+  2
+HIDDEN
+ 70
+64
+  3
+__ __ __ __ __ __ __ __ __ __ __ __ __ __ __
+ 72
+65
+ 73
+2
+ 40
+0.50
+ 49
+0.30
+ 49
+-0.20
+  0
+LTYPE
+  2
+DASHDOT
+ 70
+64
+  3
+____ _ ____ _ ____ _ ____ _ ____ _ ____ _ __
+ 72
+65
+ 73
+4
+ 40
+2.0
+ 49
+1.5
+ 49
+-0.25
+ 49
+0
+ 49
+-0.25
+  0
+LTYPE
+  2
+DOT
+ 70
+64
+  3
+............................................
+ 72
+65
+ 73
+2
+ 40
+0.30
+ 49
+0
+ 49
+-0.30
+  0
+ENDTAB
+  0
+TABLE
+  2
+LAYER
+ 70
+23
+  0
+LAYER
+  2
+SCHRAUBEN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+REST
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+UNTERSCHRIFT
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+TEILE
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEZ_SCHRAUBEN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+MARKERPUNKTE
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+HILFSPUNKTE
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+PICKPUNKTE
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+SCHWEISSEN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+GRAFIK
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEM_FREI
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEM_SYSTEM
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEM_KONTUR
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEM_ANBAU
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEM_SCHRAUBEN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEM_SCHWEISSEN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+FREIER_TEXT
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEZ_TEILE
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+BEZ_SCHWEISSEN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+SCHRAFFUREN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+SCHNITTSYMBOL
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+RASTER
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+LISTEN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+LAYER
+  2
+RAHMEN
+ 70
+64
+ 62
+7
+  6
+CONTINUOUS
+  0
+ENDTAB
+  0
+TABLE
+  2
+STYLE
+ 70
+1
+  0
+STYLE
+  2
+STANDARD
+ 70
+64
+ 40
+0
+ 41
+1
+ 50
+0.0
+ 71
+0
+ 42
+0.35
+  3
+ROMANS
+  0
+ENDTAB
+  0
+ENDSEC
+  0
+SECTION
+  2
+ENTITIES
+  0
+LINE
+  8
+SCHRAUBEN
+ 62
+6
+ 10
+65.198471
+ 20
+5.165042
+ 11
+54.798473
+ 21
+-5.234959
+  0
+LINE
+  8
+SCHRAUBEN
+ 62
+6
+ 10
+54.798473
+ 20
+5.165042
+ 11
+65.198471
+ 21
+-5.234959
+  0
+CIRCLE
+  8
+SCHRAUBEN
+ 62
+2
+ 10
+59.998474
+ 20
+-0.034958
+ 40
+13.000000
+  0
+LINE
+  8
+SCHRAUBEN
+ 62
+6
+ 10
+140.199127
+ 20
+5.164324
+ 11
+129.799118
+ 21
+-5.235677
+  0
+LINE
+  8
+SCHRAUBEN
+ 62
+6
+ 10
+129.799118
+ 20
+5.164324
+ 11
+140.199127
+ 21
+-5.235677
+  0
+CIRCLE
+  8
+SCHRAUBEN
+ 62
+2
+ 10
+134.999115
+ 20
+-0.035677
+ 40
+13.000015
+  0
+TEXT
+ 8
+UNTERSCHRIFT
+ 62
+2
+ 10
+15.600171
+ 20
+39.713905
+ 40
+3.250000
+ 50
+0.001598
+ 41
+0.800000
+ 51
+15.000000
+  1
+Project  DP0GN9  ,Qty. 6  , Pos. 
+  0
+TEXT
+ 8
+UNTERSCHRIFT
+ 62
+2
+ 10
+124.800171
+ 20
+39.717014
+ 40
+3.250001
+ 50
+0.001598
+ 41
+0.800000
+ 51
+15.000000
+  1
+  , Profi l PL90*20
+  0
+TEXT
+ 8
+UNTERSCHRIFT
+ 62
+2
+ 10
+101.400162
+ 20
+39.716347
+ 40
+3.250000
+ 50
+0.001598
+ 41
+0.800000
+ 51
+15.000000
+  1
+4_11_2166
+  0
+LINE
+  8
+TEILE
+ 62
+2
+ 10
+195.000000
+ 20
+-45.031319
+ 11
+-0.000000
+ 21
+-45.036846
+  0
+LINE
+  8
+TEILE
+ 62
+2
+ 10
+-0.000000
+ 20
+-45.036846
+ 11
+0.000007
+ 21
+44.963463
+  0
+LINE
+  8
+TEILE
+ 62
+2
+ 10
+0.000007
+ 20
+44.963463
+ 11
+195.000000
+ 21
+44.969017
+  0
+LINE
+  8
+TEILE
+ 62
+2
+ 10
+195.000000
+ 20
+44.969017
+ 11
+195.000000
+ 21
+-45.031319
+  0
+TEXT
+ 8
+BEZ_SCHRAUBEN
+ 62
+2
+ 10
+51.998466
+ 20
+-20.534958
+ 40
+5.000000
+ 41
+0.800000
+ 51
+15.000000
+  1
+ ø26
+  0
+ENDSEC
+  0
+EOF
+

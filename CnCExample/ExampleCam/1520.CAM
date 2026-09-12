@@ -1,0 +1,114 @@
+[ENTITY4]
+[HEAD]
+NUM_COM:2013011
+DES_COM:Rampa C
+LOT_COM:
+DLO_COM:
+CLI_COM:Cimolai
+IND_COM:
+DAT_COM:
+NUM_DIS:2013011DCD10410
+DES_DIS:
+DAT_DIS:27/08/13
+REV_DIS:
+NOM_DIS:
+TRA_PEZ:VERNICIATO
+SBA_PEZ:101
+TIP_PEZ:
+MAR_PEZ:1520
+DES_PEZ:ANGOLARE
+POS_PEZ:1520
+NOT_PEZ:
+ING_PEZ:481*12*4234
+QTA_PEZ:1
+MCL_PEZ:
+COD_PEZ:
+COS_PEZ:
+NOM_PRO:Pl. 12
+TIP_PRO:R
+LUN_PRO:4234
+LAR_PRO:481
+SPE_PRO:12
+MAT_PRO:S355JOW
+PES_PRO:
+SUP_PRO:
+CPE_LIS:
+CSU_LIS:
+PUN_LIS:191.84
+SUN_LIS:4.07
+CMP_MAR:
+PROGRAM:TecnoTRACE-T081339
+SPD_NOT:
+IDF_PEZ:FEA26C9762DD44199185262B36EF5975
+FLG_DWG:TOTAL
+MAR_CMP:1520=1,
+CMP_TOT:1520=1,
+SBS_CMP:101=1,
+[SHAPE]
+R 4
+     0.00      0.00      0.00      0.00      0.00      0.00 
+     0.00      0.00      0.00      0.00      0.00      0.00      0.00 
+  4234.00    481.00     12.00 
+[OUTLINE]
+LIV1
+  4233.96     10.96      6.00      0.00      0.00      0.00      0.00
+  4233.96     10.96      6.00      0.00      0.00      0.00      0.00
+  4233.96   -470.31      6.00      0.00      0.00      0.00      0.00
+     0.00   -470.31      6.00      0.00      0.00      0.00      0.00
+     0.00      0.00      6.00      0.00      0.00      0.00      0.00
+  1875.65  93269.79      6.00  93288.65    268.85    271.45      0.00
+  4233.96     10.96      6.00      0.00      0.00      0.00      0.00
+
+LIV2
+LIV3
+LIV4
+[INLINE]
+LIV1
+LIV2
+LIV3
+LIV4
+[BREAK]
+LIV1
+     0.00      0.00
+LIV2
+     0.00      0.00
+LIV3
+     0.00      0.00
+LIV4
+     0.00      0.00
+[HOLE]
+LIV1
+H     26.00     57.03   -325.31      6.00      0.00      0.00      0.00
+H     26.00     57.03   -395.31      6.00      0.00      0.00      0.00
+H     26.00   3671.85   -325.31      6.00      0.00      0.00      0.00
+H     26.00   3671.85   -395.31      6.00      0.00      0.00      0.00
+H     26.00   3795.88   -325.31      6.00      0.00      0.00      0.00
+H     26.00   3795.88   -395.31      6.00      0.00      0.00      0.00
+LIV2
+LIV3
+LIV4
+[MARK]
+LIV1
+LIV2
+LIV3
+LIV4
+[COMP]
+[CUTTING]
+[FOLD]
+LIV1
+LIV2
+[OPEN]
+LIV1
+LIV2
+[CUTTER]
+[WELD]
+LIV1
+LIV2
+LIV3
+LIV4
+[THREED]
+[INLINE2]
+LIV1
+LIV2
+LIV3
+LIV4

@@ -1,0 +1,104 @@
+[ENTIT3]
+[HEAD]
+NUM_COM:c450
+DES_COM:
+LOT_COM:4
+DLO_COM:
+CLI_COM:
+IND_COM:
+DAT_COM:
+NUM_DIS:
+DES_DIS:
+PRE_DIS:
+FAB_DIS:
+NOM_DIS:
+TRA_PEZ:
+SBA_PEZ:4
+TIP_PEZ:
+MAR_PEZ:01156p
+DES_PEZ:
+POS_PEZ:01156p
+NOT_PEZ:
+ING_PEZ:391.6*450.0*30.0
+QTA_PEZ:2
+MCL_PEZ:
+COD_PEZ:
+COS_PEZ:
+TIP_PRO:R
+LUN_PRO:391.579
+MAT_PRO:s355j0
+PES_PRO:
+SUP_PRO:
+NOM_PRO:LAM.30
+LAR_PRO:450
+SPE_PRO:30
+PRE_LIS:LAM.
+CPE_LIS:1
+CSU_LIS:1
+PUN_LIS:41.5
+SUN_LIS:0.376
+PRE_LIS:LAM.
+CMP_MAR:
+PROGRAM:
+IDF_PEZ:
+[SHAPE]
+R 1
+   0.00   0.00   0.00   0.00    0.00   0.00   0.00
+   0.00   0.00   0.00   0.00    0.00   0.00   0.00
+      391.58      450.00       30.00
+[OUTLINE]
+LIV1
+        0.00      -450.00        30.00         0.00         0.00         0.00
+      391.58      -450.00        30.00         0.00         0.00         0.00
+      391.58         0.00        30.00         0.00         0.00         0.00
+        0.00         0.00        30.00         0.00         0.00         0.00
+        0.00      -189.00        30.00         0.00         0.00         0.00
+       20.00      -209.00        30.00         0.00         0.00         0.00
+      129.73      -209.00        30.00         0.00         0.00         0.00
+      139.73      -219.00        30.00         0.00         0.00         0.00
+      139.73      -231.00        30.00         0.00         0.00         0.00
+      129.73      -241.00        30.00         0.00         0.00         0.00
+       20.01      -241.00        30.00         0.00         0.00         0.00
+        0.00      -261.01        30.00         0.00         0.00         0.00
+LIV2
+LIV3
+LIV4
+[INLINE]
+LIV1
+LIV2
+LIV3
+LIV4
+[BREAK]
+LIV1
+        0.00         0.00
+LIV2
+        0.00         0.00
+LIV3
+        0.00         0.00
+LIV4
+        0.00         0.00
+[HOLE]
+LIV1
+LIV2
+LIV3
+LIV4
+[MARK]
+LIV1
+LIV2
+LIV3
+LIV4
+[COMP]
+[CUTTING]
+[FOLD]
+LIV1
+LIV2
+[OPEN]
+LIV1
+LIV2
+[CUTTER]
+[WELD]
+LIV1
+LIV2
+LIV3
+LIV4
+[THREED]

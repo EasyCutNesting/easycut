@@ -1,0 +1,247 @@
+(defun TableNestingBar (PtInsert IdJob LstDataOptimizedBar Id Ls BarMargStart BarMargEnd ThiCut	DimScale / GetNameByLength
+						)
+
+	(defun GetNameByLength (Lng AssocLengthName / PosLst LstChk Rtn1 Rtn2)
+
+		(defun PosLst ( l e / n p r)
+		 (setq n -1)
+		 (while
+		   (and
+			 (setq p (vl-position e l))
+			 (setq n (+ 1 n p)
+				   r (cons n r)
+				   l (cdr (member e l))
+			 )
+		   )
+		 )
+		 (reverse r)
+		)
+		;
+		;
+		;
+		(if (and Lng AssocLengthName)
+			(if (setq LstChk (assoc Lng AssocLengthName))
+				(progn
+					(setq Rtn1 (cadr LstChk))
+					(if (= (- (caddr LstChk) 1) 0)
+						(setq Rtn2 (LM:RemoveNth (car (PosLst AssocLengthName LstChk)) AssocLengthName))
+						(setq Rtn2 (subst (list (car LstChk) (cadr LstChk) (- (caddr LstChk) 1)) LstChk AssocLengthName))
+					)
+					(list Rtn1 Rtn2)
+				)
+			)
+		)
+	)	
+	;
+	; Main
+	;
+	(setq HA4 			297.0)
+	(setq MBorderV 		  2.0)
+	(setq MBorderO 		  2.0)
+	(setq InterR		  1.5)
+	(setq Head	 		 15.0)
+	(setq HInfoBar 		 12.0)
+	(setq HBar	 		  6.0)
+	(setq HPart 		  5.0)
+	(setq StepX	  		  0.0)
+	(setq StepY	  		  0.0)
+	(setq DimStyleName   "EasyCutDimOptimezeBars")
+	(setq TextStyleName  "EasyCutStyleOptimezeBars")
+
+	(if (not (tblsearch "DIMSTYLE" DimStyleName))
+		(MakeDimStyleToEntmake DimStyleName DimScale HTextDim TextStyleName "0")
+	)
+
+	(setq Idx (nth 0 PtInsert))
+	(setq Idy (nth  PtInsert))
+	
+	(setq PosX (+ Idx MBorderO StepX))
+	(setq PosY (- IdY MBorderV Head StepY))
+	(PrintHead PosX PosY IdJob)
+	
+	
+	(foreach Bar (vl-sort (cadr LstDataOptimizedBar) (function (lambda (e1 e2)  (< (caddr e1) (caddr e2)))))
+
+		; *******************************************
+		(setq PosY (- PosY InterR HInfoBar))
+		(if (> (abs (- PosY IdY)) HA4)
+			(progn
+				(setq StepY (+ StepY  HA4))
+				(setq PosY  (- IdY StepY MBorderV HInfoBar)) 
+			)
+		)
+		
+		;(11 (2105.0 2005.0 1855.0) 15.0)
+		(setq InfoBar (list (car Bar) 
+							Ls 
+							BarMargStart 
+							BarMargEnd 
+							ThiCut 
+							(+ (caddr Bar) BarMargStart BarMargEnd (* (length (cadr Bar)) ThiCut))
+							(- 1.0 (/ Ls (+ (caddr DataBar)	BarMargStart BarMargEnd	(* (length (cadr DataBar)) ThiCut)))))			 
+		(PrintInfoBar PosX PosY InfoBar)
+		; *******************************************
+		(setq PosY (- PosY InterR HBar))
+		(if (> (abs (- PosY IdY)) HA4)
+			(progn
+				(setq StepY (+ StepY HA4))  
+				(setq PosY  (- IdY StepY MBorderV HBar)) 
+			)
+		)
+		(PrintHeadBar PosX PosY)
+		; *******************************************
+		(foreach Part (cadr Bar)
+			(setq PosY (- PosY InterR HPart))
+			(if (> (abs(- PosY IdY)) HA4)
+				(setq PosY (- IdY StepY MBorderV HPart)) 
+
+			)
+			
+				(setq TextPart (car  (GetNameByLength LgPart Id)))
+				(setq Id  	   (cadr (GetNameByLength LgPart Id)))			
+			
+			
+				(setq InfoComposerBar (list  Part
+			
+			(setq Id  (nth 0 InfoBar))	; 	Id Part
+			(setq Lg  (nth 1 InfoBar))	;	Length Part
+			(setq Qta (nth 2 InfoBar))	;	Quantity Part
+			
+			
+			
+			(PrintComposerBar (PosX PosY InfoComposerBar)
+		)
+		; *******************************************
+	)
+)
+;
+;
+;
+(defun XMakeText (Point TextPart HTextPart WdTextFactor Rotation Position1 Position2 Color)
+ 
+	(if (and Point TextPart HTextPart WdTextFactor Rotation Position1 Position2 Color)
+		(vla-put-Color (vlax-ename->vla-object(entmakex  (list 	(cons 000 "TEXT")
+																(cons 100 "AcDbEntity")
+																(cons 100 "AcDbText")
+																(cons 010 Point)	
+																(cons 040 HTextPart)
+																(cons 001 TextPart)  
+																(cons 050 Rotation)  
+																(cons 041 WdTextFactor)  
+																(cons 051 0.0)  
+																(cons 007 $StyleEasyCut)
+																(cons 071 0)  
+																(cons 072 Position1) ; 
+																(cons 011 (list (+ (nth 0 Point) 1) (nth 1 Point)))	
+																(cons 073 Position2)
+														))) Color)
+	)
+)
+;
+;
+;
+(defun PrintHead (PosX PosY StrBarCode / Tab1 BorderMargin HBarCode NameBlockLogo PosLogo EnameBlockLogo PosBarCode)
+	
+	(setq Tab1 			144.0)
+	(setq BorderMargin 	  2.0)
+	(setq HBarCode 	  	 11.0)
+	
+	(if (and PosX PosY StrBarCode)
+		(progn
+			(setq NameBlockLogo	  (strcat LibPathEasyCut$ FileBlockLogo$))
+			(setq PosLogo 		  (list (+ PosX BorderMargin  Tab1) (+ PosY BorderMargin))
+			(setq EnameBlockLogo  (vlax-vla-object->ename (InsertBlock NameBlockLogo PosLogo nil)))
+			(setq PosBarCode 	  (list (+ PosX BorderMargin) (+ PosY BorderMargin))
+			(BrCode128 StrBarCode (strcat "BARCODE128_" StrBarCode)  PosBarCode HBarCode (* HBarCode 0.2))
+			(PurgeBlock 		  (strcat "BARCODE128_" StrBarCode))
+		)
+	)
+)
+;
+;
+;
+(defun PrintComposerBar (PosX PosY InfoComposerBar / Tab1 Tab2 Tab3 Tab4 Tab5 BorderMargin HTarget HValue ClrTarget ClrValue)
+
+	(setq Tab1 			 7.0)
+	(setq Tab2 			21.0)
+	(setq Tab3 			26.0)
+	(setq Tab4 			40.0)
+	(setq Tab5 			45.0)
+	(setq BorderMargin 	 2.0)
+	(setq HTarget 		 2.5)
+	(setq HValue  		 3.0)
+	(setq ClrTarget 	 1  )	; Red
+	(setq ClrValue  	 3  ) 	; Green
+
+	(if (and PosX PosY InfoComposerBar)
+		(progn
+			(setq Id  (nth 0 InfoComposerBar))	; 	Id Part
+			(setq Lg  (nth 1 InfoComposerBar))	;	Length Part
+			(setq Qta (nth 2 InfoComposerBar))	;	quantity Part
+
+			(XMakeText (list (+ PosX BorderMargin) 		(+ PosY BorderMargin)) "ID." 	HTarget 0.8 0.0 0 0 ClrTarget)
+			(XMakeText (list (+ PosX BorderMargin Tab2)	(+ PosY BorderMargin)) "L."     HTarget 0.8 0.0 0 0 ClrTarget)
+			(XMakeText (list (+ PosX BorderMargin Tab4)	(+ PosY BorderMargin)) "n°."	HTarget 0.8 0.0 0 0 ClrTarget)
+
+			(XMakeText (list (+ PosX BorderMargin Tab1)	(+ PosY BorderMargin)) (LM:rtos Id  2 0 HValue 0.8 0.0 0 0 ClrValue)
+			(XMakeText (list (+ PosX BorderMargin Tab3)	(+ PosY BorderMargin)) (LM:rtos Lg  2 1 HValue 0.8 0.0 0 0 ClrValue)
+			(XMakeText (list (+ PosX BorderMargin Tab5)	(+ PosY BorderMargin)) (LM:rtos Qta 2 0	HValue 0.8 0.0 0 0 ClrValue)
+		
+		)
+	)
+)
+;
+;
+;
+(defun PrintHeadBar (PosX PosY / BorderMargin HTarget ClrTarget)
+
+	(setq BorderMargin 	2.0)
+	(setq HTarget 		2.5)
+	(setq ClrTarget 	2)	; Yellow
+
+	(if (and PosX PosY)
+		(XMakeText (list (+ PosX BorderMargin) 	(+ PosY BorderMargin)) "COMPOSIZIONE BARRA SINGOLA" HTarget 0.8 0.0 0 0 ClrTarget)
+	)
+)
+;
+;
+;
+(defun PrintInfoBar (PosX PosY InfoBar / Tab1Tab2 HTarget HValue ClrTarget ClrValue Nbar Lbar Mgini Mgfin TkCut Waste Eff)
+
+
+	(setq Tab1 			40.0)
+	(setq Tab2 			25.0)
+	(setq BorderMargin 	2.0)
+	(setq HTarget 		2.5)
+	(setq HValue  		3.0)
+	(setq ClrTarget 	1)	; Red
+	(setq ClrValue  	3)  ; Green
+
+	(if (and PosX PosY InfoBar)
+		(progn
+			(setq Nbar 	(nth 0 InfoBar))	; 	Numero barre
+			(setq Lbar 	(nth 1 InfoBar))	;	Lunghezza barra
+			(setq Mgini (nth 2 InfoBar))	;	Margine iniziale
+			(setq Mgfin (nth 3 InfoBar))	;	Margine finale
+			(setq TkCut (nth 4 InfoBar))	;	Spessore di taglio
+			(setq Waste (nth 5 InfoBar))	;	Sfrido
+			(setq Eff 	(nth 6 InfoBar))	;	Efficienza
+							
+			(XMakeText (list (+ PosX BorderMargin) 				(+ PosY BorderMargin)) 		"SFRIDO" 		HTarget 0.8 0.0 0 0 ClrTarget)
+			(XMakeText (list (+ PosX BorderMargin Tab1) 		(+ PosY BorderMargin)) 		"EFFICIENZA"    HTarget 0.8 0.0 0 0 ClrTarget)
+			(XMakeText (list (+ PosX BorderMargin) 				(+ PosY BorderMargin 5.5)) 	"QTA. BARRE"    HTarget 0.8 0.0 0 0 ClrTarget)
+			(XMakeText (list (+ PosX BorderMargin Tab1) 		(+ PosY BorderMargin 5.5)) 	"LUNGHEZZA"     HTarget 0.8 0.0 0 0 ClrTarget)
+			(XMakeText (list (+ PosX BorderMargin (* Tab1 2.0))	(+ PosY BorderMargin 5.5))	"MARGINE INI."  HTarget 0.8 0.0 0 0 ClrTarget)
+			(XMakeText (list (+ PosX BorderMargin (* Tab1 3.0))	(+ PosY BorderMargin 5.5)) 	"MARGINE FIN."  HTarget 0.8 0.0 0 0 ClrTarget)
+			(XMakeText (list (+ PosX BorderMargin (* Tab1 4.0))	(+ PosY BorderMargin 5.5)) 	"SPES. TAGLIO"  HTarget 0.8 0.0 0 0 ClrTarget)
+			
+			(XMakeText (list (+ PosX BorderMargin Tab2) 					(+ PosY BorderMargin)) 		(LM:rtos Waste 2 0)  HValue 0.8 0.0 0 0 ClrValue)
+			(XMakeText (list (+ PosX BorderMargin (+ Tab1 Tab2))			(+ PosY BorderMargin))      (LM:rtos Eff   2 1)  HValue 0.8 0.0 0 0 ClrValue)
+			(XMakeText (list (+ PosX BorderMargin Tab2) 					(+ PosY BorderMargin 5.5)) 	(LM:rtos Nbar  2 0)  HValue 0.8 0.0 0 0 ClrValue)
+			(XMakeText (list (+ PosX BorderMargin (+ Tab1 Tab2))			(+ PosY BorderMargin 5.5)) 	(LM:rtos LgBar 2 1)  HValue 0.8 0.0 0 0 ClrValue)
+			(XMakeText (list (+ PosX BorderMargin (+ (* Tab1 2.0) Tab1))	(+ PosY BorderMargin 5.5))	(LM:rtos Mgini 2 1)  HValue 0.8 0.0 0 0 ClrValue)
+			(XMakeText (list (+ PosX BorderMargin (+ (* Tab1 3.0) Tab1))	(+ PosY BorderMargin 5.5))  (LM:rtos Mgfin 2 1)  HValue 0.8 0.0 0 0 ClrValue)
+			(XMakeText (list (+ PosX BorderMargin (+ (* Tab1 4.0) Tab1))	(+ PosY BorderMargin 5.5))  (LM:rtos TkCut 2 1)  HValue 0.8 0.0 0 0 ClrValue)
+		)
+	)
+)

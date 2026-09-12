@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<commessa>
+    <!-- Impostazioni Generali -->
+    <configurazione>
+       <lama>4</lama>
+       <rifilo>15</rifilo>
+		<cartella_output>C:\\Users\\adl20\\EasyCut\\Output\\Nesting</cartella_output>
+		<prefisso_file>RectPack</prefisso_file>
+		<mostra_grafica>True</mostra_grafica>
+		<testo_offset_x>10</testo_offset_x>
+		<testo_offset_y>10</testo_offset_y>
+		<testo_altezza>2</testo_altezza>
+    </configurazione>
+
+    <!-- Pannelli grandi disponibili in Magazzino -->
+    <magazzino>
+        <pannello larghezza="3000" altezza="2000" />
+        <pannello larghezza="3000" altezza="2000" />
+    </magazzino>
+
+    <!-- Elenco dei Pezzi Ordinati da ricavare -->
+    <prodotti>
+        <pezzo larghezza="800" altezza="600" nome="Fianco_Destro" />
+        <pezzo larghezza="800" altezza="600" nome="Fianco_Destro" />
+        <pezzo larghezza="800" altezza="600" nome="Fianco_Destro" />
+        <pezzo larghezza="800" altezza="600" nome="Fianco_Destro" />
+        <pezzo larghezza="800" altezza="600" nome="Fianco_Destro" />
+        <pezzo larghezza="800" altezza="600" nome="Fianco_Destro" />
+        <pezzo larghezza="800" altezza="600" nome="Fianco_Destro" />
+        <pezzo larghezza="800" altezza="600" nome="Fianco_Destro" />
+        <pezzo larghezza="800" altezza="400" nome="Fianco_Sinistro" />
+        <pezzo larghezza="800" altezza="400" nome="Fianco_Sinistro" />
+        <pezzo larghezza="800" altezza="400" nome="Fianco_Sinistro" />
+        <pezzo larghezza="800" altezza="400" nome="Fianco_Sinistro" />
+        <pezzo larghezza="800" altezza="400" nome="Fianco_Sinistro" />
+        <pezzo larghezza="800" altezza="400" nome="Fianco_Sinistro" />
+        <pezzo larghezza="800" altezza="400" nome="Fianco_Sinistro" />
+        <pezzo larghezza="800" altezza="400" nome="Fianco_Sinistro" />
+    </prodotti>
+</commessa>

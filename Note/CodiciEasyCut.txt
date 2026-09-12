@@ -1,0 +1,81 @@
+; informazioni estese del contorno
+; esempio di informazioni estese del contorno
+; (-3 ("PIATTO"	(1002 . "{") 
+;              	(1000 . ["CE"]["CI"] 				CE contorno esterno / CI contorno interno  -valore string-)
+;             	(1000 . ["123456789"]   			nome contorno -valore string-)
+;             	(1000 . ["0"]["2"]["3"]  			percorrenza di taglio 0 contorno aperto 2 percorrenza antioraria 3 percorrenza oraria  -valore stringa-)
+;             	(1000 . ["PIPPO"]  					nome piatto -valore stringa-)
+;             	(1000 . ["0"]["1"]["2"]["3"] 	 	compensazione taglio 0 nessuna 1 auto 2 dx 3 sx  -valore stringa-)
+;				(1000 . ["C2018032"]  	 	        nome commessa  -valore stringa-)
+;				(1000 . ["P100"]  	 	        	nome fase  -valore stringa-)
+;				(1000 . ["S355J0"]  	 	        nome qualita'  -valore stringa-)
+;				(1000 . ["10"]  	 	            spessore  -valore stringa-)
+;				(1000 . ["10/11/2018"]  	 	    ultima modifica  -valore stringa-)
+;             	(1002 . "}") 
+;     )
+; )
+;
+; informazioni estese della lamiera
+; (-3 ("LAMIERA" (1002 . "{") 
+;                   (1000 . nome lamiera  		-valore stringa-)
+;                   (1000 . id lamiera    		-valore stringa-)
+;                   (1000 . spessore lamiera    -valore stringa-)
+;                   (1002 . "}") 
+;     )
+; 
+; )
+;
+; informazioni estese della lamiera piu' percorso di taglio
+; (-3 ("LAMIERA" (1002 . "{") 
+;                   (1000 . nome lamiera  			-valore stringa-)
+;                   (1000 . id lamiera    			-valore stringa-)
+;                   (1000 . spessore lamiera    	-valore stringa-)
+;                   (1000 . tipo sequenza 	    	-valore stringa-)
+;                   (1000 . nome gruppo contorno 1  -valore stringa-)
+;                   (1000 . nome gruppo contorno 2  -valore stringa-)
+;                   (1000 . nome gruppo contorno 3  -valore stringa-)
+;                   (1002 . "}") 
+;     )
+; )
+;
+; 
+; (-3 ("ESCI" (1002 . "{") 
+;             (1000 . nome contorno -valore stringa-) 
+;             (1070 . [+] / [-] / [*] )  orario / antiorario / rettilineo
+;             (1002 . "}") 
+;     )
+; )
+; (-3 ("ENTRA" (1002 . "{") 
+;              (1000 . nome contorno -valore stringa-) 
+;              (1070 . [+] / [-] / [*] )  orario / antiorario / rettilineo
+;              (1002 . "}") 
+;     )
+; )
+;
+;
+;(setq $StyleEasyCut "EasyCutStyle")
+;
+;
+;
+;(defun MakeStyle ()
+;	(if (not (tblobjname "style" $StyleEasyCut))
+;		(progn
+;			(entmake
+;				(list 	'(0 . "STYLE")
+;						'(100 . "AcDbSymbolTableRecord")
+;						'(100 . "AcDbTextStyleTableRecord")
+;						(cons 2 $StyleEasyCut)
+;						'(70 . 0)
+;						'(40 . 0.0)
+;						'(41 . 0.8)
+;						'(50 . 0.0)
+;						'(71 . 0)
+;						'(42 . 0.0)
+;						'(3 . "romans.shx")
+;						'(4 . "")
+;				)
+;			)
+;			(setvar "textstyle" $StyleEasyCut)
+;		)
+;	)
+;)

@@ -1,0 +1,11 @@
+C:\EasyCut\Source\repos\EasyCutBrowser\Browser\bin\Debug\Browser.exe.config
+C:\EasyCut\Source\repos\EasyCutBrowser\Browser\bin\Debug\Browser.exe
+C:\EasyCut\Source\repos\EasyCutBrowser\Browser\bin\Debug\Browser.pdb
+C:\EasyCut\Source\repos\EasyCutBrowser\Browser\bin\Debug\Browser.xml
+C:\EasyCut\Source\repos\EasyCutBrowser\Browser\obj\Debug\Browser.vbprojAssemblyReference.cache
+C:\EasyCut\Source\repos\EasyCutBrowser\Browser\obj\Debug\Browser.Form1.resources
+C:\EasyCut\Source\repos\EasyCutBrowser\Browser\obj\Debug\Browser.Resources.resources
+C:\EasyCut\Source\repos\EasyCutBrowser\Browser\obj\Debug\Browser.vbproj.GenerateResource.cache
+C:\EasyCut\Source\repos\EasyCutBrowser\Browser\obj\Debug\Browser.exe
+C:\EasyCut\Source\repos\EasyCutBrowser\Browser\obj\Debug\Browser.xml
+C:\EasyCut\Source\repos\EasyCutBrowser\Browser\obj\Debug\Browser.pdb

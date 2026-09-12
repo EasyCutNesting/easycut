@@ -1,0 +1,537 @@
+;
+(defun ShapeInside02 (EnameShape / SortEnameByEname
+								 Shape Ename ChechZoom Rtn)
+
+	(defun SortEnameByEname (LstEname / itm AddLst Rtn)
+		(if LstEname 
+			(progn
+				(foreach itm LstEname
+					(setq AddLst (append AddLst (list (list (vl-prin1-to-string itm) itm))))
+				)
+				(setq AddLst (vl-sort AddLst (function (lambda (e1 e2)  (> (car e1) (car e2))))))
+				(foreach itm AddLst
+					(setq Rtn (append Rtn (list (cadr itm))))
+				)
+			)
+		)
+		Rtn
+	)
+	;
+	;
+	(if EnameShape
+		(progn 
+			(setq ChechZoom (VisibleEname EnameShape))
+			(cond 
+				((= (GetNameEname EnameShape) "LWPOLYLINE")
+					(setq Shape (DiscretizeShape EnameShape))
+				)
+				((= (GetNameEname EnameShape) "CIRCLE")
+					 (setq Shape (DiscretizeCircle EnameShape))
+				)
+				((= (GetNameEname EnameShape) "ELLIPSE")
+					(setq Ename (Ellipse2LwPolyline EnameShape nil))
+					(if  (IsClosed Ename T)
+						(setq Shape (DiscretizeShape Ename))
+					)
+					(DeleteEntity (list Ename))
+				)
+			)
+			(ZoomPrevius ChechZoom)
+			(if Shape 
+				(setq Rtn (SortEnameByEname (LM:RemoveOnce EnameShape (LM:ss->ent (ssget "_CP" Shape $FilterList)))))
+			)
+			(if (null Rtn)
+				(setq Rtn (list EnameShape))
+				(setq Rtn (cons EnameShape Rtn))
+			)
+		)
+	)
+	Rtn
+)
+;
+;
+(defun ShapeInside (EnameShape / SortEnameByEname
+								 Shape Ename ChechZoom Rtn)
+
+	(defun SortEnameByEname (LstEname / itm AddLst Rtn)
+		(if LstEname 
+			(progn
+				(foreach itm LstEname
+					(setq AddLst (append AddLst (list (list (vl-prin1-to-string itm) itm))))
+				)
+				(setq AddLst (vl-sort AddLst (function (lambda (e1 e2)  (> (car e1) (car e2))))))
+				(foreach itm AddLst
+					(setq Rtn (append Rtn (list (cadr itm))))
+				)
+			)
+		)
+		Rtn
+	)
+	;
+	;
+	(if EnameShape
+		(progn 
+			(setq ChechZoom (VisibleEname EnameShape))
+			(cond 
+				((= (GetNameEname EnameShape) "LWPOLYLINE")
+					(setq Shape (DiscretizeShape EnameShape))
+				)
+				((= (GetNameEname EnameShape) "CIRCLE")
+					 (setq Shape (DiscretizeCircle EnameShape))
+				)
+				((= (GetNameEname EnameShape) "ELLIPSE")
+					(setq Ename (Ellipse2LwPolyline EnameShape nil))
+					(if  (IsClosed Ename T)
+						(setq Shape (DiscretizeShape Ename))
+					)
+					(DeleteEntity (list Ename))
+				)
+			)
+			(ZoomPrevius ChechZoom)
+			(if Shape 
+				(setq Rtn (SortEnameByEname (LM:RemoveOnce EnameShape (LM:ss->ent (ssget "_CP" Shape $FilterList)))))
+			)
+		)
+	)
+	Rtn
+)
+;
+;
+(defun InsIns (EnameShape / SearchDownLevel RemoveDownLevelToOneLevel UpdateOneLevel
+							LstEnameInside LstHimSelf itm EnamesHimSelf LevelOne NewLevelOne NewNewLevelOne LstDownLevel
+							TmpLst LevelTwo Rtn)
+	
+	(defun SearchDownLevel (LevelOne LstHimSelf / itm Rtn)
+		; LevelOne   (<Entity name: 28ba49f78c0> (<Entity name: 28ba49f7950> <Entity name: 28ba49f7930> <Entity name: 28ba49f78e0>))
+		; LstHimSelf (<Entity name: 28ba49f7950> <Entity name: 28ba49f7930> <Entity name: 28ba49f78e0>)
+		(if (and LevelOne LstHimSelf)
+			(progn
+				(setq Rtn T)
+				(foreach itm (cadr LevelOne)
+					(if (not (member itm LstHimSelf))
+						(setq Rtn nil)
+					)
+				)
+			)
+		)
+		Rtn
+	)
+	;
+	(defun RemoveDownLevelToOneLevel (LevelOne LstDownLevel / itm Rtn)
+	
+		(if (and LevelOne LstDownLevel)
+			(progn
+				(foreach itm (cadr LevelOne)
+					(if (not (member itm LstDownLevel))
+						(setq Rtn (append Rtn (list itm)))
+					)
+				)
+				(if Rtn 
+					(setq Rtn (cons (car LevelOne) (list Rtn)))
+					(setq Rtn LevelOne)
+				)
+			)
+		)
+		Rtn
+	)
+	;
+	(defun UpdateOneLevel (LevelOne LstDownLevel / LevelOneCadr itm EnameChk Rtn)
+		;LstDownLevel ((<Entity name: 28ba4a0ec10> (<Entity name: 28ba4a0ec50> <Entity name: 28ba4a0ec30>)) (<Entity name: 28ba4a0ebb0> (<Entity name: 28ba4a0ebf0> <Entity name: 28ba4a0ebd0>)))
+		;LevelOne 	   (<Entity name: 28ba4a0eb40> (<Entity name: 28ba4a0ec10> <Entity name: 28ba4a0ebb0> <Entity name: 28ba4a0eb50>))
+		
+		(if (and LevelOne LstDownLevel)
+			(progn
+				(setq LevelOneCadr (cadr LevelOne)) 
+				(foreach itm LstDownLevel
+					(setq EnameChk (car itm)) 
+					(if (member EnameChk LevelOneCadr)
+						(setq LevelOneCadr (subst itm EnameChk LevelOneCadr)) 
+					)
+				)
+				(setq Rtn (cons (car LevelOne) (list LevelOneCadr)))
+			)
+		)
+		Rtn
+	)
+	;
+	; Main
+	;
+	(if (and EnameShape)
+		(progn
+			(setq LstEnameInside (ShapeInside EnameShape))
+			; search composed himself ++++++++++++++++++++++++++++++++
+			(foreach itm LstEnameInside
+				(if (null (setq EnamesHimSelf (ShapeInside itm)))
+				 	(setq LstHimSelf (append LstHimSelf (list itm)))
+				)
+			)
+			(princ "\n Se stessi ") (princ LstHimSelf) (princ "\n")
+			; ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			; set first level [insieme primo livello]
+			(foreach itm LstEnameInside
+				(if (not (member itm LstHimSelf))
+					(setq LevelOne (append LevelOne (list (list itm (ShapeInside itm)))))
+				)
+			)
+			(setq LevelOne (append LevelOne (list (list EnameShape LstEnameInside))))
+			(princ "\n 1° livello ") (princ LevelOne) (princ "\n")
+			; ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			; filtro gli insiemi non scomponibili
+			(setq NewLevelOne LevelOne)
+			(foreach itm NewLevelOne
+				(if (SearchDownLevel itm LstHimSelf)
+					(progn
+						(setq LstDownLevel   (append LstDownLevel (list itm)))
+						(setq NewLevelOne    (LM:RemoveOnce itm NewLevelOne))
+					)
+				)
+			)
+			(princ "\n non scomponibili ") (princ LstDownLevel) (princ "\n")
+			(princ "\n 1° livello nuovo ") (princ NewLevelOne)  (princ "\n")
+
+			; ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			; elimino dal primo livello i non scomponibili
+			(if NewLevelOne
+				(progn
+					(foreach itm LstDownLevel
+						(setq TmpLst (append TmpLst (car (cdr itm))))
+					)
+					(princ "\n non scomponibili base ") (princ TmpLst) (princ "\n")
+					(foreach itm NewLevelOne
+						(setq NewNewLevelOne (append NewNewLevelOne (list (RemoveDownLevelToOneLevel itm TmpLst))))
+					)
+					(princ "\n 1° livello nuovo nuovo ") (princ NewNewLevelOne) (princ "\n")
+
+					(foreach itm NewNewLevelOne
+						(setq LevelTwo (append LevelTwo (list (UpdateOneLevel itm  LstDownLevel))))
+					)
+					(princ "\n 2° livello ") (princ LevelTwo) (princ "\n")
+					
+					; ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+					; resolution system
+					; ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+					(setq Rtn (SystemResolution LevelTwo))
+				)
+				(setq Rtn LevelOne)
+			)
+		)
+	)
+	Rtn
+)
+;
+;
+(defun SystemResolution (ListSystem / SortSystem
+									  Loop Num Pos Rtn)
+
+	(defun SortSystem (ListSystem / itm Flat Rtn)
+		(foreach itm ListSystem
+			(setq Flat (append Flat (list (list (length (LM:flatten itm))
+										        itm))))
+		)
+		(if Flat
+			(foreach itm (vl-sort Flat (function (lambda (e1 e2)  (< (car e1) (car e2)))))
+				(setq Rtn (append Rtn (list (cadr itm))))
+			)
+		)
+		Rtn
+	)
+	;
+	; Main
+	;
+	(if ListSystem
+		(progn
+			(setq ListSystem (SortSystem ListSystem))
+			(setq Loop T)
+			(setq Pos 0)
+			(setq Num (1+ Pos))
+			(while Loop
+				(if (setq TmpLst (RebuildList (nth Pos ListSystem) (nth Num ListSystem)))
+					(setq ListSystem (subst TmpLst (nth Num ListSystem) ListSystem))
+				)
+				(setq Num (1+ Num))
+					
+				(if (> Num (- (length ListSystem) 1))
+					(progn
+						(setq Pos (1+ Pos))
+						(setq Num (1+ Pos))
+					)
+				)
+				(if (= Pos (- (length ListSystem) 1))
+					(setq Loop nil)
+				)
+			)
+			(setq Rtn (nth Pos ListSystem))
+		)
+	)
+	Rtn
+)
+;
+;
+(defun RebuildList (List1 List2 / MyMember RemoveEach FormatList RemoveExtraParent
+								  Flag itm RtnLst Rtn)
+
+	; (setq List1 '(   "A" (( "H" ( "I" "L" ))                                  )))
+	; (setq List2 '(   "B" (( "H" ( "I" "L" )) ( "D" ( "E" "F" )) "A"           )))
+	;  Rtn -----> '(   "B" (( "D" ( "E" "F" )) ( "A" (("H"  ( "I" "L" )))       ))))
+	
+	; (setq List1 '(   "B" (( "D" ( "E" "F" )) ( "A" (( "H" ( "I" "L" ))))                            )))
+	; (setq List2 '(   "C" (( "H" ( "I" "L" )) "G" ("D" ( "E" "F" ))  ( "A" (( "H" ( "I" "L" )))) "B" )))
+	;  Rtn  ----> '(   "C" ("G"  ("B" (("D" ("E" "F")) ("A" (("H" ("I" "L"))))))))
+	;              
+
+	
+	(defun MyMember (xEname lEname / L1 L2 Loop Num Rtn)
+		(if (and xEname lEname)
+			(progn
+				(setq L1 (LM:flatten xEname))
+				(setq L2 (LM:flatten lEname))
+				(setq Loop T)
+				(setq Num  0)
+				(setq Rtn  T)
+				(while Loop
+					(if (not (member (nth Num L1) L2))
+						(setq Rtn nil
+						      Loop nil
+						)
+					)
+					(setq Num (1+ Num))
+					(if (> Num (- (length L1) 1))
+						(setq Loop nil)
+					)
+				)
+			)
+		)
+		Rtn
+	)
+	;
+	;
+	(defun RemoveEach (a l / Remove 
+							 itm Rtn)
+	
+		(defun Remove (itm l)
+			(cond 
+				((null l) 
+					nil
+				)
+				((atom (car l))
+					(cond 
+						((equal itm (car l))
+							(Remove itm (cdr l)))
+						(t 
+							(cons (car l) (Remove itm (cdr l)))
+						)
+					)
+				)
+				(t 
+					(cons (Remove itm (car l)) (Remove itm (cdr l)))
+				)
+			)
+		)
+		;
+		; Main
+		;
+		(if (and a l)
+			(progn
+				(setq Rtn l)
+				(foreach itm (LM:flatten a)
+					(setq Rtn (Remove itm Rtn))
+				)
+			)
+		)
+		Rtn
+	)
+	;
+	;
+	(defun RemoveExtraParent (Lst / Strip)
+
+		; (((A)) ((D ((E F))))) -> ((A) (D (E F)))
+		
+		(defun Strip (lst)
+			(if (or (null lst) (atom lst) (not (null (cdr lst))))
+				lst
+				(Strip (car lst))
+			)
+		)
+		
+		(cond 
+			((or (null lst) (atom lst))
+				lst
+			)
+			((null (Strip (car lst)))
+				(RemoveExtraParent (cdr lst))
+			)
+			(t
+				(Strip (cons (RemoveExtraParent (Strip (car lst))) (RemoveExtraParent (cdr lst))))
+			)
+		)
+	)
+	;
+	;
+	(defun FormatList (l / itm Tmp Rtn)
+		; (FormatList '("C" ((nil) "G" (nil) (((nil)))))) 	---> ("C" ("G"))
+		;
+		; Main
+		;
+		(foreach itm l
+			(if (= (type itm) 'LIST)
+				(if (setq Tmp (FormatList itm))
+					(setq Rtn (append Rtn (list Tmp)))
+				)
+				(if itm
+					(setq Rtn (append Rtn (list itm)))
+				)
+			)
+		)
+		Rtn
+	)	
+	;
+	; Main
+	;
+	(if (and List1 List2)
+		(progn
+			(if (MyMember List1 List2)
+				(progn
+					(setq Spy (car List1))
+					(setq Rtn    (RemoveEach (cdr List1) (cdr List2)))
+					(princ "\n**************************\n")
+					(princ "RemoveEach         ") (princ Rtn)
+					(setq Rtn    (FormatList Rtn))
+					(princ "\n**************************\n")
+					(princ "FormatList         ") (princ Rtn)
+					(setq Rtn    (RemoveExtraParent Rtn))
+					(princ "\n**************************\n")
+					(princ "RemoveExtraParent  ") (princ Rtn)
+					(princ "\n**************************\n")
+
+					(setq Rtn    (cons (car List2) (list (append Rtn (list List1)))))
+					;(setq Rtn     (append (list (car List2)) (append Rtn (list List1))))
+				)
+			)
+		)
+	)
+	Rtn
+)
+;
+;
+(defun InsIns02 (EnameShape / SearchDownLevel RemoveDownLevelToOneLevel UpdateOneLevel
+							  LstEnameInside Rtn itm
+							  )
+	
+	(defun SearchDownLevel (LevelOne LstHimSelf / itm Rtn)
+		; LevelOne   (<Entity name: 28ba49f78c0> (<Entity name: 28ba49f7950> <Entity name: 28ba49f7930> <Entity name: 28ba49f78e0>))
+		; LstHimSelf (<Entity name: 28ba49f7950> <Entity name: 28ba49f7930> <Entity name: 28ba49f78e0>)
+		(if (and LevelOne LstHimSelf)
+			(progn
+				(setq Rtn T)
+				(foreach itm (cadr LevelOne)
+					(if (not (member itm LstHimSelf))
+						(setq Rtn nil)
+					)
+				)
+			)
+		)
+		Rtn
+	)
+	;
+	(defun RemoveDownLevelToOneLevel (LevelOne LstDownLevel / itm Rtn)
+	
+		(if (and LevelOne LstDownLevel)
+			(progn
+				(foreach itm (cadr LevelOne)
+					(if (not (member itm LstDownLevel))
+						(setq Rtn (append Rtn (list itm)))
+					)
+				)
+				(if Rtn 
+					(setq Rtn (cons (car LevelOne) (list Rtn)))
+					(setq Rtn LevelOne)
+				)
+			)
+		)
+		Rtn
+	)
+	;
+	(defun UpdateOneLevel (LevelOne LstDownLevel / LevelOneCadr itm EnameChk Rtn)
+		;LstDownLevel ((<Entity name: 28ba4a0ec10> (<Entity name: 28ba4a0ec50> <Entity name: 28ba4a0ec30>)) (<Entity name: 28ba4a0ebb0> (<Entity name: 28ba4a0ebf0> <Entity name: 28ba4a0ebd0>)))
+		;LevelOne 	   (<Entity name: 28ba4a0eb40> (<Entity name: 28ba4a0ec10> <Entity name: 28ba4a0ebb0> <Entity name: 28ba4a0eb50>))
+		
+		(if (and LevelOne LstDownLevel)
+			(progn
+				(setq LevelOneCadr (cadr LevelOne)) 
+				(foreach itm LstDownLevel
+					(setq EnameChk (car itm)) 
+					(if (member EnameChk LevelOneCadr)
+						(setq LevelOneCadr (subst itm EnameChk LevelOneCadr)) 
+					)
+				)
+				(setq Rtn (cons (car LevelOne) (list LevelOneCadr)))
+			)
+		)
+		Rtn
+	)
+	;
+	; Main
+	;
+	(if EnameShape
+		(progn
+			(setq LstEnameInside (ShapeInside02 EnameShape))
+			(setq Rtn (list LstEnameInside))
+			; search composed ++++++++++++++++++++++++++++++++++++++
+			(foreach itm (cdr LstEnameInside)
+			 	(setq Rtn (append Ryn (list (ShapeInside02 itm))))
+			)
+			(princ "\n Nested List \n") (princ Rtn) (princ "\nEnd\n")
+			; ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		)
+	)
+	Rtn
+)
+;
+;
+(defun SystemResolution02 (ListSystem / SortSystem
+									    Loop Num Pos Rtn)
+
+	(defun SortSystem (ListSystem / itm Flat Rtn)
+		(foreach itm ListSystem
+			(setq Flat (append Flat (list (list (length (LM:flatten itm))
+										        itm))))
+		)
+		(if Flat
+			(foreach itm (vl-sort Flat (function (lambda (e1 e2)  (< (car e1) (car e2)))))
+				(setq Rtn (append Rtn (list (cadr itm))))
+			)
+		)
+		Rtn
+	)
+	;
+	; Main
+	;
+	(if ListSystem
+		(progn
+			(setq ListSystem (SortSystem ListSystem))
+			(setq Loop T)
+			(setq Pos 0)
+			(setq Num (1+ Pos))
+			(while Loop
+				(if (setq TmpLst (RebuildList (nth Pos ListSystem) (nth Num ListSystem)))
+					(setq ListSystem (subst TmpLst (nth Num ListSystem) ListSystem))
+				)
+				(setq Num (1+ Num))
+					
+				(if (> Num (- (length ListSystem) 1))
+					(progn
+						(setq Pos (1+ Pos))
+						(setq Num (1+ Pos))
+					)
+				)
+				(if (= Pos (- (length ListSystem) 1))
+					(setq Loop nil)
+				)
+			)
+			(setq Rtn (nth Pos ListSystem))
+		)
+	)
+	Rtn
+)
+;
+;

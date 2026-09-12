@@ -1,0 +1,106 @@
+[ENTIT3]
+[HEAD]
+NUM_COM:c450
+DES_COM:
+LOT_COM:4
+DLO_COM:
+CLI_COM:
+IND_COM:
+DAT_COM:
+NUM_DIS:
+DES_DIS:
+PRE_DIS:
+FAB_DIS:
+NOM_DIS:
+TRA_PEZ:
+SBA_PEZ:4
+TIP_PEZ:
+MAR_PEZ:01045p
+DES_PEZ:
+POS_PEZ:01045p
+NOT_PEZ:
+ING_PEZ:656.5*481.2*22.0
+QTA_PEZ:2
+MCL_PEZ:
+COD_PEZ:
+COS_PEZ:
+TIP_PRO:R
+LUN_PRO:656.478
+MAT_PRO:s355j0
+PES_PRO:
+SUP_PRO:
+NOM_PRO:LAM.22
+LAR_PRO:481.211
+SPE_PRO:22
+PRE_LIS:LAM.
+CPE_LIS:1
+CSU_LIS:1
+PUN_LIS:54.56
+SUN_LIS:0.663
+PRE_LIS:LAM.
+CMP_MAR:
+PROGRAM:
+IDF_PEZ:
+[SHAPE]
+R 1
+   0.00   0.00   0.00   0.00    0.00   0.00   0.00
+   0.00   0.00   0.00   0.00    0.00   0.00   0.00
+      656.48      481.21       22.00
+[OUTLINE]
+LIV1
+       55.64      -481.21        22.00         0.00         0.00         0.00
+      656.48      -481.21        22.00         0.00         0.00         0.00
+      451.26       -83.17        22.00         0.00         0.00         0.00
+      181.80         0.00        22.00         0.00         0.00         0.00
+        0.00      -383.84        22.00         0.00         0.00         0.00
+       34.86      -467.37        22.00         0.00         0.00         0.00
+LIV2
+LIV3
+LIV4
+[INLINE]
+LIV1
+LIV2
+LIV3
+LIV4
+[BREAK]
+LIV1
+        0.00         0.00
+LIV2
+        0.00         0.00
+LIV3
+        0.00         0.00
+LIV4
+        0.00         0.00
+[HOLE]
+LIV1
+B   29.0       301.26      -348.74        22.00     0.00     0.00     0.00
+B   29.0       325.15      -271.34        22.00     0.00     0.00     0.00
+B   29.0       349.04      -193.95        22.00     0.00     0.00     0.00
+B   29.0       372.93      -116.55        22.00     0.00     0.00     0.00
+B   29.0       156.03      -303.91        22.00     0.00     0.00     0.00
+B   29.0       179.91      -226.52        22.00     0.00     0.00     0.00
+B   29.0       203.80      -149.12        22.00     0.00     0.00     0.00
+B   29.0       227.69       -71.72        22.00     0.00     0.00     0.00
+LIV2
+LIV3
+LIV4
+[MARK]
+LIV1
+LIV2
+LIV3
+LIV4
+[COMP]
+[CUTTING]
+[FOLD]
+LIV1
+LIV2
+[OPEN]
+LIV1
+LIV2
+[CUTTER]
+[WELD]
+LIV1
+LIV2
+LIV3
+LIV4
+[THREED]

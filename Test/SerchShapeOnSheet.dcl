@@ -1,0 +1,36 @@
+SortMultiLevel:dialog {
+	label="Ordina";
+	
+	:boxed_radio_column {
+						label="Colonna";
+						fixed_height=true;
+						alignment =top;
+						:row {
+							:toggle {
+										key="ActivePop1";
+										fixed_width=true;
+									}	 
+							
+							:popup_list {
+										key="Pop1";
+										label="Ordina per:";
+										value="1";
+										edit_width=16;
+							}
+						
+						}
+						:row {
+							:toggle {
+										key="ActivePop2";
+										fixed_width = true;
+									}	 
+							:popup_list {
+										key="Pop2";
+										label="Ordina per:";
+										value="1";
+										edit_width=16;
+							} 
+						}
+	}
+	ok_cancel;
+}

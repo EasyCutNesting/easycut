@@ -1,0 +1,1031 @@
+<!-- saved from url=(0048)http://www.lee-mac.com/lisp/html/LISPStyler.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<link rel="stylesheet" type="text/css" href="./dark.css" id="theme">
+</script>
+</head>
+<body>
+<pre>
+<span class="brkt">(</span><span class="func">defun</span> <span class="func">GuiExpertNesting</span> <span class="brkt">(</span><span class="func">/</span> MakeButtons UpDateButtons MakeListShape MakeListSheet GetSelectShape <span class="func">GetSelectSheet</span>
+						   RestoreFile BoxToList ListToBox LoadTable SortBox UpdateBoxList
+						   FileSaveShape FileSaveSheet LstButtonShapeKey LstSortShape LstSortSheet
+						   AlertShape$
+						   AlertSheet$
+						   xx LstBoxShape LstBoxSheet LstSheet LstShape GoNesting GoImport<span class="brkt">)</span>
+											   
+	
+	<span class="brkt">(</span><span class="func">defun</span> MakeButtons <span class="brkt">(</span>LstButtonKey LstStatusButton <span class="func">/</span> LstVectors <span class="func">Num</span> Key XKey YKey Vector X Y x1 y1 x2 y2 x3 y3<span class="brkt">)</span>
+		
+		<span class="brkt">(</span><span class="func">setq</span> LstVectors <span class="brkt">(</span><span class="func">list</span> 	<span class="brkt">(</span><span class="func">list</span> 	<span class="brkt">(</span><span class="func">list</span> <span class="rea">0.43</span> <span class="rea">0.57</span> <span class="rea">0.50</span><span class="brkt">)</span>
+										<span class="brkt">(</span><span class="func">list</span> <span class="rea">0.35</span> <span class="rea">0.35</span> <span class="rea">0.65</span><span class="brkt">)</span>
+								<span class="brkt">)</span>
+								<span class="brkt">(</span><span class="func">list</span> 	<span class="brkt">(</span><span class="func">list</span> <span class="rea">0.57</span> <span class="rea">0.43</span> <span class="rea">0.50</span><span class="brkt">)</span>
+										<span class="brkt">(</span><span class="func">list</span> <span class="rea">0.65</span> <span class="rea">0.65</span> <span class="rea">0.35</span><span class="brkt">)</span>
+								<span class="brkt">)</span>
+						 <span class="brkt">)</span>
+		<span class="brkt">)</span>
+
+		<span class="brkt">(</span><span class="func">setq</span> <span class="func">Num</span> <span class="int">0</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">foreach</span> Key LstButtonKey
+			<span class="brkt">(</span><span class="func">setq</span> XKey <span class="brkt">(</span><span class="func">dimx_tile</span> Key<span class="brkt">))</span>
+			<span class="brkt">(</span><span class="func">setq</span> YKey <span class="brkt">(</span><span class="func">dimy_tile</span> Key<span class="brkt">))</span>
+			<span class="brkt">(</span><span class="func">start_image</span> Key<span class="brkt">)</span> 
+			<span class="brkt">(</span><span class="func">fill_image</span> <span class="int">0</span> <span class="int">0</span> XKey YKey <span class="int">-15</span><span class="brkt">)</span>
+			<span class="brkt">(</span><span class="func">cond</span> 
+				<span class="brkt">((</span><span class="func">=</span> <span class="brkt">(</span><span class="func">nth</span> <span class="func">Num</span> LstStatusButton<span class="brkt">)</span> <span class="int">1</span><span class="brkt">)</span>
+					<span class="brkt">(</span><span class="func">setq</span> Vector <span class="brkt">(</span><span class="func">nth</span> <span class="int">0</span> LstVectors<span class="brkt">))</span>
+				<span class="brkt">)</span>	
+				<span class="brkt">((</span><span class="func">=</span> <span class="brkt">(</span><span class="func">nth</span> <span class="func">Num</span> LstStatusButton<span class="brkt">)</span> <span class="int">-1</span><span class="brkt">)</span>
+					<span class="brkt">(</span><span class="func">setq</span> Vector <span class="brkt">(</span><span class="func">nth</span> <span class="int">1</span> LstVectors<span class="brkt">))</span>
+				<span class="brkt">)</span>	
+			<span class="brkt">)</span>
+			<span class="brkt">(</span><span class="func">if</span> Vector
+				<span class="brkt">(</span><span class="func">progn</span>
+					<span class="brkt">(</span><span class="func">setq</span> X <span class="brkt">(</span><span class="func">nth</span> <span class="int">0</span> Vector<span class="brkt">))</span>
+					<span class="brkt">(</span><span class="func">setq</span> Y <span class="brkt">(</span><span class="func">nth</span> <span class="int">1</span> Vector<span class="brkt">))</span>
+					<span class="brkt">(</span><span class="func">setq</span> x1 <span class="brkt">(</span><span class="func">fix</span> <span class="brkt">(</span><span class="func">*</span> <span class="brkt">(</span><span class="func">car</span> X<span class="brkt">)</span> XKey<span class="brkt">)))</span>
+					<span class="brkt">(</span><span class="func">setq</span> y1 <span class="brkt">(</span><span class="func">fix</span> <span class="brkt">(</span><span class="func">*</span> <span class="brkt">(</span><span class="func">car</span> Y<span class="brkt">)</span> YKey<span class="brkt">)))</span>
+					<span class="brkt">(</span><span class="func">setq</span> x2 <span class="brkt">(</span><span class="func">fix</span> <span class="brkt">(</span><span class="func">*</span> <span class="brkt">(</span><span class="func">cadr</span> X<span class="brkt">)</span> XKey<span class="brkt">)))</span>
+					<span class="brkt">(</span><span class="func">setq</span> y2 <span class="brkt">(</span><span class="func">fix</span> <span class="brkt">(</span><span class="func">*</span> <span class="brkt">(</span><span class="func">cadr</span> Y<span class="brkt">)</span> YKey<span class="brkt">)))</span>
+					<span class="brkt">(</span><span class="func">setq</span> x3 <span class="brkt">(</span><span class="func">fix</span> <span class="brkt">(</span><span class="func">*</span> <span class="brkt">(</span><span class="func">caddr</span> X<span class="brkt">)</span> XKey<span class="brkt">)))</span>
+					<span class="brkt">(</span><span class="func">setq</span> y3 <span class="brkt">(</span><span class="func">fix</span> <span class="brkt">(</span><span class="func">*</span> <span class="brkt">(</span><span class="func">caddr</span> Y<span class="brkt">)</span> YKey<span class="brkt">)))</span>
+					<span class="brkt">(</span><span class="func">vector_image</span> x1 y1 x2 y2 <span class="int">250</span><span class="brkt">)</span>
+					<span class="brkt">(</span><span class="func">vector_image</span> x2 y2 x3 y3 <span class="int">250</span><span class="brkt">)</span>
+					<span class="brkt">(</span><span class="func">vector_image</span> x3 y3 x1 y1 <span class="int">250</span><span class="brkt">)</span>
+				<span class="brkt">)</span>
+			<span class="brkt">)</span>
+			<span class="brkt">(</span><span class="func">end_image</span><span class="brkt">)</span>
+			<span class="brkt">(</span><span class="func">setq</span> <span class="func">Num</span> <span class="brkt">(</span><span class="func">1+</span> <span class="func">Num</span><span class="brkt">))</span>
+			<span class="brkt">(</span><span class="func">setq</span> Vector <span class="func">nil</span><span class="brkt">)</span>
+		<span class="brkt">)</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> UpDateButtons <span class="brkt">(</span>Key LstButtonKey LstStatusButton <span class="func">/</span> NthVal <span class="func">Rtn</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">and</span> Key LstStatusButton LstButtonKey<span class="brkt">)</span>
+			<span class="brkt">(</span><span class="func">progn</span>
+				<span class="brkt">(</span><span class="func">setq</span> NthVal <span class="brkt">(</span><span class="func">GetNth</span> LstButtonKey Key<span class="brkt">))</span>
+				<span class="brkt">(</span><span class="func">cond</span>
+					<span class="brkt">((</span><span class="func">=</span> <span class="brkt">(</span><span class="func">nth</span> NthVal LstStatusButton<span class="brkt">)</span> <span class="int">0</span><span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">LM:SubstNth</span> <span class="int">1</span> NthVal LstStatusButton<span class="brkt">))</span>
+					<span class="brkt">)</span>
+					<span class="brkt">((</span><span class="func">=</span> <span class="brkt">(</span><span class="func">nth</span> NthVal LstStatusButton<span class="brkt">)</span> <span class="int">1</span><span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">LM:SubstNth</span> <span class="int">-1</span> NthVal LstStatusButton<span class="brkt">))</span>
+					<span class="brkt">)</span>
+					<span class="brkt">((</span><span class="func">=</span> <span class="brkt">(</span><span class="func">nth</span> NthVal LstStatusButton<span class="brkt">)</span> <span class="int">-1</span><span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">LM:SubstNth</span> <span class="int">1</span> NthVal LstStatusButton<span class="brkt">))</span>
+					<span class="brkt">)</span>
+				<span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">setq</span> <span class="func">Num</span> <span class="int">0</span><span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">repeat</span> <span class="brkt">(</span><span class="func">length</span> LstStatusButton<span class="brkt">)</span>
+					<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">/=</span> <span class="func">Num</span> NthVal<span class="brkt">)</span> <span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">LM:SubstNth</span> <span class="int">0</span> <span class="func">Num</span> <span class="func">Rtn</span><span class="brkt">)))</span>
+					<span class="brkt">(</span><span class="func">setq</span> <span class="func">Num</span> <span class="brkt">(</span><span class="func">1+</span> <span class="func">Num</span><span class="brkt">))</span>
+				<span class="brkt">)</span>
+				<span class="brkt">(</span>MakeButtons LstButtonKey <span class="func">Rtn</span><span class="brkt">)</span>
+			<span class="brkt">)</span>
+		<span class="brkt">)</span>
+		<span class="func">Rtn</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> MakeListShape <span class="brkt">(</span>FileShape <span class="func">/</span> EnameShape Pr itm LstIdShapeFromBom <span class="func">Rtn</span><span class="brkt">)</span>
+		
+		<span class="brkt">(</span><span class="func">setq</span> Pr <span class="int">1</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">setq</span> AlertShape$ <span class="func">nil</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">if</span> FileShape
+			<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">setq</span> LstShape <span class="brkt">(</span><span class="func">ReadFileNesting</span> FileShape <span class="str">" "</span><span class="brkt">))</span>
+				<span class="cmt">;Prg Id Order Phase Mark Qta Thik Length Height Mat n.torch</span>
+				<span class="cmt">;1 782139489 C792 1 1252 2 33 550 410 S355J2W 1</span>
+				<span class="brkt">(</span><span class="func">progn</span>
+					<span class="brkt">(</span><span class="func">foreach</span> itm <span class="brkt">(</span><span class="func">GetLstBlockBomShapeByRgp</span><span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">setq</span> LstIdShapeFromBom <span class="brkt">(</span><span class="func">append</span> LstIdShapeFromBom <span class="brkt">(</span><span class="func">list</span> <span class="brkt">(</span><span class="func">LM:vl-getattributevalue</span> <span class="brkt">(</span><span class="func">vlax-ename-&gt;vla-object</span> itm<span class="brkt">)</span> <span class="str">"IDSHAPE"</span><span class="brkt">))))</span>
+					<span class="brkt">)</span>
+				
+					<span class="brkt">(</span><span class="func">foreach</span> itm <span class="brkt">(</span><span class="func">cdr</span> LstShape<span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">member</span> <span class="brkt">(</span><span class="func">cadr</span> itm<span class="brkt">)</span> LstIdShapeFromBom<span class="brkt">)</span>
+							<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">append</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">list</span> <span class="brkt">(</span><span class="func">list</span> 	<span class="brkt">(</span><span class="func">LM:rtos</span> Pr <span class="int">2</span> <span class="int">0</span><span class="brkt">)</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">1</span> itm<span class="brkt">)</span>		<span class="cmt">;Id</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">2</span> itm<span class="brkt">)</span>		<span class="cmt">;Order</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">3</span> itm<span class="brkt">)</span>		<span class="cmt">;Phase</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">4</span> itm<span class="brkt">)</span>		<span class="cmt">;Mark</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">5</span> itm<span class="brkt">)</span>		<span class="cmt">;Qta</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">6</span> itm<span class="brkt">)</span>		<span class="cmt">;Tk</span>
+																<span class="str">"OK"</span><span class="brkt">))))</span>
+							<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">append</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">list</span> <span class="brkt">(</span><span class="func">list</span> 	<span class="brkt">(</span><span class="func">LM:rtos</span> Pr <span class="int">2</span> <span class="int">0</span><span class="brkt">)</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">1</span> itm<span class="brkt">)</span>		<span class="cmt">;Id</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">2</span> itm<span class="brkt">)</span>		<span class="cmt">;Order</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">3</span> itm<span class="brkt">)</span>		<span class="cmt">;Phase</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">4</span> itm<span class="brkt">)</span>		<span class="cmt">;Mark</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">5</span> itm<span class="brkt">)</span>		<span class="cmt">;Qta</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">6</span> itm<span class="brkt">)</span>		<span class="cmt">;Tk</span>
+																<span class="str">"NO"</span><span class="brkt">)))</span>
+								AlertShape$ <span class="func">T</span>
+							<span class="brkt">)</span>
+						<span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">setq</span> Pr <span class="brkt">(</span><span class="func">1+</span> Pr<span class="brkt">))</span>
+					<span class="brkt">)</span>
+				<span class="brkt">)</span>
+			<span class="brkt">)</span>
+			<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">SortTable</span> <span class="func">Rtn</span> <span class="quot">'</span><span class="brkt">(</span><span class="int">0</span> <span class="int">0</span> <span class="int">1</span> <span class="int">2</span> <span class="int">4</span> <span class="int">0</span> <span class="int">3</span> <span class="int">0</span><span class="brkt">)</span> <span class="str">"&lt;"</span><span class="brkt">))</span>
+		<span class="brkt">)</span>
+		<span class="func">Rtn</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> MakeListSheet <span class="brkt">(</span>FileSheet <span class="func">/</span> EnameSheet itm Pr LstIdSheetFromBom <span class="func">Rtn</span><span class="brkt">)</span>
+		
+		<span class="brkt">(</span><span class="func">setq</span> AlertSheet$ <span class="func">nil</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">setq</span> Pr <span class="int">1</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">if</span> FileSheet
+			<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">setq</span> LstSheet <span class="brkt">(</span><span class="func">ReadFileNesting</span> FileSheet <span class="str">" "</span><span class="brkt">))</span>
+				<span class="cmt">;Prg Id Stok Width Length Thik Surface Weight Mat n.torch</span>
+				<span class="cmt">;2 02544 STK_GGG_02 2500 5000 10 12.5 981.25 FF 1</span>
+				<span class="brkt">(</span><span class="func">progn</span>
+					<span class="brkt">(</span><span class="func">foreach</span> itm <span class="brkt">(</span><span class="func">GetLstBlockBomSheetByRgp</span><span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">setq</span> LstIdSheetFromBom <span class="brkt">(</span><span class="func">append</span> LstIdSheetFromBom <span class="brkt">(</span><span class="func">list</span> <span class="brkt">(</span><span class="func">LM:vl-getattributevalue</span> <span class="brkt">(</span><span class="func">vlax-ename-&gt;vla-object</span> itm<span class="brkt">)</span> <span class="str">"ID_SHEET"</span><span class="brkt">))))</span>
+					<span class="brkt">)</span>
+				
+					<span class="brkt">(</span><span class="func">foreach</span> itm <span class="brkt">(</span><span class="func">cdr</span> LstSheet<span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">member</span> <span class="brkt">(</span><span class="func">cadr</span> itm<span class="brkt">)</span> LstIdSheetFromBom<span class="brkt">)</span>
+							<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">append</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">list</span> <span class="brkt">(</span><span class="func">list</span>  	<span class="brkt">(</span><span class="func">LM:rtos</span> Pr <span class="int">2</span> <span class="int">0</span><span class="brkt">)</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">1</span> itm<span class="brkt">)</span>		<span class="cmt">;Id</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">2</span> itm<span class="brkt">)</span>		<span class="cmt">;Stock</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">3</span> itm<span class="brkt">)</span>		<span class="cmt">;Width</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">4</span> itm<span class="brkt">)</span>		<span class="cmt">;Length</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">5</span> itm<span class="brkt">)</span>		<span class="cmt">;Thik</span>
+																<span class="str">"OK"</span><span class="brkt">))))</span>
+							<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">append</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">list</span> <span class="brkt">(</span><span class="func">list</span>  	<span class="brkt">(</span><span class="func">LM:rtos</span> Pr <span class="int">2</span> <span class="int">0</span><span class="brkt">)</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">1</span> itm<span class="brkt">)</span>		<span class="cmt">;Id</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">2</span> itm<span class="brkt">)</span>		<span class="cmt">;Stock</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">3</span> itm<span class="brkt">)</span>		<span class="cmt">;Width</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">4</span> itm<span class="brkt">)</span>		<span class="cmt">;Length</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">5</span> itm<span class="brkt">)</span>		<span class="cmt">;Thik</span>
+																<span class="str">"NO"</span><span class="brkt">)))</span>
+								  AlertSheet$ <span class="func">T</span>
+
+							<span class="brkt">)</span>
+						<span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">setq</span> Pr <span class="brkt">(</span><span class="func">1+</span> Pr<span class="brkt">))</span>
+					<span class="brkt">)</span>
+				<span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">SortTable</span> <span class="func">Rtn</span> <span class="quot">'</span><span class="brkt">(</span><span class="int">0</span> <span class="int">0</span> <span class="int">2</span> <span class="int">3</span> <span class="int">4</span> <span class="int">1</span> <span class="int">0</span><span class="brkt">)</span> <span class="str">"&lt;"</span><span class="brkt">))</span>
+			<span class="brkt">)</span>
+		<span class="brkt">)</span>
+		<span class="func">Rtn</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> GetSelectShape <span class="brkt">(</span>OutFile Key TypeQuantity <span class="func">/</span> <span class="func">Rtn</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">cond</span>
+			<span class="brkt">((</span><span class="func">=</span> TypeQuantity <span class="str">"1"</span><span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">GuiSelPiecesShape</span> <span class="brkt">(</span><span class="func">GetTableStockDeductShapeNesting</span><span class="brkt">)</span> OutFile<span class="brkt">))</span>
+			<span class="brkt">)</span>
+			<span class="brkt">((</span><span class="func">=</span> TypeQuantity <span class="str">"0"</span><span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">GuiSelPiecesShape</span> <span class="brkt">(</span><span class="func">GetTableStockShapeNesting</span><span class="brkt">)</span>       OutFile<span class="brkt">))</span>
+			<span class="brkt">)</span>
+		<span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">car</span> <span class="func">Rtn</span><span class="brkt">)</span> 
+			<span class="brkt">(</span><span class="func">set_tile</span>  Key	<span class="brkt">(</span><span class="func">car</span> <span class="func">Rtn</span><span class="brkt">))</span> 
+			<span class="brkt">(</span><span class="func">set_tile</span>  Key	<span class="str">""</span><span class="brkt">)</span>
+		<span class="brkt">)</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> <span class="func">GetSelectSheet</span> <span class="brkt">(</span>OutFile Key <span class="func">/</span> <span class="func">Rtn</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">GuiSelPiecesSheet</span> <span class="brkt">(</span><span class="func">GetTableStockSheetNesting</span> <span class="int">1</span><span class="brkt">)</span> OutFile<span class="brkt">))</span>
+		<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">car</span> <span class="func">Rtn</span><span class="brkt">)</span> 
+			<span class="brkt">(</span><span class="func">set_tile</span>  Key	<span class="brkt">(</span><span class="func">car</span> <span class="func">Rtn</span><span class="brkt">))</span> 
+			<span class="brkt">(</span><span class="func">set_tile</span>  Key	<span class="str">""</span><span class="brkt">)</span>
+		<span class="brkt">)</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> RestoreFile <span class="brkt">(</span>Key Ext <span class="func">/</span> <span class="func">Rtn</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">LM:getfiles</span> <span class="str">"Seleziona file Sheet"</span> <span class="func">DxfNestingEasyCut$</span> Ext<span class="brkt">))</span>
+		<span class="brkt">(</span><span class="func">if</span> <span class="func">Rtn</span> 
+			<span class="brkt">(</span><span class="func">set_tile</span>  Key	<span class="brkt">(</span><span class="func">car</span> <span class="func">Rtn</span><span class="brkt">))</span> 
+			<span class="brkt">(</span><span class="func">set_tile</span>  Key	<span class="str">""</span><span class="brkt">)</span>
+		<span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">car</span> <span class="func">Rtn</span><span class="brkt">)</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> BoxToList <span class="brkt">(</span>LstBox <span class="func">/</span> itm <span class="func">Rtn</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">foreach</span> itm LstBox
+			<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">append</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">list</span> <span class="brkt">(</span><span class="func">LM:str-&gt;lst</span> itm <span class="str">"\t"</span><span class="brkt">))))</span>
+		<span class="brkt">)</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> ListToBox <span class="brkt">(</span>LstBox <span class="func">/</span> itm <span class="func">Rtn</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">foreach</span> itm LstBox
+			<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">append</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">list</span> <span class="brkt">(</span><span class="func">LM:lst-&gt;str</span> itm <span class="str">"\t"</span><span class="brkt">))))</span>
+		<span class="brkt">)</span>
+		<span class="func">Rtn</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> LoadTable <span class="brkt">(</span>LstTable KeyBox<span class="brkt">)</span>
+
+		<span class="brkt">(</span><span class="func">if</span> LstTable
+			<span class="brkt">(</span><span class="func">progn</span>
+				<span class="brkt">(</span><span class="func">start_list</span> KeyBox<span class="brkt">)</span>
+					<span class="brkt">(</span><span class="func">mapcar</span> <span class="quot">'</span><span class="func">add_list</span> LstTable<span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">end_list</span><span class="brkt">)</span>
+			<span class="brkt">)</span>
+		<span class="brkt">)</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> SortBox <span class="brkt">(</span>LstTableNesting KeyBox LstSort <span class="func">/</span> LstSort TypeSort <span class="func">Num</span> itm <span class="func">Rtn</span><span class="brkt">)</span>
+
+		<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">and</span> LstTableNesting KeyBox LstSort<span class="brkt">)</span>
+			<span class="brkt">(</span><span class="func">progn</span>
+				<span class="brkt">(</span><span class="func">setq</span> TypeSort <span class="str">"&gt;"</span><span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">setq</span> <span class="func">Num</span> <span class="int">0</span><span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">foreach</span> itm LstSort
+					<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">=</span> itm <span class="int">-1</span><span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">progn</span>
+							<span class="brkt">(</span><span class="func">setq</span> TypeSort <span class="str">"&lt;"</span><span class="brkt">)</span>
+							<span class="brkt">(</span><span class="func">setq</span> LstSort <span class="brkt">(</span><span class="func">LM:SubstNth</span> <span class="int">1</span> <span class="func">Num</span> LstSort<span class="brkt">))</span>
+						<span class="brkt">)</span>
+					<span class="brkt">)</span>
+				<span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span>ListToBox <span class="brkt">(</span><span class="func">SortTable</span> <span class="brkt">(</span>BoxToList LstTableNesting<span class="brkt">)</span> LstSort TypeSort<span class="brkt">)))</span>
+				<span class="brkt">(</span>LoadTable <span class="func">Rtn</span> KeyBox<span class="brkt">)</span>
+			<span class="brkt">)</span>
+		<span class="brkt">)</span>
+		<span class="func">Rtn</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> UpdateBoxList <span class="brkt">(</span>KeyBox FileIn TypeEl <span class="func">/</span> Lst <span class="func">Rtn</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">and</span> KeyBox FileIn<span class="brkt">)</span>
+			<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">findfile</span> FileIn<span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">progn</span>
+					<span class="brkt">(</span><span class="func">cond</span> 
+						<span class="brkt">((</span><span class="func">=</span> TypeEl <span class="str">"SHEET"</span><span class="brkt">)</span>
+							<span class="brkt">(</span><span class="func">setq</span> Lst  <span class="brkt">(</span>MakeListSheet FileIn<span class="brkt">))</span>
+						<span class="brkt">)</span>
+						<span class="brkt">((</span><span class="func">=</span> TypeEl <span class="str">"SHAPE"</span><span class="brkt">)</span>
+							<span class="brkt">(</span><span class="func">setq</span> Lst  <span class="brkt">(</span>MakeListShape FileIn<span class="brkt">))</span>
+						<span class="brkt">)</span>
+					<span class="brkt">)</span>
+					<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span>  <span class="brkt">(</span>ListToBox Lst<span class="brkt">))</span>
+					<span class="brkt">(</span>LoadTable <span class="func">Rtn</span> KeyBox<span class="brkt">)</span>
+				<span class="brkt">)</span>
+			<span class="brkt">)</span>
+		<span class="brkt">)</span>
+		<span class="func">Rtn</span>
+	<span class="brkt">)</span>
+	
+	<span class="cmt">;</span>
+	<span class="cmt">; Main</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">setq</span> FileSaveShape 	  <span class="brkt">(</span><span class="func">strcat</span> <span class="func">DxfNestingEasyCut$</span> <span class="str">"StdShapeExpert.shp"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">setq</span> FileSaveSheet       <span class="brkt">(</span><span class="func">strcat</span> <span class="func">DxfNestingEasyCut$</span> <span class="str">"StdSheetExpert.sht"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">setq</span> LstButtonShapeKey   <span class="quot">'</span><span class="brkt">(</span><span class="str">"BtShape1"</span> <span class="str">"BtShape2"</span> <span class="str">"BtShape3"</span> <span class="str">"BtShape4"</span> <span class="str">"BtShape5"</span> <span class="str">"BtShape6"</span> <span class="str">"BtShape7"</span> <span class="str">"BtShape8"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">setq</span> <span class="func">LstButtonSheetKey</span>   <span class="quot">'</span><span class="brkt">(</span><span class="str">"BtSheet1"</span> <span class="str">"BtSheet2"</span> <span class="str">"BtSheet3"</span> <span class="str">"BtSheet4"</span> <span class="str">"BtSheet5"</span> <span class="str">"BtSheet6"</span> <span class="str">"BtSheet7"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">setq</span> LstSortShape 	      <span class="quot">'</span><span class="brkt">(</span><span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">setq</span> LstSortSheet 	      <span class="quot">'</span><span class="brkt">(</span><span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">setq</span> AlertShape$ <span class="func">T</span><span class="brkt">)</span>
+	<span class="brkt">(</span><span class="func">setq</span> AlertShape$ <span class="func">T</span><span class="brkt">)</span>
+
+	<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">not</span> <span class="func">CalcQtyE$</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">setq</span> <span class="func">CalcQtyE$</span> <span class="str">"1"</span><span class="brkt">)</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="cmt">; Main</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">setq</span> xx <span class="brkt">(</span><span class="func">load_dialog</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="func">GuiPathEasyCut$</span> <span class="str">"geocut.dcl"</span><span class="brkt">)))</span>
+	<span class="cmt">;(setq xx (load_dialog "c:\\EasyCutBeta\\test\\test.dcl"))</span>
+	<span class="brkt">(</span><span class="func">new_dialog</span> <span class="str">"NestingDialog"</span> xx <span class="str">""</span> <span class="brkt">(</span><span class="func">cond</span> <span class="brkt">(</span> <span class="func">*NestingDialog*</span> <span class="brkt">)</span> <span class="brkt">(</span> <span class="quot">'</span><span class="brkt">(</span><span class="int">-1</span> <span class="int">-1</span><span class="brkt">)</span> <span class="brkt">)))</span>
+	
+	<span class="brkt">(</span><span class="func">set_tile</span>  <span class="str">"DeductShape"</span>	<span class="func">CalcQtyE$</span><span class="brkt">)</span>
+	
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"DeductShape"</span>	<span class="str">"(setq CalcQtyE$ (get_tile \"DeductShape\"))"</span><span class="brkt">)</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"SelectShape"</span> 	<span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(if (/= (GetSelectShape FileSaveShape \"FileSelectShape\" CalcQtyE$) \"\")
+											 (setq LstBoxShape (UpdateBoxList \"ListShape\" FileSaveShape \"SHAPE\"))
+										 )"</span><span class="brkt">))</span>								
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"SelectSheet"</span> 	<span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(if (/= (GetSelectSheet FileSaveSheet \"FileSelectSheet\") \"\")
+											 (setq LstBoxSheet (UpdateBoxList \"ListSheet\" FileSaveSheet \"SHEET\"))
+										 )"</span><span class="brkt">))</span>
+										 
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtShape1"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortShape (UpDateButtons \"BtShape1\" LstButtonShapeKey LstSortShape))
+									 (setq LstBoxShape  (SortBox LstBoxShape \"ListShape\" LstSortShape))"</span><span class="brkt">))</span> 			<span class="cmt">; LstShape = ("1\t782139489\tC792\t1\t1252\t2\t33\tOK" ....)</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtShape2"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortShape (UpDateButtons \"BtShape2\" LstButtonShapeKey LstSortShape))
+									 (setq LstBoxShape  (SortBox LstBoxShape \"ListShape\" LstSortShape))"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtShape3"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortShape (UpDateButtons \"BtShape3\" LstButtonShapeKey LstSortShape))
+									 (setq LstBoxShape  (SortBox LstBoxShape \"ListShape\" LstSortShape))"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtShape4"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortShape (UpDateButtons \"BtShape4\" LstButtonShapeKey LstSortShape))
+									 (setq LstBoxShape  (SortBox LstBoxShape \"ListShape\" LstSortShape))"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtShape5"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortShape (UpDateButtons \"BtShape5\" LstButtonShapeKey LstSortShape))
+									 (setq LstBoxShape  (SortBox LstBoxShape \"ListShape\" LstSortShape))"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtShape6"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortShape (UpDateButtons \"BtShape6\" LstButtonShapeKey LstSortShape))
+									 (setq LstBoxShape  (SortBox LstBoxShape \"ListShape\" LstSortShape))"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtShape7"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortShape (UpDateButtons \"BtShape7\" LstButtonShapeKey LstSortShape))
+									 (setq LstBoxShape  (SortBox LstBoxShape \"ListShape\" LstSortShape))"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtShape8"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortShape (UpDateButtons \"BtShape8\" LstButtonShapeKey LstSortShape))
+									 (setq LstBoxShape  (SortBox LstBoxShape \"ListShape\" LstSortShape))"</span><span class="brkt">))</span>
+
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtSheet1"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortSheet (UpDateButtons \"BtSheet1\" LstButtonSheetKey LstSortSheet))
+									 (setq LstBoxSheet  (SortBox LstBoxSheet \"ListSheet\" LstSortSheet))"</span><span class="brkt">))</span> 
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtSheet2"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortSheet (UpDateButtons \"BtSheet2\" LstButtonSheetKey LstSortSheet))
+									 (setq LstBoxSheet  (SortBox LstBoxSheet \"ListSheet\" LstSortSheet))"</span><span class="brkt">))</span> 
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtSheet3"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortSheet (UpDateButtons \"BtSheet3\" LstButtonSheetKey LstSortSheet))
+									 (setq LstBoxSheet  (SortBox LstBoxSheet \"ListSheet\" LstSortSheet))"</span><span class="brkt">))</span> 
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtSheet4"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortSheet (UpDateButtons \"BtSheet4\" LstButtonSheetKey LstSortSheet))
+									 (setq LstBoxSheet  (SortBox LstBoxSheet \"ListSheet\" LstSortSheet))"</span><span class="brkt">))</span> 
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtSheet5"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortSheet (UpDateButtons \"BtSheet5\" LstButtonSheetKey LstSortSheet))
+									 (setq LstBoxSheet  (SortBox LstBoxSheet \"ListSheet\" LstSortSheet))"</span><span class="brkt">))</span> 
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtSheet6"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortSheet (UpDateButtons \"BtSheet6\" LstButtonSheetKey LstSortSheet))
+									 (setq LstBoxSheet  (SortBox LstBoxSheet \"ListSheet\" LstSortSheet))"</span><span class="brkt">))</span> 
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtSheet7"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortSheet (UpDateButtons \"BtSheet7\" LstButtonSheetKey LstSortSheet))
+									 (setq LstBoxSheet  (SortBox LstBoxSheet \"ListSheet\" LstSortSheet))"</span><span class="brkt">))</span> 
+
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"RestoreShape"</span>	<span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq FileSaveShape (RestoreFile \"FileSelectShape\" \"shp\"))
+										 (setq LstBoxShape   (UpdateBoxList \"ListShape\" FileSaveShape \"SHAPE\"))
+										"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"RestoreSheet"</span>	<span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq FileSaveSheet (RestoreFile \"FileSelectSheet\" \"sht\"))
+										 (setq LstBoxSheet   (UpdateBoxList \"ListSheet\" FileSaveSheet \"SHEET\"))
+										"</span><span class="brkt">))</span>
+
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"Nesting"</span> 		<span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(if (or AlertShape$ AlertSheet$)
+											(LM:popup \"Errore\" \"Contorni o lamiere non disponibili\" (+ 0 16 4096))
+											(progn
+												(setq 	GoNesting T  
+														LstShape (ReadFileNesting (get_tile \"FileSelectShape\") \" \")
+														LstSheet (ReadFileNesting (get_tile \"FileSelectSheet\") \" \")
+														*NestingDialog* (done_dialog)
+												)
+												(unload_dialog xx)
+											)
+										 )"</span><span class="brkt">))</span>
+		
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"cancel"</span>		<span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq  *NestingDialog* (done_dialog)) (unload_dialog xx)"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">start_dialog</span><span class="brkt">)</span>
+	
+	<span class="brkt">(</span><span class="func">if</span> GoNesting
+		<span class="brkt">(</span><span class="func">CreateNestingExpert</span> <span class="brkt">(</span><span class="func">cdr</span> LstSheet<span class="brkt">)</span> <span class="brkt">(</span><span class="func">cdr</span> LstShape<span class="brkt">)</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="func">DxfNestingEasyCut$</span> <span class="str">"FileXml.xml"</span><span class="brkt">))</span>
+	<span class="brkt">)</span>
+<span class="brkt">)</span>
+<span class="cmt">;</span>
+<span class="cmt">;</span>
+<span class="cmt">;</span>
+<span class="brkt">(</span><span class="func">defun</span> <span class="func">GuiSimpleNesting</span> <span class="brkt">(</span><span class="func">/</span> MakeButtons UpDateButtons MakeListShape MakeListSheet GetSelectShape <span class="func">GetSelectSheet</span>
+						   RestoreFile BoxToList ListToBox LoadTable SortBox UpdateBoxList
+						   FileSaveShape FileSaveSheet LstButtonShapeKey <span class="func">LstButtonSheetKey</span> LstSortShape LstSortSheet
+						   AlertShape$
+						   AlertSheet$
+						   xx LstBoxShape LstBoxSheet LstSheet LstShape GoNesting<span class="brkt">)</span>
+											   
+	
+	<span class="brkt">(</span><span class="func">defun</span> MakeButtons <span class="brkt">(</span>LstButtonKey LstStatusButton <span class="func">/</span> LstVectors <span class="func">Num</span> Key XKey YKey Vector X Y x1 y1 x2 y2 x3 y3<span class="brkt">)</span>
+		
+		<span class="brkt">(</span><span class="func">setq</span> LstVectors <span class="brkt">(</span><span class="func">list</span> 	<span class="brkt">(</span><span class="func">list</span> 	<span class="brkt">(</span><span class="func">list</span> <span class="rea">0.43</span> <span class="rea">0.57</span> <span class="rea">0.50</span><span class="brkt">)</span>
+										<span class="brkt">(</span><span class="func">list</span> <span class="rea">0.35</span> <span class="rea">0.35</span> <span class="rea">0.65</span><span class="brkt">)</span>
+								<span class="brkt">)</span>
+								<span class="brkt">(</span><span class="func">list</span> 	<span class="brkt">(</span><span class="func">list</span> <span class="rea">0.57</span> <span class="rea">0.43</span> <span class="rea">0.50</span><span class="brkt">)</span>
+										<span class="brkt">(</span><span class="func">list</span> <span class="rea">0.65</span> <span class="rea">0.65</span> <span class="rea">0.35</span><span class="brkt">)</span>
+								<span class="brkt">)</span>
+						 <span class="brkt">)</span>
+		<span class="brkt">)</span>
+
+		<span class="brkt">(</span><span class="func">setq</span> <span class="func">Num</span> <span class="int">0</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">foreach</span> Key LstButtonKey
+			<span class="brkt">(</span><span class="func">setq</span> XKey <span class="brkt">(</span><span class="func">dimx_tile</span> Key<span class="brkt">))</span>
+			<span class="brkt">(</span><span class="func">setq</span> YKey <span class="brkt">(</span><span class="func">dimy_tile</span> Key<span class="brkt">))</span>
+			<span class="brkt">(</span><span class="func">start_image</span> Key<span class="brkt">)</span> 
+			<span class="brkt">(</span><span class="func">fill_image</span> <span class="int">0</span> <span class="int">0</span> XKey YKey <span class="int">-15</span><span class="brkt">)</span>
+			<span class="brkt">(</span><span class="func">cond</span> 
+				<span class="brkt">((</span><span class="func">=</span> <span class="brkt">(</span><span class="func">nth</span> <span class="func">Num</span> LstStatusButton<span class="brkt">)</span> <span class="int">1</span><span class="brkt">)</span>
+					<span class="brkt">(</span><span class="func">setq</span> Vector <span class="brkt">(</span><span class="func">nth</span> <span class="int">0</span> LstVectors<span class="brkt">))</span>
+				<span class="brkt">)</span>	
+				<span class="brkt">((</span><span class="func">=</span> <span class="brkt">(</span><span class="func">nth</span> <span class="func">Num</span> LstStatusButton<span class="brkt">)</span> <span class="int">-1</span><span class="brkt">)</span>
+					<span class="brkt">(</span><span class="func">setq</span> Vector <span class="brkt">(</span><span class="func">nth</span> <span class="int">1</span> LstVectors<span class="brkt">))</span>
+				<span class="brkt">)</span>	
+			<span class="brkt">)</span>
+			<span class="brkt">(</span><span class="func">if</span> Vector
+				<span class="brkt">(</span><span class="func">progn</span>
+					<span class="brkt">(</span><span class="func">setq</span> X <span class="brkt">(</span><span class="func">nth</span> <span class="int">0</span> Vector<span class="brkt">))</span>
+					<span class="brkt">(</span><span class="func">setq</span> Y <span class="brkt">(</span><span class="func">nth</span> <span class="int">1</span> Vector<span class="brkt">))</span>
+					<span class="brkt">(</span><span class="func">setq</span> x1 <span class="brkt">(</span><span class="func">fix</span> <span class="brkt">(</span><span class="func">*</span> <span class="brkt">(</span><span class="func">car</span> X<span class="brkt">)</span> XKey<span class="brkt">)))</span>
+					<span class="brkt">(</span><span class="func">setq</span> y1 <span class="brkt">(</span><span class="func">fix</span> <span class="brkt">(</span><span class="func">*</span> <span class="brkt">(</span><span class="func">car</span> Y<span class="brkt">)</span> YKey<span class="brkt">)))</span>
+					<span class="brkt">(</span><span class="func">setq</span> x2 <span class="brkt">(</span><span class="func">fix</span> <span class="brkt">(</span><span class="func">*</span> <span class="brkt">(</span><span class="func">cadr</span> X<span class="brkt">)</span> XKey<span class="brkt">)))</span>
+					<span class="brkt">(</span><span class="func">setq</span> y2 <span class="brkt">(</span><span class="func">fix</span> <span class="brkt">(</span><span class="func">*</span> <span class="brkt">(</span><span class="func">cadr</span> Y<span class="brkt">)</span> YKey<span class="brkt">)))</span>
+					<span class="brkt">(</span><span class="func">setq</span> x3 <span class="brkt">(</span><span class="func">fix</span> <span class="brkt">(</span><span class="func">*</span> <span class="brkt">(</span><span class="func">caddr</span> X<span class="brkt">)</span> XKey<span class="brkt">)))</span>
+					<span class="brkt">(</span><span class="func">setq</span> y3 <span class="brkt">(</span><span class="func">fix</span> <span class="brkt">(</span><span class="func">*</span> <span class="brkt">(</span><span class="func">caddr</span> Y<span class="brkt">)</span> YKey<span class="brkt">)))</span>
+					<span class="brkt">(</span><span class="func">vector_image</span> x1 y1 x2 y2 <span class="int">250</span><span class="brkt">)</span>
+					<span class="brkt">(</span><span class="func">vector_image</span> x2 y2 x3 y3 <span class="int">250</span><span class="brkt">)</span>
+					<span class="brkt">(</span><span class="func">vector_image</span> x3 y3 x1 y1 <span class="int">250</span><span class="brkt">)</span>
+				<span class="brkt">)</span>
+			<span class="brkt">)</span>
+			<span class="brkt">(</span><span class="func">end_image</span><span class="brkt">)</span>
+			<span class="brkt">(</span><span class="func">setq</span> <span class="func">Num</span> <span class="brkt">(</span><span class="func">1+</span> <span class="func">Num</span><span class="brkt">))</span>
+			<span class="brkt">(</span><span class="func">setq</span> Vector <span class="func">nil</span><span class="brkt">)</span>
+		<span class="brkt">)</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> UpDateButtons <span class="brkt">(</span>Key LstButtonKey LstStatusButton <span class="func">/</span> NthVal <span class="func">Rtn</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">and</span> Key LstStatusButton LstButtonKey<span class="brkt">)</span>
+			<span class="brkt">(</span><span class="func">progn</span>
+				<span class="brkt">(</span><span class="func">setq</span> NthVal <span class="brkt">(</span><span class="func">GetNth</span> LstButtonKey Key<span class="brkt">))</span>
+				<span class="brkt">(</span><span class="func">cond</span>
+					<span class="brkt">((</span><span class="func">=</span> <span class="brkt">(</span><span class="func">nth</span> NthVal LstStatusButton<span class="brkt">)</span> <span class="int">0</span><span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">LM:SubstNth</span> <span class="int">1</span> NthVal LstStatusButton<span class="brkt">))</span>
+					<span class="brkt">)</span>
+					<span class="brkt">((</span><span class="func">=</span> <span class="brkt">(</span><span class="func">nth</span> NthVal LstStatusButton<span class="brkt">)</span> <span class="int">1</span><span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">LM:SubstNth</span> <span class="int">-1</span> NthVal LstStatusButton<span class="brkt">))</span>
+					<span class="brkt">)</span>
+					<span class="brkt">((</span><span class="func">=</span> <span class="brkt">(</span><span class="func">nth</span> NthVal LstStatusButton<span class="brkt">)</span> <span class="int">-1</span><span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">LM:SubstNth</span> <span class="int">1</span> NthVal LstStatusButton<span class="brkt">))</span>
+					<span class="brkt">)</span>
+				<span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">setq</span> <span class="func">Num</span> <span class="int">0</span><span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">repeat</span> <span class="brkt">(</span><span class="func">length</span> LstStatusButton<span class="brkt">)</span>
+					<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">/=</span> <span class="func">Num</span> NthVal<span class="brkt">)</span> <span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">LM:SubstNth</span> <span class="int">0</span> <span class="func">Num</span> <span class="func">Rtn</span><span class="brkt">)))</span>
+					<span class="brkt">(</span><span class="func">setq</span> <span class="func">Num</span> <span class="brkt">(</span><span class="func">1+</span> <span class="func">Num</span><span class="brkt">))</span>
+				<span class="brkt">)</span>
+				<span class="brkt">(</span>MakeButtons LstButtonKey <span class="func">Rtn</span><span class="brkt">)</span>
+			<span class="brkt">)</span>
+		<span class="brkt">)</span>
+		<span class="func">Rtn</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> MakeListShape <span class="brkt">(</span>FileShape <span class="func">/</span> EnameShape Pr itm LstIdShapeFromBom <span class="func">Rtn</span><span class="brkt">)</span>
+		
+		<span class="brkt">(</span><span class="func">setq</span> Pr <span class="int">1</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">setq</span> AlertShape$ <span class="func">nil</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">if</span> FileShape
+			<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">setq</span> LstShape <span class="brkt">(</span><span class="func">ReadFileNesting</span> FileShape <span class="str">" "</span><span class="brkt">))</span>
+				<span class="cmt">;Prg Id Order Phase Mark Qta Thik Length Height Mat n.torch</span>
+				<span class="cmt">;1 782139489 C792 1 1252 2 33 550 410 S355J2W 1</span>
+				<span class="brkt">(</span><span class="func">progn</span>
+					<span class="brkt">(</span><span class="func">foreach</span> itm <span class="brkt">(</span><span class="func">GetLstBlockBomShapeByRgp</span><span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">setq</span> LstIdShapeFromBom <span class="brkt">(</span><span class="func">append</span> LstIdShapeFromBom <span class="brkt">(</span><span class="func">list</span> <span class="brkt">(</span><span class="func">LM:vl-getattributevalue</span> <span class="brkt">(</span><span class="func">vlax-ename-&gt;vla-object</span> itm<span class="brkt">)</span> <span class="str">"IDSHAPE"</span><span class="brkt">))))</span>
+					<span class="brkt">)</span>
+				
+					<span class="brkt">(</span><span class="func">foreach</span> itm <span class="brkt">(</span><span class="func">cdr</span> LstShape<span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">member</span> <span class="brkt">(</span><span class="func">cadr</span> itm<span class="brkt">)</span> LstIdShapeFromBom<span class="brkt">)</span>
+							<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">append</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">list</span> <span class="brkt">(</span><span class="func">list</span> 	<span class="brkt">(</span><span class="func">LM:rtos</span> Pr <span class="int">2</span> <span class="int">0</span><span class="brkt">)</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">1</span> itm<span class="brkt">)</span>		<span class="cmt">;Id</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">2</span> itm<span class="brkt">)</span>		<span class="cmt">;Order</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">3</span> itm<span class="brkt">)</span>		<span class="cmt">;Phase</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">4</span> itm<span class="brkt">)</span>		<span class="cmt">;Mark</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">5</span> itm<span class="brkt">)</span>		<span class="cmt">;Qta</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">6</span> itm<span class="brkt">)</span>		<span class="cmt">;Tk</span>
+																<span class="str">"OK"</span><span class="brkt">))))</span>
+							<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">append</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">list</span> <span class="brkt">(</span><span class="func">list</span> 	<span class="brkt">(</span><span class="func">LM:rtos</span> Pr <span class="int">2</span> <span class="int">0</span><span class="brkt">)</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">1</span> itm<span class="brkt">)</span>		<span class="cmt">;Id</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">2</span> itm<span class="brkt">)</span>		<span class="cmt">;Order</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">3</span> itm<span class="brkt">)</span>		<span class="cmt">;Phase</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">4</span> itm<span class="brkt">)</span>		<span class="cmt">;Mark</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">5</span> itm<span class="brkt">)</span>		<span class="cmt">;Qta</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">6</span> itm<span class="brkt">)</span>		<span class="cmt">;Tk</span>
+																<span class="str">"NO"</span><span class="brkt">)))</span>
+								AlertShape$ <span class="func">T</span>
+							<span class="brkt">)</span>
+						<span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">setq</span> Pr <span class="brkt">(</span><span class="func">1+</span> Pr<span class="brkt">))</span>
+					<span class="brkt">)</span>
+				<span class="brkt">)</span>
+			<span class="brkt">)</span>
+			<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">SortTable</span> <span class="func">Rtn</span> <span class="quot">'</span><span class="brkt">(</span><span class="int">0</span> <span class="int">0</span> <span class="int">1</span> <span class="int">2</span> <span class="int">4</span> <span class="int">0</span> <span class="int">3</span> <span class="int">0</span><span class="brkt">)</span> <span class="str">"&lt;"</span><span class="brkt">))</span>
+		<span class="brkt">)</span>
+		<span class="func">Rtn</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> MakeListSheet <span class="brkt">(</span>FileSheet <span class="func">/</span> EnameSheet itm Pr LstIdSheetFromBom <span class="func">Rtn</span><span class="brkt">)</span>
+		
+		<span class="brkt">(</span><span class="func">setq</span> AlertSheet$ <span class="func">nil</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">setq</span> Pr <span class="int">1</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">if</span> FileSheet
+			<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">setq</span> LstSheet <span class="brkt">(</span><span class="func">ReadFileNesting</span> FileSheet <span class="str">" "</span><span class="brkt">))</span>
+				<span class="cmt">;Prg Id Stok Width Length Thik Surface Weight Mat n.torch</span>
+				<span class="cmt">;2 02544 STK_GGG_02 2500 5000 10 12.5 981.25 FF 1</span>
+				<span class="brkt">(</span><span class="func">progn</span>
+					<span class="brkt">(</span><span class="func">foreach</span> itm <span class="brkt">(</span><span class="func">GetLstBlockBomSheetByRgp</span><span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">setq</span> LstIdSheetFromBom <span class="brkt">(</span><span class="func">append</span> LstIdSheetFromBom <span class="brkt">(</span><span class="func">list</span> <span class="brkt">(</span><span class="func">LM:vl-getattributevalue</span> <span class="brkt">(</span><span class="func">vlax-ename-&gt;vla-object</span> itm<span class="brkt">)</span> <span class="str">"ID_SHEET"</span><span class="brkt">))))</span>
+					<span class="brkt">)</span>
+				
+					<span class="brkt">(</span><span class="func">foreach</span> itm <span class="brkt">(</span><span class="func">cdr</span> LstSheet<span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">member</span> <span class="brkt">(</span><span class="func">cadr</span> itm<span class="brkt">)</span> LstIdSheetFromBom<span class="brkt">)</span>
+							<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">append</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">list</span> <span class="brkt">(</span><span class="func">list</span>  	<span class="brkt">(</span><span class="func">LM:rtos</span> Pr <span class="int">2</span> <span class="int">0</span><span class="brkt">)</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">1</span> itm<span class="brkt">)</span>		<span class="cmt">;Id</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">2</span> itm<span class="brkt">)</span>		<span class="cmt">;Stock</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">3</span> itm<span class="brkt">)</span>		<span class="cmt">;Width</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">4</span> itm<span class="brkt">)</span>		<span class="cmt">;Length</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">5</span> itm<span class="brkt">)</span>		<span class="cmt">;Thik</span>
+																<span class="str">"OK"</span><span class="brkt">))))</span>
+							<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">append</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">list</span> <span class="brkt">(</span><span class="func">list</span>  	<span class="brkt">(</span><span class="func">LM:rtos</span> Pr <span class="int">2</span> <span class="int">0</span><span class="brkt">)</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">1</span> itm<span class="brkt">)</span>		<span class="cmt">;Id</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">2</span> itm<span class="brkt">)</span>		<span class="cmt">;Stock</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">3</span> itm<span class="brkt">)</span>		<span class="cmt">;Width</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">4</span> itm<span class="brkt">)</span>		<span class="cmt">;Length</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">5</span> itm<span class="brkt">)</span>		<span class="cmt">;Thik</span>
+																<span class="str">"NO"</span><span class="brkt">)))</span>
+								  AlertSheet$ <span class="func">T</span>
+
+							<span class="brkt">)</span>
+						<span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">setq</span> Pr <span class="brkt">(</span><span class="func">1+</span> Pr<span class="brkt">))</span>
+					<span class="brkt">)</span>
+				<span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">SortTable</span> <span class="func">Rtn</span> <span class="quot">'</span><span class="brkt">(</span><span class="int">0</span> <span class="int">0</span> <span class="int">2</span> <span class="int">3</span> <span class="int">4</span> <span class="int">1</span> <span class="int">0</span><span class="brkt">)</span> <span class="str">"&lt;"</span><span class="brkt">))</span>
+			<span class="brkt">)</span>
+		<span class="brkt">)</span>
+		<span class="func">Rtn</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> GetSelectShape <span class="brkt">(</span>OutFile Key TypeQuantity <span class="func">/</span> <span class="func">Rtn</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">cond</span>
+			<span class="brkt">((</span><span class="func">=</span> TypeQuantity <span class="str">"1"</span><span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">GuiSelPiecesShape</span> <span class="brkt">(</span><span class="func">GetTableStockDeductShapeNesting</span><span class="brkt">)</span> OutFile<span class="brkt">))</span>
+			<span class="brkt">)</span>
+			<span class="brkt">((</span><span class="func">=</span> TypeQuantity <span class="str">"0"</span><span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">GuiSelPiecesShape</span> <span class="brkt">(</span><span class="func">GetTableStockShapeNesting</span><span class="brkt">)</span>       OutFile<span class="brkt">))</span>
+			<span class="brkt">)</span>
+		<span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">car</span> <span class="func">Rtn</span><span class="brkt">)</span> 
+			<span class="brkt">(</span><span class="func">set_tile</span>  Key	<span class="brkt">(</span><span class="func">car</span> <span class="func">Rtn</span><span class="brkt">))</span> 
+			<span class="brkt">(</span><span class="func">set_tile</span>  Key	<span class="str">""</span><span class="brkt">)</span>
+		<span class="brkt">)</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> <span class="func">GetSelectSheet</span> <span class="brkt">(</span>OutFile Key <span class="func">/</span> <span class="func">Rtn</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">GuiSelPiecesSheet</span> <span class="brkt">(</span><span class="func">GetTableStockSheetNesting</span> <span class="int">1</span><span class="brkt">)</span> OutFile<span class="brkt">))</span>
+		<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">car</span> <span class="func">Rtn</span><span class="brkt">)</span> 
+			<span class="brkt">(</span><span class="func">set_tile</span>  Key	<span class="brkt">(</span><span class="func">car</span> <span class="func">Rtn</span><span class="brkt">))</span> 
+			<span class="brkt">(</span><span class="func">set_tile</span>  Key	<span class="str">""</span><span class="brkt">)</span>
+		<span class="brkt">)</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> RestoreFile <span class="brkt">(</span>Key Ext <span class="func">/</span> <span class="func">Rtn</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">LM:getfiles</span> <span class="str">"Seleziona file Sheet"</span> <span class="func">DxfNestingEasyCut$</span> Ext<span class="brkt">))</span>
+		<span class="brkt">(</span><span class="func">if</span> <span class="func">Rtn</span> 
+			<span class="brkt">(</span><span class="func">set_tile</span>  Key	<span class="brkt">(</span><span class="func">car</span> <span class="func">Rtn</span><span class="brkt">))</span> 
+			<span class="brkt">(</span><span class="func">set_tile</span>  Key	<span class="str">""</span><span class="brkt">)</span>
+		<span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">car</span> <span class="func">Rtn</span><span class="brkt">)</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> BoxToList <span class="brkt">(</span>LstBox <span class="func">/</span> itm <span class="func">Rtn</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">foreach</span> itm LstBox
+			<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">append</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">list</span> <span class="brkt">(</span><span class="func">LM:str-&gt;lst</span> itm <span class="str">"\t"</span><span class="brkt">))))</span>
+		<span class="brkt">)</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> ListToBox <span class="brkt">(</span>LstBox <span class="func">/</span> itm <span class="func">Rtn</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">foreach</span> itm LstBox
+			<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">append</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">list</span> <span class="brkt">(</span><span class="func">LM:lst-&gt;str</span> itm <span class="str">"\t"</span><span class="brkt">))))</span>
+		<span class="brkt">)</span>
+		<span class="func">Rtn</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> LoadTable <span class="brkt">(</span>LstTable KeyBox<span class="brkt">)</span>
+
+		<span class="brkt">(</span><span class="func">if</span> LstTable
+			<span class="brkt">(</span><span class="func">progn</span>
+				<span class="brkt">(</span><span class="func">start_list</span> KeyBox<span class="brkt">)</span>
+					<span class="brkt">(</span><span class="func">mapcar</span> <span class="quot">'</span><span class="func">add_list</span> LstTable<span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">end_list</span><span class="brkt">)</span>
+			<span class="brkt">)</span>
+		<span class="brkt">)</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> SortBox <span class="brkt">(</span>LstTableNesting KeyBox LstSort <span class="func">/</span> LstSort TypeSort <span class="func">Num</span> itm <span class="func">Rtn</span><span class="brkt">)</span>
+
+		<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">and</span> LstTableNesting KeyBox LstSort<span class="brkt">)</span>
+			<span class="brkt">(</span><span class="func">progn</span>
+				<span class="brkt">(</span><span class="func">setq</span> TypeSort <span class="str">"&gt;"</span><span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">setq</span> <span class="func">Num</span> <span class="int">0</span><span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">foreach</span> itm LstSort
+					<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">=</span> itm <span class="int">-1</span><span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">progn</span>
+							<span class="brkt">(</span><span class="func">setq</span> TypeSort <span class="str">"&lt;"</span><span class="brkt">)</span>
+							<span class="brkt">(</span><span class="func">setq</span> LstSort <span class="brkt">(</span><span class="func">LM:SubstNth</span> <span class="int">1</span> <span class="func">Num</span> LstSort<span class="brkt">))</span>
+						<span class="brkt">)</span>
+					<span class="brkt">)</span>
+				<span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span>ListToBox <span class="brkt">(</span><span class="func">SortTable</span> <span class="brkt">(</span>BoxToList LstTableNesting<span class="brkt">)</span> LstSort TypeSort<span class="brkt">)))</span>
+				<span class="brkt">(</span>LoadTable <span class="func">Rtn</span> KeyBox<span class="brkt">)</span>
+			<span class="brkt">)</span>
+		<span class="brkt">)</span>
+		<span class="func">Rtn</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> UpdateBoxList <span class="brkt">(</span>KeyBox FileIn TypeEl <span class="func">/</span> Lst <span class="func">Rtn</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">and</span> KeyBox FileIn<span class="brkt">)</span>
+			<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">findfile</span> FileIn<span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">progn</span>
+					<span class="brkt">(</span><span class="func">cond</span> 
+						<span class="brkt">((</span><span class="func">=</span> TypeEl <span class="str">"SHEET"</span><span class="brkt">)</span>
+							<span class="brkt">(</span><span class="func">setq</span> Lst  <span class="brkt">(</span>MakeListSheet FileIn<span class="brkt">))</span>
+						<span class="brkt">)</span>
+						<span class="brkt">((</span><span class="func">=</span> TypeEl <span class="str">"SHAPE"</span><span class="brkt">)</span>
+							<span class="brkt">(</span><span class="func">setq</span> Lst  <span class="brkt">(</span>MakeListShape FileIn<span class="brkt">))</span>
+						<span class="brkt">)</span>
+					<span class="brkt">)</span>
+					<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span>  <span class="brkt">(</span>ListToBox Lst<span class="brkt">))</span>
+					<span class="brkt">(</span>LoadTable <span class="func">Rtn</span> KeyBox<span class="brkt">)</span>
+				<span class="brkt">)</span>
+			<span class="brkt">)</span>
+		<span class="brkt">)</span>
+		<span class="func">Rtn</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="cmt">; Main</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">setq</span> FileSaveShape 	  <span class="brkt">(</span><span class="func">strcat</span> <span class="func">DxfNestingEasyCut$</span> <span class="str">"StdShapeExpert.shp"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">setq</span> FileSaveSheet       <span class="brkt">(</span><span class="func">strcat</span> <span class="func">DxfNestingEasyCut$</span> <span class="str">"StdSheetExpert.sht"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">setq</span> LstButtonShapeKey   <span class="quot">'</span><span class="brkt">(</span><span class="str">"BtShape1"</span> <span class="str">"BtShape2"</span> <span class="str">"BtShape3"</span> <span class="str">"BtShape4"</span> <span class="str">"BtShape5"</span> <span class="str">"BtShape6"</span> <span class="str">"BtShape7"</span> <span class="str">"BtShape8"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">setq</span> <span class="func">LstButtonSheetKey</span>   <span class="quot">'</span><span class="brkt">(</span><span class="str">"BtSheet1"</span> <span class="str">"BtSheet2"</span> <span class="str">"BtSheet3"</span> <span class="str">"BtSheet4"</span> <span class="str">"BtSheet5"</span> <span class="str">"BtSheet6"</span> <span class="str">"BtSheet7"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">setq</span> LstSortShape 	      <span class="quot">'</span><span class="brkt">(</span><span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">setq</span> LstSortSheet 	      <span class="quot">'</span><span class="brkt">(</span><span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">setq</span> AlertShape$ <span class="func">T</span><span class="brkt">)</span>
+	<span class="brkt">(</span><span class="func">setq</span> AlertShape$ <span class="func">T</span><span class="brkt">)</span>
+
+	<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">not</span> CalcQtyS$<span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">setq</span> CalcQtyS$ <span class="str">"1"</span><span class="brkt">)</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="cmt">; Main</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">setq</span> xx <span class="brkt">(</span><span class="func">load_dialog</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="func">GuiPathEasyCut$</span> <span class="str">"geocut.dcl"</span><span class="brkt">)))</span>
+	<span class="cmt">;(setq xx (load_dialog "c:\\EasyCutBeta\\test\\test.dcl"))</span>
+	<span class="brkt">(</span><span class="func">new_dialog</span> <span class="str">"NestingDialog"</span> xx <span class="str">""</span> <span class="brkt">(</span><span class="func">cond</span> <span class="brkt">(</span> <span class="func">*NestingDialog*</span> <span class="brkt">)</span> <span class="brkt">(</span> <span class="quot">'</span><span class="brkt">(</span><span class="int">-1</span> <span class="int">-1</span><span class="brkt">)</span> <span class="brkt">)))</span>
+	
+	<span class="brkt">(</span><span class="func">set_tile</span>  <span class="str">"DeductShape"</span>	CalcQtyS$<span class="brkt">)</span>
+	
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"DeductShape"</span>	<span class="str">"(setq CalcQtyE$ (get_tile \"DeductShape\"))"</span><span class="brkt">)</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"SelectShape"</span> 	<span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(if (/= (GetSelectShape FileSaveShape \"FileSelectShape\" CalcQtyE$) \"\")
+											 (setq LstBoxShape (UpdateBoxList \"ListShape\" FileSaveShape \"SHAPE\"))
+										 )"</span><span class="brkt">))</span>								
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"SelectSheet"</span> 	<span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(if (/= (GetSelectSheet FileSaveSheet \"FileSelectSheet\") \"\")
+											 (setq LstBoxSheet (UpdateBoxList \"ListSheet\" FileSaveSheet \"SHEET\"))
+										 )"</span><span class="brkt">))</span>
+										 
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtShape1"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortShape (UpDateButtons \"BtShape1\" LstButtonShapeKey LstSortShape))
+									 (setq LstBoxShape  (SortBox LstBoxShape \"ListShape\" LstSortShape))"</span><span class="brkt">))</span> 			<span class="cmt">; LstShape = ("1\t782139489\tC792\t1\t1252\t2\t33\tOK" ....)</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtShape2"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortShape (UpDateButtons \"BtShape2\" LstButtonShapeKey LstSortShape))
+									 (setq LstBoxShape  (SortBox LstBoxShape \"ListShape\" LstSortShape))"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtShape3"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortShape (UpDateButtons \"BtShape3\" LstButtonShapeKey LstSortShape))
+									 (setq LstBoxShape  (SortBox LstBoxShape \"ListShape\" LstSortShape))"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtShape4"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortShape (UpDateButtons \"BtShape4\" LstButtonShapeKey LstSortShape))
+									 (setq LstBoxShape  (SortBox LstBoxShape \"ListShape\" LstSortShape))"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtShape5"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortShape (UpDateButtons \"BtShape5\" LstButtonShapeKey LstSortShape))
+									 (setq LstBoxShape  (SortBox LstBoxShape \"ListShape\" LstSortShape))"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtShape6"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortShape (UpDateButtons \"BtShape6\" LstButtonShapeKey LstSortShape))
+									 (setq LstBoxShape  (SortBox LstBoxShape \"ListShape\" LstSortShape))"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtShape7"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortShape (UpDateButtons \"BtShape7\" LstButtonShapeKey LstSortShape))
+									 (setq LstBoxShape  (SortBox LstBoxShape \"ListShape\" LstSortShape))"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtShape8"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortShape (UpDateButtons \"BtShape8\" LstButtonShapeKey LstSortShape))
+									 (setq LstBoxShape  (SortBox LstBoxShape \"ListShape\" LstSortShape))"</span><span class="brkt">))</span>
+
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtSheet1"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortSheet (UpDateButtons \"BtSheet1\" LstButtonSheetKey LstSortSheet))
+									 (setq LstBoxSheet  (SortBox LstBoxSheet \"ListSheet\" LstSortSheet))"</span><span class="brkt">))</span> 
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtSheet2"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortSheet (UpDateButtons \"BtSheet2\" LstButtonSheetKey LstSortSheet))
+									 (setq LstBoxSheet  (SortBox LstBoxSheet \"ListSheet\" LstSortSheet))"</span><span class="brkt">))</span> 
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtSheet3"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortSheet (UpDateButtons \"BtSheet3\" LstButtonSheetKey LstSortSheet))
+									 (setq LstBoxSheet  (SortBox LstBoxSheet \"ListSheet\" LstSortSheet))"</span><span class="brkt">))</span> 
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtSheet4"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortSheet (UpDateButtons \"BtSheet4\" LstButtonSheetKey LstSortSheet))
+									 (setq LstBoxSheet  (SortBox LstBoxSheet \"ListSheet\" LstSortSheet))"</span><span class="brkt">))</span> 
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtSheet5"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortSheet (UpDateButtons \"BtSheet5\" LstButtonSheetKey LstSortSheet))
+									 (setq LstBoxSheet  (SortBox LstBoxSheet \"ListSheet\" LstSortSheet))"</span><span class="brkt">))</span> 
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtSheet6"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortSheet (UpDateButtons \"BtSheet6\" LstButtonSheetKey LstSortSheet))
+									 (setq LstBoxSheet  (SortBox LstBoxSheet \"ListSheet\" LstSortSheet))"</span><span class="brkt">))</span> 
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtSheet7"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortSheet (UpDateButtons \"BtSheet7\" LstButtonSheetKey LstSortSheet))
+									 (setq LstBoxSheet  (SortBox LstBoxSheet \"ListSheet\" LstSortSheet))"</span><span class="brkt">))</span> 
+
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"RestoreShape"</span>	<span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq FileSaveShape (RestoreFile \"FileSelectShape\" \"shp\"))
+										 (setq LstBoxShape   (UpdateBoxList \"ListShape\" FileSaveShape \"SHAPE\"))
+										"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"RestoreSheet"</span>	<span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq FileSaveSheet (RestoreFile \"FileSelectSheet\" \"sht\"))
+										 (setq LstBoxSheet   (UpdateBoxList \"ListSheet\" FileSaveSheet \"SHEET\"))
+										"</span><span class="brkt">))</span>
+
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"Nesting"</span> 		<span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(if (or AlertShape$ AlertSheet$)
+											(LM:popup \"Errore\" \"Contorni o lamiere non disponibili\" (+ 0 16 4096))
+											(progn
+												(setq 	GoNesting T  
+														LstShape (ReadFileNesting (get_tile \"FileSelectShape\") \" \")
+														LstSheet (ReadFileNesting (get_tile \"FileSelectSheet\") \" \")
+														*NestingDialog* (done_dialog)
+												)
+												(unload_dialog xx)
+											)
+										 )"</span><span class="brkt">))</span>
+		
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"cancel"</span>		<span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq  *NestingDialog* (done_dialog)) (unload_dialog xx)"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">start_dialog</span><span class="brkt">)</span>
+
+	<span class="brkt">(</span><span class="func">if</span> GoNesting
+		<span class="brkt">(</span><span class="func">CreateNestingSimple</span> <span class="brkt">(</span><span class="func">cdr</span> LstSheet<span class="brkt">)</span> <span class="brkt">(</span><span class="func">cdr</span> LstShape<span class="brkt">))</span>
+	<span class="brkt">)</span>
+	
+<span class="brkt">)</span>
+<span class="cmt">;</span>
+<span class="cmt">;</span>
+<span class="cmt">;</span>
+<span class="brkt">(</span><span class="func">defun</span> <span class="func">GuiMergeNesting</span> <span class="brkt">(</span><span class="func">/</span> MakeButtons UpDateButtons MakeListShape MakeListSheet RestoreFile BoxToList 
+						  ListToBox LoadTable SortBox UpdateBoxList
+						  AlertShape$ 
+						  AlertSheet$						  
+						  LstButtonShapeKey <span class="func">LstButtonSheetKey</span> LstSortShape LstSortSheet
+						  xx FileSaveShape FileSaveSheet LstBoxShape LstBoxSheet Merge<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> MakeButtons <span class="brkt">(</span>LstButtonKey LstStatusButton <span class="func">/</span> LstVectors <span class="func">Num</span> Key XKey YKey Vector X Y x1 y1 x2 y2 x3 y3<span class="brkt">)</span>
+		
+		<span class="brkt">(</span><span class="func">setq</span> LstVectors <span class="brkt">(</span><span class="func">list</span> 	<span class="brkt">(</span><span class="func">list</span> 	<span class="brkt">(</span><span class="func">list</span> <span class="rea">0.43</span> <span class="rea">0.57</span> <span class="rea">0.50</span><span class="brkt">)</span>
+										<span class="brkt">(</span><span class="func">list</span> <span class="rea">0.35</span> <span class="rea">0.35</span> <span class="rea">0.65</span><span class="brkt">)</span>
+								<span class="brkt">)</span>
+								<span class="brkt">(</span><span class="func">list</span> 	<span class="brkt">(</span><span class="func">list</span> <span class="rea">0.57</span> <span class="rea">0.43</span> <span class="rea">0.50</span><span class="brkt">)</span>
+										<span class="brkt">(</span><span class="func">list</span> <span class="rea">0.65</span> <span class="rea">0.65</span> <span class="rea">0.35</span><span class="brkt">)</span>
+								<span class="brkt">)</span>
+						 <span class="brkt">)</span>
+		<span class="brkt">)</span>
+
+		<span class="brkt">(</span><span class="func">setq</span> <span class="func">Num</span> <span class="int">0</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">foreach</span> Key LstButtonKey
+			<span class="brkt">(</span><span class="func">setq</span> XKey <span class="brkt">(</span><span class="func">dimx_tile</span> Key<span class="brkt">))</span>
+			<span class="brkt">(</span><span class="func">setq</span> YKey <span class="brkt">(</span><span class="func">dimy_tile</span> Key<span class="brkt">))</span>
+			<span class="brkt">(</span><span class="func">start_image</span> Key<span class="brkt">)</span> 
+			<span class="brkt">(</span><span class="func">fill_image</span> <span class="int">0</span> <span class="int">0</span> XKey YKey <span class="int">-15</span><span class="brkt">)</span>
+			<span class="brkt">(</span><span class="func">cond</span> 
+				<span class="brkt">((</span><span class="func">=</span> <span class="brkt">(</span><span class="func">nth</span> <span class="func">Num</span> LstStatusButton<span class="brkt">)</span> <span class="int">1</span><span class="brkt">)</span>
+					<span class="brkt">(</span><span class="func">setq</span> Vector <span class="brkt">(</span><span class="func">nth</span> <span class="int">0</span> LstVectors<span class="brkt">))</span>
+				<span class="brkt">)</span>	
+				<span class="brkt">((</span><span class="func">=</span> <span class="brkt">(</span><span class="func">nth</span> <span class="func">Num</span> LstStatusButton<span class="brkt">)</span> <span class="int">-1</span><span class="brkt">)</span>
+					<span class="brkt">(</span><span class="func">setq</span> Vector <span class="brkt">(</span><span class="func">nth</span> <span class="int">1</span> LstVectors<span class="brkt">))</span>
+				<span class="brkt">)</span>	
+			<span class="brkt">)</span>
+			<span class="brkt">(</span><span class="func">if</span> Vector
+				<span class="brkt">(</span><span class="func">progn</span>
+					<span class="brkt">(</span><span class="func">setq</span> X <span class="brkt">(</span><span class="func">nth</span> <span class="int">0</span> Vector<span class="brkt">))</span>
+					<span class="brkt">(</span><span class="func">setq</span> Y <span class="brkt">(</span><span class="func">nth</span> <span class="int">1</span> Vector<span class="brkt">))</span>
+					<span class="brkt">(</span><span class="func">setq</span> x1 <span class="brkt">(</span><span class="func">fix</span> <span class="brkt">(</span><span class="func">*</span> <span class="brkt">(</span><span class="func">car</span> X<span class="brkt">)</span> XKey<span class="brkt">)))</span>
+					<span class="brkt">(</span><span class="func">setq</span> y1 <span class="brkt">(</span><span class="func">fix</span> <span class="brkt">(</span><span class="func">*</span> <span class="brkt">(</span><span class="func">car</span> Y<span class="brkt">)</span> YKey<span class="brkt">)))</span>
+					<span class="brkt">(</span><span class="func">setq</span> x2 <span class="brkt">(</span><span class="func">fix</span> <span class="brkt">(</span><span class="func">*</span> <span class="brkt">(</span><span class="func">cadr</span> X<span class="brkt">)</span> XKey<span class="brkt">)))</span>
+					<span class="brkt">(</span><span class="func">setq</span> y2 <span class="brkt">(</span><span class="func">fix</span> <span class="brkt">(</span><span class="func">*</span> <span class="brkt">(</span><span class="func">cadr</span> Y<span class="brkt">)</span> YKey<span class="brkt">)))</span>
+					<span class="brkt">(</span><span class="func">setq</span> x3 <span class="brkt">(</span><span class="func">fix</span> <span class="brkt">(</span><span class="func">*</span> <span class="brkt">(</span><span class="func">caddr</span> X<span class="brkt">)</span> XKey<span class="brkt">)))</span>
+					<span class="brkt">(</span><span class="func">setq</span> y3 <span class="brkt">(</span><span class="func">fix</span> <span class="brkt">(</span><span class="func">*</span> <span class="brkt">(</span><span class="func">caddr</span> Y<span class="brkt">)</span> YKey<span class="brkt">)))</span>
+					<span class="brkt">(</span><span class="func">vector_image</span> x1 y1 x2 y2 <span class="int">250</span><span class="brkt">)</span>
+					<span class="brkt">(</span><span class="func">vector_image</span> x2 y2 x3 y3 <span class="int">250</span><span class="brkt">)</span>
+					<span class="brkt">(</span><span class="func">vector_image</span> x3 y3 x1 y1 <span class="int">250</span><span class="brkt">)</span>
+				<span class="brkt">)</span>
+			<span class="brkt">)</span>
+			<span class="brkt">(</span><span class="func">end_image</span><span class="brkt">)</span>
+			<span class="brkt">(</span><span class="func">setq</span> <span class="func">Num</span> <span class="brkt">(</span><span class="func">1+</span> <span class="func">Num</span><span class="brkt">))</span>
+			<span class="brkt">(</span><span class="func">setq</span> Vector <span class="func">nil</span><span class="brkt">)</span>
+		<span class="brkt">)</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> UpDateButtons <span class="brkt">(</span>Key LstButtonKey LstStatusButton <span class="func">/</span> NthVal <span class="func">Rtn</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">and</span> Key LstStatusButton LstButtonKey<span class="brkt">)</span>
+			<span class="brkt">(</span><span class="func">progn</span>
+				<span class="brkt">(</span><span class="func">setq</span> NthVal <span class="brkt">(</span><span class="func">GetNth</span> LstButtonKey Key<span class="brkt">))</span>
+				<span class="brkt">(</span><span class="func">cond</span>
+					<span class="brkt">((</span><span class="func">=</span> <span class="brkt">(</span><span class="func">nth</span> NthVal LstStatusButton<span class="brkt">)</span> <span class="int">0</span><span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">LM:SubstNth</span> <span class="int">1</span> NthVal LstStatusButton<span class="brkt">))</span>
+					<span class="brkt">)</span>
+					<span class="brkt">((</span><span class="func">=</span> <span class="brkt">(</span><span class="func">nth</span> NthVal LstStatusButton<span class="brkt">)</span> <span class="int">1</span><span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">LM:SubstNth</span> <span class="int">-1</span> NthVal LstStatusButton<span class="brkt">))</span>
+					<span class="brkt">)</span>
+					<span class="brkt">((</span><span class="func">=</span> <span class="brkt">(</span><span class="func">nth</span> NthVal LstStatusButton<span class="brkt">)</span> <span class="int">-1</span><span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">LM:SubstNth</span> <span class="int">1</span> NthVal LstStatusButton<span class="brkt">))</span>
+					<span class="brkt">)</span>
+				<span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">setq</span> <span class="func">Num</span> <span class="int">0</span><span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">repeat</span> <span class="brkt">(</span><span class="func">length</span> LstStatusButton<span class="brkt">)</span>
+					<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">/=</span> <span class="func">Num</span> NthVal<span class="brkt">)</span> <span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">LM:SubstNth</span> <span class="int">0</span> <span class="func">Num</span> <span class="func">Rtn</span><span class="brkt">)))</span>
+					<span class="brkt">(</span><span class="func">setq</span> <span class="func">Num</span> <span class="brkt">(</span><span class="func">1+</span> <span class="func">Num</span><span class="brkt">))</span>
+				<span class="brkt">)</span>
+				<span class="brkt">(</span>MakeButtons LstButtonKey <span class="func">Rtn</span><span class="brkt">)</span>
+			<span class="brkt">)</span>
+		<span class="brkt">)</span>
+		<span class="func">Rtn</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> MakeListShape <span class="brkt">(</span>FileShape <span class="func">/</span> EnameShape Pr itm LstIdShapeFromBom <span class="func">Rtn</span><span class="brkt">)</span>
+		
+		<span class="brkt">(</span><span class="func">setq</span> Pr <span class="int">1</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">setq</span> AlertShape$ <span class="func">nil</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">if</span> FileShape
+			<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">setq</span> LstShape <span class="brkt">(</span><span class="func">ReadFileNesting</span> FileShape <span class="str">" "</span><span class="brkt">))</span>
+				<span class="cmt">;Prg Id Order Phase Mark Qta Thik Length Height Mat n.torch</span>
+				<span class="cmt">;1 782139489 C792 1 1252 2 33 550 410 S355J2W 1</span>
+				<span class="brkt">(</span><span class="func">progn</span>
+					<span class="brkt">(</span><span class="func">foreach</span> itm <span class="brkt">(</span><span class="func">GetLstBlockBomShapeByRgp</span><span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">setq</span> LstIdShapeFromBom <span class="brkt">(</span><span class="func">append</span> LstIdShapeFromBom <span class="brkt">(</span><span class="func">list</span> <span class="brkt">(</span><span class="func">LM:vl-getattributevalue</span> <span class="brkt">(</span><span class="func">vlax-ename-&gt;vla-object</span> itm<span class="brkt">)</span> <span class="str">"IDSHAPE"</span><span class="brkt">))))</span>
+					<span class="brkt">)</span>
+				
+					<span class="brkt">(</span><span class="func">foreach</span> itm <span class="brkt">(</span><span class="func">cdr</span> LstShape<span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">member</span> <span class="brkt">(</span><span class="func">cadr</span> itm<span class="brkt">)</span> LstIdShapeFromBom<span class="brkt">)</span>
+							<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">append</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">list</span> <span class="brkt">(</span><span class="func">list</span> 	<span class="brkt">(</span><span class="func">LM:rtos</span> Pr <span class="int">2</span> <span class="int">0</span><span class="brkt">)</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">1</span> itm<span class="brkt">)</span>		<span class="cmt">;Id</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">2</span> itm<span class="brkt">)</span>		<span class="cmt">;Order</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">3</span> itm<span class="brkt">)</span>		<span class="cmt">;Phase</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">4</span> itm<span class="brkt">)</span>		<span class="cmt">;Mark</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">5</span> itm<span class="brkt">)</span>		<span class="cmt">;Qta</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">6</span> itm<span class="brkt">)</span>		<span class="cmt">;Tk</span>
+																<span class="str">"OK"</span><span class="brkt">))))</span>
+							<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">append</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">list</span> <span class="brkt">(</span><span class="func">list</span> 	<span class="brkt">(</span><span class="func">LM:rtos</span> Pr <span class="int">2</span> <span class="int">0</span><span class="brkt">)</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">1</span> itm<span class="brkt">)</span>		<span class="cmt">;Id</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">2</span> itm<span class="brkt">)</span>		<span class="cmt">;Order</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">3</span> itm<span class="brkt">)</span>		<span class="cmt">;Phase</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">4</span> itm<span class="brkt">)</span>		<span class="cmt">;Mark</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">5</span> itm<span class="brkt">)</span>		<span class="cmt">;Qta</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">6</span> itm<span class="brkt">)</span>		<span class="cmt">;Tk</span>
+																<span class="str">"NO"</span><span class="brkt">)))</span>
+								AlertShape$ <span class="func">T</span>
+							<span class="brkt">)</span>
+						<span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">setq</span> Pr <span class="brkt">(</span><span class="func">1+</span> Pr<span class="brkt">))</span>
+					<span class="brkt">)</span>
+				<span class="brkt">)</span>
+			<span class="brkt">)</span>
+			<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">SortTable</span> <span class="func">Rtn</span> <span class="quot">'</span><span class="brkt">(</span><span class="int">0</span> <span class="int">0</span> <span class="int">1</span> <span class="int">2</span> <span class="int">4</span> <span class="int">0</span> <span class="int">3</span> <span class="int">0</span><span class="brkt">)</span> <span class="str">"&lt;"</span><span class="brkt">))</span>
+		<span class="brkt">)</span>
+		<span class="func">Rtn</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> MakeListSheet <span class="brkt">(</span>FileSheet <span class="func">/</span> EnameSheet itm Pr LstIdSheetFromBom <span class="func">Rtn</span><span class="brkt">)</span>
+		
+		<span class="brkt">(</span><span class="func">setq</span> AlertSheet$ <span class="func">nil</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">setq</span> Pr <span class="int">1</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">if</span> FileSheet
+			<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">setq</span> LstSheet <span class="brkt">(</span><span class="func">ReadFileNesting</span> FileSheet <span class="str">" "</span><span class="brkt">))</span>
+				<span class="cmt">;Prg Id Stok Width Length Thik Surface Weight Mat n.torch</span>
+				<span class="cmt">;2 02544 STK_GGG_02 2500 5000 10 12.5 981.25 FF 1</span>
+				<span class="brkt">(</span><span class="func">progn</span>
+					<span class="brkt">(</span><span class="func">foreach</span> itm <span class="brkt">(</span><span class="func">GetLstBlockBomSheetByRgp</span><span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">setq</span> LstIdSheetFromBom <span class="brkt">(</span><span class="func">append</span> LstIdSheetFromBom <span class="brkt">(</span><span class="func">list</span> <span class="brkt">(</span><span class="func">LM:vl-getattributevalue</span> <span class="brkt">(</span><span class="func">vlax-ename-&gt;vla-object</span> itm<span class="brkt">)</span> <span class="str">"ID_SHEET"</span><span class="brkt">))))</span>
+					<span class="brkt">)</span>
+				
+					<span class="brkt">(</span><span class="func">foreach</span> itm <span class="brkt">(</span><span class="func">cdr</span> LstSheet<span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">member</span> <span class="brkt">(</span><span class="func">cadr</span> itm<span class="brkt">)</span> LstIdSheetFromBom<span class="brkt">)</span>
+							<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">append</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">list</span> <span class="brkt">(</span><span class="func">list</span>  	<span class="brkt">(</span><span class="func">LM:rtos</span> Pr <span class="int">2</span> <span class="int">0</span><span class="brkt">)</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">1</span> itm<span class="brkt">)</span>		<span class="cmt">;Id</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">2</span> itm<span class="brkt">)</span>		<span class="cmt">;Stock</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">3</span> itm<span class="brkt">)</span>		<span class="cmt">;Width</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">4</span> itm<span class="brkt">)</span>		<span class="cmt">;Length</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">5</span> itm<span class="brkt">)</span>		<span class="cmt">;Thik</span>
+																<span class="str">"OK"</span><span class="brkt">))))</span>
+							<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">append</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">list</span> <span class="brkt">(</span><span class="func">list</span>  	<span class="brkt">(</span><span class="func">LM:rtos</span> Pr <span class="int">2</span> <span class="int">0</span><span class="brkt">)</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">1</span> itm<span class="brkt">)</span>		<span class="cmt">;Id</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">2</span> itm<span class="brkt">)</span>		<span class="cmt">;Stock</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">3</span> itm<span class="brkt">)</span>		<span class="cmt">;Width</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">4</span> itm<span class="brkt">)</span>		<span class="cmt">;Length</span>
+																<span class="brkt">(</span><span class="func">nth</span> <span class="int">5</span> itm<span class="brkt">)</span>		<span class="cmt">;Thik</span>
+																<span class="str">"NO"</span><span class="brkt">)))</span>
+								  AlertSheet$ <span class="func">T</span>
+
+							<span class="brkt">)</span>
+						<span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">setq</span> Pr <span class="brkt">(</span><span class="func">1+</span> Pr<span class="brkt">))</span>
+					<span class="brkt">)</span>
+				<span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">SortTable</span> <span class="func">Rtn</span> <span class="quot">'</span><span class="brkt">(</span><span class="int">0</span> <span class="int">0</span> <span class="int">2</span> <span class="int">3</span> <span class="int">4</span> <span class="int">1</span> <span class="int">0</span><span class="brkt">)</span> <span class="str">"&lt;"</span><span class="brkt">))</span>
+			<span class="brkt">)</span>
+		<span class="brkt">)</span>
+		<span class="func">Rtn</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> RestoreFile <span class="brkt">(</span>Key Ext <span class="func">/</span> <span class="func">Rtn</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">LM:getfiles</span> <span class="str">"Seleziona file Sheet"</span> <span class="func">DxfNestingEasyCut$</span> Ext<span class="brkt">))</span>
+		<span class="brkt">(</span><span class="func">if</span> <span class="func">Rtn</span> 
+			<span class="brkt">(</span><span class="func">set_tile</span>  Key	<span class="brkt">(</span><span class="func">car</span> <span class="func">Rtn</span><span class="brkt">))</span> 
+			<span class="brkt">(</span><span class="func">set_tile</span>  Key	<span class="str">""</span><span class="brkt">)</span>
+		<span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">car</span> <span class="func">Rtn</span><span class="brkt">)</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> BoxToList <span class="brkt">(</span>LstBox <span class="func">/</span> itm <span class="func">Rtn</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">foreach</span> itm LstBox
+			<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">append</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">list</span> <span class="brkt">(</span><span class="func">LM:str-&gt;lst</span> itm <span class="str">"\t"</span><span class="brkt">))))</span>
+		<span class="brkt">)</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> ListToBox <span class="brkt">(</span>LstBox <span class="func">/</span> itm <span class="func">Rtn</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">foreach</span> itm LstBox
+			<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">append</span> <span class="func">Rtn</span> <span class="brkt">(</span><span class="func">list</span> <span class="brkt">(</span><span class="func">LM:lst-&gt;str</span> itm <span class="str">"\t"</span><span class="brkt">))))</span>
+		<span class="brkt">)</span>
+		<span class="func">Rtn</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> LoadTable <span class="brkt">(</span>LstTable KeyBox<span class="brkt">)</span>
+
+		<span class="brkt">(</span><span class="func">if</span> LstTable
+			<span class="brkt">(</span><span class="func">progn</span>
+				<span class="brkt">(</span><span class="func">start_list</span> KeyBox<span class="brkt">)</span>
+					<span class="brkt">(</span><span class="func">mapcar</span> <span class="quot">'</span><span class="func">add_list</span> LstTable<span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">end_list</span><span class="brkt">)</span>
+			<span class="brkt">)</span>
+		<span class="brkt">)</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> SortBox <span class="brkt">(</span>LstTableNesting KeyBox LstSort <span class="func">/</span> LstSort TypeSort <span class="func">Num</span> itm <span class="func">Rtn</span><span class="brkt">)</span>
+
+		<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">and</span> LstTableNesting KeyBox LstSort<span class="brkt">)</span>
+			<span class="brkt">(</span><span class="func">progn</span>
+				<span class="brkt">(</span><span class="func">setq</span> TypeSort <span class="str">"&gt;"</span><span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">setq</span> <span class="func">Num</span> <span class="int">0</span><span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">foreach</span> itm LstSort
+					<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">=</span> itm <span class="int">-1</span><span class="brkt">)</span>
+						<span class="brkt">(</span><span class="func">progn</span>
+							<span class="brkt">(</span><span class="func">setq</span> TypeSort <span class="str">"&lt;"</span><span class="brkt">)</span>
+							<span class="brkt">(</span><span class="func">setq</span> LstSort <span class="brkt">(</span><span class="func">LM:SubstNth</span> <span class="int">1</span> <span class="func">Num</span> LstSort<span class="brkt">))</span>
+						<span class="brkt">)</span>
+					<span class="brkt">)</span>
+				<span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span> <span class="brkt">(</span>ListToBox <span class="brkt">(</span><span class="func">SortTable</span> <span class="brkt">(</span>BoxToList LstTableNesting<span class="brkt">)</span> LstSort TypeSort<span class="brkt">)))</span>
+				<span class="brkt">(</span>LoadTable <span class="func">Rtn</span> KeyBox<span class="brkt">)</span>
+			<span class="brkt">)</span>
+		<span class="brkt">)</span>
+		<span class="func">Rtn</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">defun</span> UpdateBoxList <span class="brkt">(</span>KeyBox FileIn TypeEl <span class="func">/</span> Lst <span class="func">Rtn</span><span class="brkt">)</span>
+		<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">and</span> KeyBox FileIn<span class="brkt">)</span>
+			<span class="brkt">(</span><span class="func">if</span> <span class="brkt">(</span><span class="func">findfile</span> FileIn<span class="brkt">)</span>
+				<span class="brkt">(</span><span class="func">progn</span>
+					<span class="brkt">(</span><span class="func">cond</span> 
+						<span class="brkt">((</span><span class="func">=</span> TypeEl <span class="str">"SHEET"</span><span class="brkt">)</span>
+							<span class="brkt">(</span><span class="func">setq</span> Lst  <span class="brkt">(</span>MakeListSheet FileIn<span class="brkt">))</span>
+						<span class="brkt">)</span>
+						<span class="brkt">((</span><span class="func">=</span> TypeEl <span class="str">"SHAPE"</span><span class="brkt">)</span>
+							<span class="brkt">(</span><span class="func">setq</span> Lst  <span class="brkt">(</span>MakeListShape FileIn<span class="brkt">))</span>
+						<span class="brkt">)</span>
+					<span class="brkt">)</span>
+					<span class="brkt">(</span><span class="func">setq</span> <span class="func">Rtn</span>  <span class="brkt">(</span>ListToBox Lst<span class="brkt">))</span>
+					<span class="brkt">(</span>LoadTable <span class="func">Rtn</span> KeyBox<span class="brkt">)</span>
+				<span class="brkt">)</span>
+			<span class="brkt">)</span>
+		<span class="brkt">)</span>
+		<span class="func">Rtn</span>
+	<span class="brkt">)</span>
+	<span class="cmt">;</span>
+	<span class="cmt">; Main</span>
+	<span class="cmt">;</span>
+	<span class="brkt">(</span><span class="func">setq</span> LstButtonShapeKey   <span class="quot">'</span><span class="brkt">(</span><span class="str">"BtShape1"</span> <span class="str">"BtShape2"</span> <span class="str">"BtShape3"</span> <span class="str">"BtShape4"</span> <span class="str">"BtShape5"</span> <span class="str">"BtShape6"</span> <span class="str">"BtShape7"</span> <span class="str">"BtShape8"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">setq</span> <span class="func">LstButtonSheetKey</span>   <span class="quot">'</span><span class="brkt">(</span><span class="str">"BtSheet1"</span> <span class="str">"BtSheet2"</span> <span class="str">"BtSheet3"</span> <span class="str">"BtSheet4"</span> <span class="str">"BtSheet5"</span> <span class="str">"BtSheet6"</span> <span class="str">"BtSheet7"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">setq</span> LstSortShape 	      <span class="quot">'</span><span class="brkt">(</span><span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">setq</span> LstSortSheet 	      <span class="quot">'</span><span class="brkt">(</span><span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span> <span class="int">0</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">setq</span> AlertShape$ <span class="func">T</span><span class="brkt">)</span>
+	<span class="brkt">(</span><span class="func">setq</span> AlertShape$ <span class="func">T</span><span class="brkt">)</span>
+	
+	<span class="cmt">;(setq xx (load_dialog (strcat GuiPathEasyCut$ "geocut.dcl")))</span>
+	<span class="brkt">(</span><span class="func">setq</span> xx <span class="brkt">(</span><span class="func">load_dialog</span> <span class="str">"c:\\EasyCutBeta\\test\\test.dcl"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">new_dialog</span> <span class="str">"MergeNestingDialog"</span> xx <span class="str">""</span> <span class="brkt">(</span><span class="func">cond</span> <span class="brkt">(</span> *MergeNestingDialog* <span class="brkt">)</span> <span class="brkt">(</span> <span class="quot">'</span><span class="brkt">(</span><span class="int">-1</span> <span class="int">-1</span><span class="brkt">)</span> <span class="brkt">)))</span>
+
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"SelectFileShape"</span>	<span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(if (setq FileSaveShape (RestoreFile \"FileSelectShape\" \"shp\"))
+												(setq LstBoxShape (UpdateBoxList \"ListShape\" FileSaveShape \"SHAPE\"))
+											 )"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"SelectFileSheet"</span>	<span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(if (setq FileSaveSheet (RestoreFile \"FileSelectSheet\" \"sht\"))
+												(setq LstBoxSheet (UpdateBoxList \"ListSheet\" FileSaveSheet \"SHEET\"))
+											 )"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtShape1"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortShape (UpDateButtons \"BtShape1\" LstButtonShapeKey LstSortShape))
+									 (setq LstBoxShape  (SortBox LstBoxShape \"ListShape\" LstSortShape))"</span><span class="brkt">))</span> 			<span class="cmt">; LstShape = ("1\t782139489\tC792\t1\t1252\t2\t33\tOK" ....)</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtShape2"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortShape (UpDateButtons \"BtShape2\" LstButtonShapeKey LstSortShape))
+									 (setq LstBoxShape  (SortBox LstBoxShape \"ListShape\" LstSortShape))"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtShape3"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortShape (UpDateButtons \"BtShape3\" LstButtonShapeKey LstSortShape))
+									 (setq LstBoxShape  (SortBox LstBoxShape \"ListShape\" LstSortShape))"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtShape4"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortShape (UpDateButtons \"BtShape4\" LstButtonShapeKey LstSortShape))
+									 (setq LstBoxShape  (SortBox LstBoxShape \"ListShape\" LstSortShape))"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtShape5"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortShape (UpDateButtons \"BtShape5\" LstButtonShapeKey LstSortShape))
+									 (setq LstBoxShape  (SortBox LstBoxShape \"ListShape\" LstSortShape))"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtShape6"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortShape (UpDateButtons \"BtShape6\" LstButtonShapeKey LstSortShape))
+									 (setq LstBoxShape  (SortBox LstBoxShape \"ListShape\" LstSortShape))"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtShape7"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortShape (UpDateButtons \"BtShape7\" LstButtonShapeKey LstSortShape))
+									 (setq LstBoxShape  (SortBox LstBoxShape \"ListShape\" LstSortShape))"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtShape8"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortShape (UpDateButtons \"BtShape8\" LstButtonShapeKey LstSortShape))
+									 (setq LstBoxShape  (SortBox LstBoxShape \"ListShape\" LstSortShape))"</span><span class="brkt">))</span>
+
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtSheet1"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortSheet (UpDateButtons \"BtSheet1\" LstButtonSheetKey LstSortSheet))
+									 (setq LstBoxSheet  (SortBox LstBoxSheet \"ListSheet\" LstSortSheet))"</span><span class="brkt">))</span> 
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtSheet2"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortSheet (UpDateButtons \"BtSheet2\" LstButtonSheetKey LstSortSheet))
+									 (setq LstBoxSheet  (SortBox LstBoxSheet \"ListSheet\" LstSortSheet))"</span><span class="brkt">))</span> 
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtSheet3"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortSheet (UpDateButtons \"BtSheet3\" LstButtonSheetKey LstSortSheet))
+									 (setq LstBoxSheet  (SortBox LstBoxSheet \"ListSheet\" LstSortSheet))"</span><span class="brkt">))</span> 
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtSheet4"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortSheet (UpDateButtons \"BtSheet4\" LstButtonSheetKey LstSortSheet))
+									 (setq LstBoxSheet  (SortBox LstBoxSheet \"ListSheet\" LstSortSheet))"</span><span class="brkt">))</span> 
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtSheet5"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortSheet (UpDateButtons \"BtSheet5\" LstButtonSheetKey LstSortSheet))
+									 (setq LstBoxSheet  (SortBox LstBoxSheet \"ListSheet\" LstSortSheet))"</span><span class="brkt">))</span> 
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtSheet6"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortSheet (UpDateButtons \"BtSheet6\" LstButtonSheetKey LstSortSheet))
+									 (setq LstBoxSheet  (SortBox LstBoxSheet \"ListSheet\" LstSortSheet))"</span><span class="brkt">))</span> 
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"BtSheet7"</span> <span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq LstSortSheet (UpDateButtons \"BtSheet7\" LstButtonSheetKey LstSortSheet))
+									 (setq LstBoxSheet  (SortBox LstBoxSheet \"ListSheet\" LstSortSheet))"</span><span class="brkt">))</span> 
+	
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"accept"</span> 		<span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(if (or AlertShape$ AlertSheet$)
+											(LM:popup \"Errore\" \"Contorni o lamiere non disponibili\" (+ 0 16 4096))
+											(progn
+												(setq 	Merge T
+														FileSaveShape (get_tile \"FileSelectShape\")
+														FileSaveSheet (get_tile \"FileSelectSheet\")
+														*AvailabilityUseSheet* (done_dialog)
+												)
+												(unload_dialog xx)
+											)
+										 )"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">action_tile</span> <span class="str">"cancel"</span>		<span class="brkt">(</span><span class="func">strcat</span> <span class="str">"(setq 	*AvailabilityUseSheet* (done_dialog)) (unload_dialog xx)"</span><span class="brkt">))</span>
+	<span class="brkt">(</span><span class="func">start_dialog</span><span class="brkt">)</span>
+		
+	<span class="brkt">(</span><span class="func">if</span> Merge
+		<span class="brkt">(</span><span class="func">MergeNesting</span> FileSaveShape FileSaveSheet<span class="brkt">)</span>
+	<span class="brkt">)</span>
+<span class="brkt">)</span>
+<span class="cmt">;</span>
+<span class="cmt">;</span>
+<span class="cmt">;</span>
+</pre>
+</body>
+</html>

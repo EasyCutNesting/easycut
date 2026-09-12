@@ -1,0 +1,287 @@
+       non scomponibili ((28ba4a0add0 (28ba4a0ae20)))
+						 (D (E))
+
+ 1° livello nuovo nuovo ((28ba4a0adb0 (28ba4a0add0)) 
+                         (28ba4a0ada0 (28ba4a0add0 28ba4a0adc0 28ba4a0adb0)))
+							(B (D))
+							(C (B D A))
+
+
+Entering (UPDATEONELEVEL (28ba4a0adb0 (28ba4a0add0)) 		
+                         ((28ba4a0add0 (28ba4a0ae20))))   
+						 (B (D))
+						 (D (E))
+						 
+Result:  (28ba4a0adb0 ((28ba4a0add0 (28ba4a0ae20)))) (B ((D (E))))
+
+
+
+Entering (UPDATEONELEVEL (28ba4a0ada0 (28ba4a0add0 28ba4a0adc0 28ba4a0adb0)) 
+                        ((28ba4a0add0 (28ba4a0ae20))))
+						(C (B D A))
+						(D (E))
+						
+Result:  (28ba4a0ada0 ((28ba4a0add0 (28ba4a0ae20)) 28ba4a0adc0 28ba4a0adb0))
+		 (C (B (D (E)) A))
+
+
+
+         ((28ba4a0adb0 ((28ba4a0add0 (28ba4a0ae20))))
+		  (28ba4a0ada0 ((28ba4a0add0 (28ba4a0ae20))
+										28ba4a0adc0 28ba4a0adb0)))
+nil
+------------------------------------------------------------------------------------------------------------------
+       non scomponibili ((28ba4a0ec10 (28ba4a0ec50 28ba4a0ec30)) (28ba4a0ebb0 (28ba4a0ebf0 28ba4a0ebd0)))
+
+ 1° livello nuovo nuovo ((28ba4a0eb50 (28ba4a0ec10)) 
+						 (28ba4a0eb40 (28ba4a0ec10 28ba4a0ebb0 28ba4a0eb50)) 
+						 (28ba4a0eb30 (28ba4a0ec10 28ba4a0ebb0 28ba4a0eb90 28ba4a0eb50 28ba4a0eb40)))
+
+
+Entering (UPDATEONELEVEL (28ba4a0eb50 (28ba4a0ec10)) 1° livello (1/3)
+						 ((28ba4a0ec10 (28ba4a0ec50 28ba4a0ec30)) (28ba4a0ebb0 (28ba4a0ebf0 28ba4a0ebd0)))) lista non scomponibili
+Result:  (28ba4a0eb50 ((28ba4a0ec10 (28ba4a0ec50 28ba4a0ec30))))
+		 (     A      ((    H       (     I            L    ))))
+			
+Entering (UPDATEONELEVEL (28ba4a0eb40 (28ba4a0ec10 28ba4a0ebb0 28ba4a0eb50)) 1° livello (2/3)
+						 ((28ba4a0ec10 (28ba4a0ec50 28ba4a0ec30)) (28ba4a0ebb0 (28ba4a0ebf0 28ba4a0ebd0)))) lista non scomponibili
+Result:  (28ba4a0eb40 ((28ba4a0ec10 (28ba4a0ec50 28ba4a0ec30)) (28ba4a0ebb0 (28ba4a0ebf0 28ba4a0ebd0)) 28ba4a0eb50))
+         (    B       ((    D       (    E            F     )) (     H      (     I            L    ))      A     ))
+		 
+Entering (UPDATEONELEVEL (28ba4a0eb30 (28ba4a0ec10 28ba4a0ebb0 28ba4a0eb90 28ba4a0eb50 28ba4a0eb40)) 1° livello (3/3)
+						 ((28ba4a0ec10 (28ba4a0ec50 28ba4a0ec30)) (28ba4a0ebb0 (28ba4a0ebf0 28ba4a0ebd0)))) lista non scomponibili
+Result:  (28ba4a0eb30 ((28ba4a0ec10 (28ba4a0ec50 28ba4a0ec30)) (28ba4a0ebb0 (28ba4a0ebf0 28ba4a0ebd0)) 28ba4a0eb90 28ba4a0eb50 28ba4a0eb40))
+		 (     C      ((     D      (     E           F     )) (    H       (     I           L     ))     G           A            B     ))
+		 
+ 2° livello ((28ba4a0eb50 ((28ba4a0ec10 (28ba4a0ec50 28ba4a0ec30))                                                                             ))
+             (   "A"      ((    "H"     (     "I"        "L"    ))                                                                             ))
+			 (28ba4a0eb40 ((28ba4a0ec10 (28ba4a0ec50 28ba4a0ec30)) (28ba4a0ebb0 (28ba4a0ebf0 28ba4a0ebd0)) 28ba4a0eb50                         ))
+			 (   "B"      ((    "H"     (     "I"        "L"    )) (     "D"    (     "E"        "F"    ))    "A"                              ))
+			 (28ba4a0eb30 ((28ba4a0ec10 (28ba4a0ec50 28ba4a0ec30)) (28ba4a0ebb0 (28ba4a0ebf0 28ba4a0ebd0)) 28ba4a0eb90 28ba4a0eb50 28ba4a0eb40)))
+			 (   "C"      ((    "H"     (     "I"        "L"    )) (     "D"    (     "E"        "F"    ))    "G"          "A"         "B"     ))
+
+(setq ll '((   "A" (( "H" ( "I" "L" ))                                  ))
+		   (   "B" (( "H" ( "I" "L" )) ( "D" ( "E" "F" )) "A"           ))
+		   (   "C" (( "H" ( "I" "L" )) ( "D" ( "E" "F" )) "G" "A" "B"   ))
+		   ))
+Rtn  ----> '(   "C" ("G"  ("B" (("D" ("E" "F")) ("A" (("H" ("I" "L"))))))))
+		   
+(setq ll '(	("G")
+			("D" "F" "E")
+			("H" "I" "L") 
+			("A" "H" "I" "L")
+			("B" "D" "F" "E" "A" "H" "I" "L")
+			("C" "B" "D" "F" "E" "A" "H" "I" "L" "G")))
+(SystemResolution02 ll)
+		  
+
+(REBUILDLIST '("A" (( "H" ( "I" "L" )))) '("B" (( "H" ( "I" "L" )) ( "D" ( "E" "F" )) "A")))
+(REBUILDLIST '("A" (( "H" ( "I" "L" )))) '("C" (( "H" ( "I" "L" )) ( "D" ( "E" "F" )) "G" "A" "B")))           
+
+(SystemResolution ll)
+(REBUILDLIST '("A" (("B" ("C" "D")))) '("H" (("B" ("C" "D")) ("E" ("F" "G")) "A")))
+(REMOVEEACH  '("A" (("B" ("C" "D")))) '("H" (("B" ("C" "D")) ("E" ("F" "G")) "A")))
+
+(<28ba4a0eb50> ((<28ba4a0ec10> (<28ba4a0ec50> <28ba4a0ec30>)))) 
+(((<28ba4a0ec10> (<28ba4a0ec50> <28ba4a0ec30>)) (<28ba4a0ebb0> (<28ba4a0ebf0> <28ba4a0ebd0>)) <28ba4a0eb50>)))
+
+(((nil (nil nil)) (<28ba4a0ebb0> (<28ba4a0ebf0> <28ba4a0ebd0>)) nil)))
+
+(((nil) (<Entity name: 28ba4a0ebb0> (<Entity name: 28ba4a0ebf0> <Entity name: 28ba4a0ebd0>))))
+
+
+("<Entity name: 15f59380ed0>" <Entity name: 15f59380ed0>) ("<Entity name: 15f59380eb0>" <Entity name: 15f59380eb0>) ("<Entity name: 15f59380e90>" <Entity name: 15f59380e90>) ("<Entity name: 15f59380e70>" <Entity name: 15f59380e70>) ("<Entity name: 15f59380e50>" <Entity name: 15f59380e50>) ("<Entity name: 15f59380e30>" <Entity name: 15f59380e30>) ("<Entity name: 15f59380e10>" <Entity name: 15f59380e10>) ("<Entity name: 15f59380dd0>" <Entity name: 15f59380dd0>) ("<Entity name: 15f59380dc0>" <Entity name: 15f59380dc0>)) (quote #<SUBR @0000015f5a3abf48 -lambda->))
+("<Entity name: 15f59380ed0>" <Entity name: 15f59380ed0>) ("<Entity name: 15f59380eb0>" <Entity name: 15f59380eb0>) ("<Entity name: 15f59380e90>" <Entity name: 15f59380e90>) ("<Entity name: 15f59380e70>" <Entity name: 15f59380e70>) ("<Entity name: 15f59380e50>" <Entity name: 15f59380e50>) ("<Entity name: 15f59380e30>" <Entity name: 15f59380e30>) ("<Entity name: 15f59380e10>" <Entity name: 15f59380e10>) ("<Entity name: 15f59380dd0>" <Entity name: 15f59380dd0>) ("<Entity name: 15f59380dc0>" <Entity name: 15f59380dc0>))
+
+
+-----------------------------------------------------------------------------------------------
+
+(
+(<Entity name: 21908ce0570> <Entity name: 21908ce0650> <Entity name: 21908ce0630> <Entity name: 21908ce0610> <Entity name: 21908ce0580>) 
+(<Entity name: 21908ce0650>) 
+(<Entity name: 21908ce0630>) 
+(<Entity name: 21908ce0610> <Entity name: 21908ce0650> <Entity name: 21908ce0630>) 
+(<Entity name: 21908ce0580> <Entity name: 21908ce0650> <Entity name: 21908ce0630> <Entity name: 21908ce0610>)
+)
+
+(B D F E A H I L)
+(D F E)
+(A H I L)
+(H I L) 
+(G)
+(C B D F E A H I L G)
+
+(G)
+(D F E)
+(H I L) 
+(A H I L)
+(B D F E A H I L)
+(C B D F E A H I L G)
+
+(G)
+(D F E)
+(H I L) 
+(A (H I L))
+(B (D F E) (A (H I L)))
+(C (B (D F E) (A (H I L))) (G))
+
+(REBUILDLIST02 '(G) '(C B D F E A H I L G))
+(REBUILDLIST02 '(D F E) '(C B D F E A H I L G))
+
+**********************
+
+(setq ll '(	(B (D F E A H I L))
+			(D (F E))
+			(A (H I L))
+			(H (I L)) 
+			(G)
+			(C (B D F E A H I L G))
+		  )
+)
+(SystemResolution02 ll)
+
+(G)
+(D (F E))
+(H (I L)) 
+(A (H I L))
+(B (D F E A H I L))
+(C (B D F E A H I L G))
+
+->(G)
+(D (F E))
+(H (I L)) 
+(A (H I L))
+(B (D F E A H I L))
+(C (B D F E A H I L (G)))
+
+->(D (F E))
+(H (I L)) 
+(A (H I L))
+(B ((D (F E)) A H I L))
+(C (B (D (F E)) A H I L (G)))
+
+->(H (I L)) 
+(A ((H (I L))))
+(B ((D (F E)) A (H (I L))))
+(C (B (D (F E)) A (H (I L)) (G)))
+
+->(A ((H (I L))))
+(B ((D (F E)) (A ((H (I L))))))
+(C (B (D (F E)) (A ((H (I L)))) (G)))
+
+-> (B ((D (F E)) (A ((H (I L))))))
+(C ((B ((D (F E)) (A ((H (I L)))))) (G)))
+
+++++++++++++++++++++++++++++++++++++++++++++++
+
+(B D A F)
+(D)
+(A)
+(F)
+(C B D A F)
+
+(D)
+(A)
+(F)
+(B D A F)
+(C B D A F)
+
+(D)
+(A)
+(F)
+(B (D) (A) (F))
+(C (B (D) (A) (F)))
+
+++++++++++++++++++++++++++++++++++++++++++++++
+
+(D (F I E O Q S L))
+(A (H R T P M N))
+(G)
+(F)
+(I)
+(E (O Q S L))
+(Q)
+(S)
+(L)
+(O (Q S L))
+(H (R T P M N))
+(C (D F I E O Q S L A H R T P M N G))
+
+(G)
+(F)
+(I)
+(Q)
+(S)
+(L)
+(R)
+(T)
+(P)
+(M)
+(N)
+(O (Q S L))
+(E (O Q S L))
+(H (R T P M N))
+(A (H R T P M N))
+(D (F I E O Q S L))
+(C (D F I E O Q S L A H R T P M N G))
+
+(O ((Q) (S) (L)))
+(E (O (Q) (S) (L)))
+(H ((R) (T) (P) (M) (N)))
+(A (H (R) (T) (P) (M) (N)))
+(D ((F) (I) E O (Q) (S) (L)))
+(C (D (F) (I) E O (Q) (S) (L) A H (R) (T) (P) (M) (N) (G)))
+
+(O ((Q) (S) (L)))
+(E ((O ((Q) (S) (L)))))
+(H ((R) (T) (P) (M) (N)))
+(A ((H ((R) (T) (P) (M) (N)))))
+(D ((F) (I) (E ((O ((Q) (S) (L)))))))
+(C ((D ((F) (I) (E ((O ((Q) (S) (L))))))) (A ((H ((R) (T) (P) (M) (N))))) (G)))
+
+(setq ll '(
+(D F I E O Q S L)
+(A H R T P M N)
+(G)
+(F)
+(I)
+(E O Q S L)
+(Q)
+(S)
+(L)
+(O Q S L)
+(H R T P M N)
+(C D F I E O Q S L A H R T P M N G)
+))
+
+
+(G)
+(F)
+(I)
+(Q)
+(S)
+(L)
+(O Q S L)
+(E O Q S L)
+(H R T P M N)
+(A H R T P M N)
+(D F I E O Q S L)
+(C D F I E O Q S L A H R T P M N G)
+
+(O (Q) (S) (L))
+(E (O (Q) (S) (L)))
+(H R T P M N)
+(A (H R T P M N))
+(D (F) (I) (E (O (Q) (S) (L))) (L))
+(C (D (F) (I) (E (O (Q) (S) (L)))) (A (H R T P M N)) (G))
+
+
+(A B D C)
+(B D)
+(C)
+
+(C)
+(B D)
+(A (B D) (C))
+
+

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+   <thcut>4</thcut>
+   <trim>15</trim>
+	<outputfile>C:\Users\adl20\EasyCut\Output\Nesting</outputfile>
+	<prefixfile>RectPack</prefixfile>
+	<show>True</show>
+	<txtoffset_x>10</txtoffset_x>
+	<txtoffset_y>10</txtoffset_y>
+	<htxt>10</htxt>
+</configuration>

@@ -1,0 +1,20 @@
+(defun LoadHtml (Path)
+
+	(if Path
+		(progn
+			(MyLoad (strcat Path "\\Html\\Html1.lsp"))
+			(PrgBr NfileLsp$)
+			(MyLoad (strcat Path "\\Html\\Html2.lsp"))
+			(PrgBr NfileLsp$)
+			(MyLoad (strcat Path "\\Html\\Html3.lsp"))
+			(PrgBr NfileLsp$)
+			(MyLoad (strcat Path "\\Html\\Html4.lsp"))
+			(PrgBr NfileLsp$)
+			(MyLoad (strcat Path "\\Html\\Html5.lsp"))
+			(PrgBr NfileLsp$)
+			(MyLoad (strcat Path "\\Html\\Browser.lsp"))
+			(PrgBr NfileLsp$)
+		)
+	)
+	(princ)
+)

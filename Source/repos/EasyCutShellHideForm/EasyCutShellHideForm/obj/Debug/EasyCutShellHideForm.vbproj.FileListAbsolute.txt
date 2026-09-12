@@ -1,0 +1,11 @@
+C:\EasyCutBeta\Source\repos\EasyCutShellHideForm\EasyCutShellHideForm\bin\Debug\EasyCutShellHideForm.exe.config
+C:\EasyCutBeta\Source\repos\EasyCutShellHideForm\EasyCutShellHideForm\bin\Debug\EasyCutShellHideForm.exe
+C:\EasyCutBeta\Source\repos\EasyCutShellHideForm\EasyCutShellHideForm\bin\Debug\EasyCutShellHideForm.pdb
+C:\EasyCutBeta\Source\repos\EasyCutShellHideForm\EasyCutShellHideForm\bin\Debug\EasyCutShellHideForm.xml
+C:\EasyCutBeta\Source\repos\EasyCutShellHideForm\EasyCutShellHideForm\obj\Debug\EasyCutShellHideForm.Form1.resources
+C:\EasyCutBeta\Source\repos\EasyCutShellHideForm\EasyCutShellHideForm\obj\Debug\EasyCutShellHideForm.Resources.resources
+C:\EasyCutBeta\Source\repos\EasyCutShellHideForm\EasyCutShellHideForm\obj\Debug\EasyCutShellHideForm.vbproj.GenerateResource.cache
+C:\EasyCutBeta\Source\repos\EasyCutShellHideForm\EasyCutShellHideForm\obj\Debug\EasyCutShellHideForm.vbproj.CoreCompileInputs.cache
+C:\EasyCutBeta\Source\repos\EasyCutShellHideForm\EasyCutShellHideForm\obj\Debug\EasyCutShellHideForm.exe
+C:\EasyCutBeta\Source\repos\EasyCutShellHideForm\EasyCutShellHideForm\obj\Debug\EasyCutShellHideForm.xml
+C:\EasyCutBeta\Source\repos\EasyCutShellHideForm\EasyCutShellHideForm\obj\Debug\EasyCutShellHideForm.pdb
