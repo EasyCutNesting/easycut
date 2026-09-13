@@ -334,7 +334,7 @@
 				)
 			)
 			;
-			(PowerShellDiag T)
+			; -----> (PowerShellDiag T)
 		)
 	)
 	(princ)

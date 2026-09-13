@@ -1,4 +1,4 @@
-4.0.0 19 1503 2026-09-06 16:34:23
+4.0.0 19 1504 2026-09-13 19:06:48
 ------------------------------
 FILE COMPRESSI:
 ------------------------------
@@ -6,11 +6,11 @@ FILE COMPRESSI:
 7-Zip 26.00 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-02-12
 
 Scanning the drive:
-108 folders, 1503 files, 250987817 bytes (240 MiB)
+109 folders, 1504 files, 250987876 bytes (240 MiB)
 
-Creating archive: C:\EasyCutNesting Beta\Release\Output\4.0.0\EasyCut_4.0.0.zip
+Creating archive: C:\Users\adl20\Desktop\EasyCutNesting Beta\Release\Output\4.0.0\EasyCut_4.0.0.zip
 
-Add new data to archive: 108 folders, 1503 files, 250987817 bytes (240 MiB)
+Add new data to archive: 109 folders, 1504 files, 250987876 bytes (240 MiB)
 
 + Apps\Banner.exe
 + Apps\DxfNest\ACadSharp.dll
@@ -1501,6 +1501,7 @@ Add new data to archive: 108 folders, 1503 files, 250987817 bytes (240 MiB)
 + Support\09-08-2026-17-19-AcadDoc.lsp
 + Support\09-08-2026-18-05-AcadDoc.lsp
 + Support\12-08-2026-16-34-AcadDoc.lsp
++ Support\13-09-2026-19-03-AcadDoc.lsp
 + Support\16-08-2026-15-09-AcadDoc.lsp
 + Support\20260808-180047acaddoc.lsp
 + Support\20260809-172149acaddoc.lsp
@@ -1516,7 +1517,7 @@ Add new data to archive: 108 folders, 1503 files, 250987817 bytes (240 MiB)
 + Support\25-08-2026-15-53-AcadDoc.lsp
 + Support\AcadDoc.lsp
 
-Files read from disk: 1503
-Archive size: 97152682 bytes (93 MiB)
+Files read from disk: 1504
+Archive size: 97153024 bytes (93 MiB)
 Volumes: 19
 Everything is Ok

@@ -1,6 +1,6 @@
 
 ; Start Load Application                                                             ; EasyCut
-; Build 25-08-2026 15-53                                                          ; EasyCut
+; Build 13-09-2026 19-03                                                          ; EasyCut
 ; Version EasyCut 4.0.0                                               ; EasyCut
 (defun SearchAndAddTrsPth (AddPath / TrsPth)                                         ; EasyCut
     (if AddPath                                                                      ; EasyCut
@@ -27,6 +27,6 @@
         )                                                                            ; EasyCut
     )                                                                                ; EasyCut
 )                                                                                    ; EasyCut
-(SearchAndAddTrsPth  "C:\\EasyCutNesting Beta...")									             ; EasyCut
-(if (not EasyCutRegistryPath$) (load  "C:\\EasyCutNesting Beta\\Load\\StartEasyCut.lsp" ""))  			             ; EasyCut
+(SearchAndAddTrsPth  "C:\\Users\\adl20\\Desktop\\EasyCutNesting Beta...")									             ; EasyCut
+(if (not EasyCutRegistryPath$) (load  "C:\\Users\\adl20\\Desktop\\EasyCutNesting Beta\\Load\\StartEasyCut.lsp" ""))  			             ; EasyCut
 ; End Load Application                                                               ; EasyCut

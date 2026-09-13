@@ -1607,7 +1607,7 @@
 				
 				(setq UrlVersion  (strcat Url "/releases/latest/download/version.txt"))
 				
-				(StartPopupPS "CONNESSIONE AL SERVER" "verifica release")
+				;(StartPopupPS "CONNESSIONE AL SERVER" "verifica release")
 				
 				(setq FolderDownload 	 (getenv "TEMP"))
 				(setq FileWildCard		 "EasyCut_")
@@ -1638,7 +1638,7 @@
 					)
 				)
 				
-				(ClosePopupPS)
+				;(ClosePopupPS)
 				
 				(if Flag 
 					(if (= (LM:popup "avvertimento" "I file sono disponibili per il download \n vuoi proseguire ?" (+ 1 32 4096)) 1)
