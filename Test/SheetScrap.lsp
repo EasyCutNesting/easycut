@@ -1,628 +1,490 @@
-(defun EasyCut:GetBoundingBoxPoints (LstPt / Pt X Y MinX MaxX MinY MaxY)
+;questi sono i dati che ho verificato
+;SheetBox ((MINX . 0.0) (MAXX . 1000.0) (MINY . 0.0) (MAXY . 500.0))
+;LstShape (((20.0 20.0) (40.0 20.0) (40.0 40.0) (20.0 40.0)) ((60.0 60.0) (80.0 60.0) (80.0 80.0) (60.0 80.0)))
+;(EasyCut:FindMaxScrapRectangle SheetBox LstShape) ((60.0 0.0) (1000.0 40.0) 37600.0)
+;però dovrei ottenere ((0.0 80.0) (1000.0 500.0) 420000.0)
 
-	(if LstPt
-		(progn
-			(setq Pt  (car LstPt)
-				  MinX (car Pt)
-				  MaxX (car Pt)
-				  MinY (cadr Pt)
-				  MaxY (cadr Pt)
-			)
-
-			(foreach Pt (cdr LstPt)
-
-				(setq X (car Pt)
-					  Y (cadr Pt)
-				)
-
-				(if (< X MinX)
-					(setq MinX X)
-				)
-
-				(if (> X MaxX)
-					(setq MaxX X)
-				)
-
-				(if (< Y MinY)
-					(setq MinY Y)
-				)
-
-				(if (> Y MaxY)
-					(setq MaxY Y)
-				)
-			)
-
-			(list
-				(cons 'MINX MinX)
-				(cons 'MAXX MaxX)
-				(cons 'MINY MinY)
-				(cons 'MAXY MaxY)
-			)
-		)
-	)
-)
-;
-;
-(defun EasyCut:PointOnSegment (Pt P1 P2 Tol / X Y X1 Y1 X2 Y2 Cross)
-
-	(setq X  (car Pt)
-		  Y  (cadr Pt)
-		  X1 (car P1)
-		  Y1 (cadr P1)
-		  X2 (car P2)
-		  Y2 (cadr P2)
-	)
-
-	(setq Cross
-		(- (* (- X X1) (- Y2 Y1))
-		   (* (- Y Y1) (- X2 X1))
-		)
-	)
-
-	(and
-		(<= (abs Cross) Tol)
-		(<= (min X1 X2) (+ X Tol))
-		(>= (max X1 X2) (- X Tol))
-		(<= (min Y1 Y2) (+ Y Tol))
-		(>= (max Y1 Y2) (- Y Tol))
-	)
-)
-;
-;
-(defun EasyCut:PointInsidePolygon (Pt LstPt / Tol Inside I J P1 P2
-										X Y X1 Y1 X2 Y2)
-
-	(setq Tol 1e-9)
-
-	(if (and Pt LstPt (> (length LstPt) 2))
-		(progn
-
-			;; Punto sul bordo
-			(setq I 0
-				  J (1- (length LstPt))
-			)
-
-			(while (< I (length LstPt))
-
-				(setq P1 (nth I LstPt)
-					  P2 (nth J LstPt)
-				)
-
-				(if (EasyCut:PointOnSegment Pt P1 P2 Tol)
-					(progn
-						(setq Inside T)
-						(setq I (length LstPt))
-					)
-					(progn
-						(setq J I
-							  I (1+ I)
-						)
-					)
-				)
-			)
-
-			;; Se non è sul bordo, controllo interno
-			(if (null Inside)
-				(progn
-
-					(setq Inside nil
-						  I 0
-						  J (1- (length LstPt))
-						  X (car Pt)
-						  Y (cadr Pt)
-					)
-
-					(while (< I (length LstPt))
-
-						(setq P1 (nth I LstPt)
-							  P2 (nth J LstPt)
-
-							  X1 (car P1)
-							  Y1 (cadr P1)
-
-							  X2 (car P2)
-							  Y2 (cadr P2)
-						)
-
-						(if
-							(and
-								(/= (> Y1 Y) (> Y2 Y))
-								(<
-									X
-									(+
-										X1
-										(*
-											(- X2 X1)
-											(/ (- Y Y1)
-											   (- Y2 Y1)
-											)
-										)
-									)
-								)
-							)
-							(setq Inside (not Inside))
-						)
-
-						(setq J I
-							  I (1+ I)
-						)
-					)
-				)
-			)
-
-			Inside
-		)
-	)
-)
-;
-;
 (setq SheetBox
 	'(
 		(MINX . 0.0)
-		(MAXX . 1000.0)
+		(MAXX . 12.0)
 		(MINY . 0.0)
-		(MAXY . 500.0)
+		(MAXY . 8.0)
 	)
 )
 (setq Shape1
 	'(
-		(20.0 20.0)
-		(40.0 20.0)
-		(40.0 40.0)
-		(20.0 40.0)
+		(4.0 2.0)
+		(7.0 4.0)
 	)
 )
-
 (setq Shape2
 	'(
-		(60.0 60.0)
-		(80.0 60.0)
-		(80.0 80.0)
-		(60.0 80.0)
+		(8.0 1.0)
+		(11.0 3.0)
+	)
+)	  
+(setq Shape3
+	'(
+		(6.0 5.0)
+		(9.0 7.0)
 	)
 )
+(setq LstShape (list Shape1 Shape2 Shape3))
 
-(setq LstShape (list Shape1 Shape2))
-
-(defun EasyCut:SegmentsIntersect
-	(P1 P2 P3 P4 / Tol Cross1 Cross2 Cross3 Cross4)
-
-	(setq Tol 1e-9)
-
-	(defun Cross (A B C)
-		(-
-			(*
-				(- (car B) (car A))
-				(- (cadr C) (cadr A))
-			)
-			(*
-				(- (cadr B) (cadr A))
-				(- (car C) (car A))
-			)
-		)
-	)
-
-	(setq Cross1 (Cross P1 P2 P3)
-		  Cross2 (Cross P1 P2 P4)
-		  Cross3 (Cross P3 P4 P1)
-		  Cross4 (Cross P3 P4 P2)
-	)
-
-	(cond
-
-		;; P3 o P4 sul segmento P1-P2
-		((and
-			(<= (abs Cross1) Tol)
-			(EasyCut:PointOnSegment P3 P1 P2 Tol)
-		 )
-			T
-		)
-
-		((and
-			(<= (abs Cross2) Tol)
-			(EasyCut:PointOnSegment P4 P1 P2 Tol)
-		 )
-			T
-		)
-
-		;; P1 o P2 sul segmento P3-P4
-		((and
-			(<= (abs Cross3) Tol)
-			(EasyCut:PointOnSegment P1 P3 P4 Tol)
-		 )
-			T
-		)
-
-		((and
-			(<= (abs Cross4) Tol)
-			(EasyCut:PointOnSegment P2 P3 P4 Tol)
-		 )
-			T
-		)
-
-		;; Intersezione propria
-		((and
-			(or
-				(and (> Cross1 Tol) (< Cross2 (- Tol)))
-				(and (< Cross1 (- Tol)) (> Cross2 Tol))
-			)
-			(or
-				(and (> Cross3 Tol) (< Cross4 (- Tol)))
-				(and (< Cross3 (- Tol)) (> Cross4 Tol))
-			)
-		 )
-			T
-		)
-	)
-)
+;(foreach itm (EasyCut:FindScrapRectangles SheetBox LstShape)
+;
+;	; ((0.0 80.0) (1000.0 500.0) 420000.0)
+;	(EasyCut:DrawScrapRectangle itm 3 1)
+;)
 ;
 ;
-(defun EasyCut:RectangleFree
-	(X1 Y1 X2 Y2 LstShape / RectPt Shape Box MinX MaxX MinY MaxY
-							  Pt P1 P2 I J Free)
+(defun EasyCut:ChoiseScrap (SheetBox LstShape / FindRect
+												LstRect Loop gr code data LstPos itm)
 
-	(setq Free T)
-
-	;; ------------------------------------------------------------
-	;; Vertici del rettangolo
-	;; ------------------------------------------------------------
-
-	(setq RectPt
-		(list
-			(list X1 Y1)
-			(list X2 Y1)
-			(list X2 Y2)
-			(list X1 Y2)
-		)
-	)
-
-	;; ------------------------------------------------------------
-	;; Analizzo tutti i pezzi
-	;; ------------------------------------------------------------
-
-	(foreach Shape LstShape
-
-		(if Free
-			(progn
-
-				(setq Box (EasyCut:GetBoundingBoxPoints Shape)
-
-					  MinX (cdr (assoc 'MINX Box))
-					  MaxX (cdr (assoc 'MAXX Box))
-					  MinY (cdr (assoc 'MINY Box))
-					  MaxY (cdr (assoc 'MAXY Box))
+	(defun FindRect (LstRect Pt / Pos P1 P2 X1 X2 Y1 Y2 LstRtn)
+		
+		(setq Pos 0)
+		(repeat (length LstRect)
+			(setq 	P1 (nth 0 (nth Pos LstRect))
+					P2 (nth 1 (nth Pos LstRect))
+					X1 (car P1)
+					Y1 (cadr P1)
+					X2 (car P2)
+					Y2 (cadr P2)
+			)
+			(if (and (>= (car  Pt) X1)
+					 (<= (car  Pt) X2)
+					 (>= (cadr Pt) Y1)
+					 (<= (cadr Pt) Y2)
 				)
-
-				;; ------------------------------------------------
-				;; 1. Bounding box completamente separati
-				;; ------------------------------------------------
-
-				(if (not
-						(or
-							(< X2 MinX)
-							(> X1 MaxX)
-							(< Y2 MinY)
-							(> Y1 MaxY)
-						)
-					)
+				(setq LstRtn (cons Pos LstRtn))
+			)
+			(setq Pos (1+ Pos))
+		)
+		LstRtn
+	)
+	;
+	; Main 
+	;
+	(setq LstRect (EasyCut:FindScrapRectangles SheetBox LstShape))
+	(setq Loop T)
+	
+	(while Loop
+		(setq gr (grread 't 15 0) code (car gr) data (cadr gr))
+		(cond
+			((= Code 2)
+				(if (member data '(13 32 69 101)) ; enter space E e
 					(progn
-
-						;; --------------------------------------------
-						;; 2. Un vertice del pezzo è dentro il
-						;;    rettangolo
-						;; --------------------------------------------
-
-						(foreach Pt Shape
-
-							(if
-								(and
-									(<= X1 (car Pt))
-									(<= (car Pt) X2)
-									(<= Y1 (cadr Pt))
-									(<= (cadr Pt) Y2)
-								)
-								(setq Free nil)
+						(redraw)
+						(setq Loop nil)
+					)
+				)
+			)
+			((and (member Code '(5 3)) (listp Data))  ; Mouse rolling
+				
+				(if (= Code 5)
+					(progn
+						(redraw)
+						(if (setq LstPos (FindRect LstRect Data))
+							(foreach itm LstPos
+								(EasyCut:DrawScrapRectangle (nth itm LstRect) 3 1)
 							)
 						)
-
-						;; --------------------------------------------
-						;; 3. Un vertice del rettangolo è dentro
-						;;    il pezzo
-						;; --------------------------------------------
-
-						(if Free
-							(foreach Pt RectPt
-
-								(if (EasyCut:PointInsidePolygon Pt Shape)
-									(setq Free nil)
-								)
-							)
-						)
-
-						;; --------------------------------------------
-						;; 4. Intersezione tra lati
-						;; --------------------------------------------
-
-						(if Free
-							(progn
-
-								(setq I 0)
-
-								(while
-									(and
-										Free
-										(< I (length Shape))
-									)
-
-									(setq J (if (= I 0)
-												(1- (length Shape))
-												(1- I)
-										  )
-										  P1 (nth J Shape)
-										  P2 (nth I Shape)
-									)
-
-									;; lato inferiore
-									(if (EasyCut:SegmentsIntersect
-											P1 P2
-											(nth 0 RectPt)
-											(nth 1 RectPt)
-										)
-										(setq Free nil)
-									)
-
-									;; lato destro
-									(if (and Free
-											(EasyCut:SegmentsIntersect
-												P1 P2
-												(nth 1 RectPt)
-												(nth 2 RectPt)
-											)
-										)
-										(setq Free nil)
-									)
-
-									;; lato superiore
-									(if (and Free
-											(EasyCut:SegmentsIntersect
-												P1 P2
-												(nth 2 RectPt)
-												(nth 3 RectPt)
-											)
-										)
-										(setq Free nil)
-									)
-
-									;; lato sinistro
-									(if (and Free
-											(EasyCut:SegmentsIntersect
-												P1 P2
-												(nth 3 RectPt)
-												(nth 0 RectPt)
-											)
-										)
-										(setq Free nil)
-									)
-
-									(setq I (1+ I))
-								)
-							)
-						)
+					)
+				)
+				
+				(if (= Code 3)						  ; Left click mouse
+					(progn
+						(redraw)
+						(setq Loop nil)
 					)
 				)
 			)
 		)
 	)
-
-	Free
 )
 ;
 ;
-(defun EasyCut:AddUnique (Val Lst /)
+(defun EasyCut:DrawScrapRectangle (Rect Color Highlight / P1 P2 X1 Y1 X2 Y2)
 
-	(if (member Val Lst)
-		Lst
-		(cons Val Lst)
+	(if (and Rect (>= (length Rect) 2))
+
+		(progn
+
+			(setq P1 (nth 0 Rect)
+				  P2 (nth 1 Rect)
+
+				  X1 (car P1)
+				  Y1 (cadr P1)
+
+				  X2 (car P2)
+				  Y2 (cadr P2)
+			)
+
+			;; Angoli del rettangolo
+			(setq P1 (list X1 Y1 0.0)
+				  P2 (list X2 Y1 0.0)
+				  P3 (list X2 Y2 0.0)
+				  P4 (list X1 Y2 0.0)
+			)
+
+			;; Lato inferiore
+			(grdraw P1 P2 Color Highlight)
+
+			;; Lato destro
+			(grdraw P2 P3 Color Highlight)
+
+			;; Lato superiore
+			(grdraw P3 P4 Color Highlight)
+
+			;; Lato sinistro
+			(grdraw P4 P1 Color Highlight)
+
+			Rect
+		)
 	)
 )
 ;
 ;
-(defun EasyCut:SortNumbers (Lst)
+(defun EasyCut:AddUnique
+  (Value Lst /)
 
-	(vl-sort Lst '<)
+  (if (member Value Lst)
+    Lst
+    (cons Value Lst)
+  )
+)
+;
+;
+(defun EasyCut:SortNumbers
+  (Lst)
+
+  (vl-sort
+    Lst
+    '(lambda (A B)
+       (< A B)
+     )
+  )
 )
 ;
 ;
 (defun EasyCut:GetCandidateCoordinates
-	(SheetBox LstShape / XList YList Shape Pt)
+  (SheetBox LstShape
+   / XList YList
+     MinX MaxX MinY MaxY
+     Shape P1 P2)
 
-	(setq XList
-		(list
-			(cdr (assoc 'MINX SheetBox))
-			(cdr (assoc 'MAXX SheetBox))
-		)
+  ;; Coordinate del foglio
+  (setq MinX (cdr (assoc 'MINX SheetBox))
+        MaxX (cdr (assoc 'MAXX SheetBox))
+        MinY (cdr (assoc 'MINY SheetBox))
+        MaxY (cdr (assoc 'MAXY SheetBox))
+  )
 
-		  YList
-		(list
-			(cdr (assoc 'MINY SheetBox))
-			(cdr (assoc 'MAXY SheetBox))
-		)
-	)
+  (setq XList (list MinX MaxX)
+        YList (list MinY MaxY)
+  )
 
-	(foreach Shape LstShape
+  ;; Coordinate degli shape rettangolari
+  (foreach Shape LstShape
 
-		(foreach Pt Shape
+    (setq P1 (nth 0 Shape)
+          P2 (nth 1 Shape)
+    )
 
-			(setq XList
-				(EasyCut:AddUnique
-					(car Pt)
-					XList
-				)
-			)
+    (setq XList
+      (EasyCut:AddUnique (car P1) XList)
+    )
 
-			(setq YList
-				(EasyCut:AddUnique
-					(cadr Pt)
-					YList
-				)
-			)
-		)
-	)
+    (setq XList
+      (EasyCut:AddUnique (car P2) XList)
+    )
 
-	(list
-		(EasyCut:SortNumbers XList)
-		(EasyCut:SortNumbers YList)
-	)
+    (setq YList
+      (EasyCut:AddUnique (cadr P1) YList)
+    )
+
+    (setq YList
+      (EasyCut:AddUnique (cadr P2) YList)
+    )
+  )
+
+  (list
+    (EasyCut:SortNumbers XList)
+    (EasyCut:SortNumbers YList)
+  )
 )
 ;
 ;
-(defun EasyCut:FindMaxScrapRectangle
-	(SheetBox LstShape / Coord XList YList
-		SheetMinX SheetMaxX SheetMinY SheetMaxY
-		SheetHeight
-		X1 X2 Y1 Y2
-		MaxWidth MaxHeight
-		BestRect BestArea Area)
+(defun EasyCut:RectanglesOverlap
+  (Rect1 Rect2
+   / A1 B1 A2 B2
+     X1Min X1Max Y1Min Y1Max
+     X2Min X2Max Y2Min Y2Max)
 
-	;; ------------------------------------------------------------
-	;; Coordinate candidate
-	;; ------------------------------------------------------------
+  (setq A1 (nth 0 Rect1)
+        B1 (nth 1 Rect1)
 
-	(setq Coord
-		(EasyCut:GetCandidateCoordinates
-			SheetBox
-			LstShape
-		)
-	)
+        A2 (nth 0 Rect2)
+        B2 (nth 1 Rect2)
+  )
 
-	(setq XList (car Coord)
-		  YList (cadr Coord)
-	)
+  (setq X1Min (min (car A1) (car B1))
+        X1Max (max (car A1) (car B1))
+        Y1Min (min (cadr A1) (cadr B1))
+        Y1Max (max (cadr A1) (cadr B1))
 
-	;; ------------------------------------------------------------
-	;; Limiti foglio
-	;; ------------------------------------------------------------
+        X2Min (min (car A2) (car B2))
+        X2Max (max (car A2) (car B2))
+        Y2Min (min (cadr A2) (cadr B2))
+        Y2Max (max (cadr A2) (cadr B2))
+  )
 
-	(setq SheetMinX (cdr (assoc 'MINX SheetBox))
-		  SheetMaxX (cdr (assoc 'MAXX SheetBox))
-		  SheetMinY (cdr (assoc 'MINY SheetBox))
-		  SheetMaxY (cdr (assoc 'MAXY SheetBox))
-
-		  SheetHeight (- SheetMaxY SheetMinY)
-
-		  BestRect nil
-		  BestArea 0.0
-	)
-
-	;; ------------------------------------------------------------
-	;; X1
-	;; ------------------------------------------------------------
-
-	(foreach X1 XList
-
-		;; Larghezza massima possibile partendo da X1
-		(setq MaxWidth
-			(- SheetMaxX X1)
-		)
-
-		;; Se anche usando tutta l'altezza del foglio
-		;; non possiamo migliorare BestArea, questa X è inutile.
-		(if (> (* MaxWidth SheetHeight) BestArea)
-
-			(foreach X2 XList
-
-				(if (> X2 X1)
-
-					(progn
-
-						(setq MaxWidth (- X2 X1))
-
-						;; ------------------------------------------------
-						;; Potatura X2
-						;; ------------------------------------------------
-
-						(if (> (* MaxWidth SheetHeight) BestArea)
-
-							(foreach Y1 YList
-
-								;; --------------------------------------------
-								;; Altezza massima possibile da Y1
-								;; --------------------------------------------
-
-								(setq MaxHeight
-									(- SheetMaxY Y1)
-								)
-
-								(if (> (* MaxWidth MaxHeight) BestArea)
-
-									(foreach Y2 YList
-
-										(if (> Y2 Y1)
-
-											(progn
-
-												(setq MaxHeight
-													(- Y2 Y1)
-												)
-
-												;; --------------------------------
-												;; Potatura Y2
-												;; --------------------------------
-
-												(if (> (* MaxWidth MaxHeight)
-													   BestArea)
-
-													;; ----------------------------
-													;; Controllo geometrico
-													;; ----------------------------
-
-													(if
-														(EasyCut:RectangleFree
-															X1 Y1 X2 Y2
-															LstShape
-														)
-
-														(progn
-
-															(setq Area
-																(*
-																	MaxWidth
-																	MaxHeight
-																)
-															)
-
-															(if (> Area BestArea)
-
-																(progn
-
-																	(setq BestArea Area)
-
-																	(setq BestRect
-																		(list
-																			(list X1 Y1)
-																			(list X2 Y2)
-																			Area
-																		)
-																	)
-																)
-															)
-														)
-													)
-												)
-											)
-										)
-									)
-								)
-							)
-						)
-					)
-				)
-			)
-		)
-	)
-
-	BestRect
+  ;; Uso di < e >:
+  ;; se due rettangoli condividono soltanto un bordo,
+  ;; non vengono considerati sovrapposti.
+  (and
+    (< X1Min X2Max)
+    (> X1Max X2Min)
+    (< Y1Min Y2Max)
+    (> Y1Max Y2Min)
+  )
 )
+;
+;
+(defun EasyCut:RectangleFree
+  (X1 Y1 X2 Y2 LstShape
+   / Candidate
+     Shape
+     Rtn)
 
+  (setq Candidate
+    (list
+      (list X1 Y1)
+      (list X2 Y2)
+    )
+  )
+
+  (setq Rtn T)
+
+  (foreach Shape LstShape
+
+    (if
+      (EasyCut:RectanglesOverlap Candidate Shape)
+      (setq Rtn nil)
+    )
+  )
+
+  Rtn
+)
+;
+;
+(defun EasyCut:RectangleContained-p
+  (Rect1 Rect2
+   / A1 B1 A2 B2
+     X1Min X1Max Y1Min Y1Max
+     X2Min X2Max Y2Min Y2Max)
+
+  (setq A1 (nth 0 Rect1)
+        B1 (nth 1 Rect1)
+
+        A2 (nth 0 Rect2)
+        B2 (nth 1 Rect2)
+  )
+
+  (setq X1Min (min (car A1) (car B1))
+        X1Max (max (car A1) (car B1))
+        Y1Min (min (cadr A1) (cadr B1))
+        Y1Max (max (cadr A1) (cadr B1))
+
+        X2Min (min (car A2) (car B2))
+        X2Max (max (car A2) (car B2))
+        Y2Min (min (cadr A2) (cadr B2))
+        Y2Max (max (cadr A2) (cadr B2))
+  )
+
+  ;; Contenimento stretto:
+  ;; rettangoli uguali non vengono considerati contenuti.
+  (and
+    (<= X2Min X1Min)
+    (<= X1Max X2Max)
+    (<= Y2Min Y1Min)
+    (<= Y1Max Y2Max)
+
+    (or
+      (< X2Min X1Min)
+      (< X1Max X2Max)
+      (< Y2Min Y1Min)
+      (< Y1Max Y2Max)
+    )
+  )
+)
+;
+;
+(defun EasyCut:RemoveContainedRectangles
+  (LstRect
+   / Result
+     Rect
+     Other
+     Contained)
+
+  (setq Result nil)
+
+  (foreach Rect LstRect
+
+    (setq Contained nil)
+
+    (foreach Other LstRect
+
+      (if
+        (and
+          (not (equal Rect Other 1e-8))
+          (EasyCut:RectangleContained-p Rect Other)
+        )
+        (setq Contained T)
+      )
+    )
+
+    (if (not Contained)
+      (setq Result
+        (cons Rect Result)
+      )
+    )
+  )
+
+  Result
+)
+;
+;
+(defun EasyCut:SortScrapRectangles
+  (LstRect)
+
+  (vl-sort
+    LstRect
+
+    '(lambda (R1 R2 / A1 A2 P1 P2)
+
+       (setq A1 (caddr R1)
+             A2 (caddr R2)
+
+             P1 (car R1)
+             P2 (car R2)
+       )
+
+       (cond
+         ;; Prima area decrescente
+         ((/= A1 A2)
+          (> A1 A2)
+         )
+
+         ;; Poi X iniziale crescente
+         ((/= (car P1) (car P2))
+          (< (car P1) (car P2))
+         )
+
+         ;; Poi Y iniziale crescente
+         ((/= (cadr P1) (cadr P2))
+          (< (cadr P1) (cadr P2))
+         )
+
+         ;; Poi X finale crescente
+         ((/= (car (cadr R1)) (car (cadr R2)))
+          (<
+            (car (cadr R1))
+            (car (cadr R2))
+          )
+         )
+
+         ;; Infine Y finale crescente
+         (T
+          (<
+            (cadr (cadr R1))
+            (cadr (cadr R2))
+          )
+         )
+       )
+     )
+  )
+)
+;
+;
+(defun EasyCut:FindScrapRectangles
+  (SheetBox LstShape
+   / Coords
+     XList YList
+     X1 X2 Y1 Y2
+     Rect Area
+     LstRect)
+
+  (setq LstRect nil)
+
+  ;; Coordinate candidate
+  (setq Coords
+    (EasyCut:GetCandidateCoordinates
+      SheetBox
+      LstShape
+    )
+  )
+
+  (setq XList (nth 0 Coords)
+        YList (nth 1 Coords)
+  )
+
+  ;; Tutte le combinazioni possibili
+  (foreach X1 XList
+
+    (foreach X2 XList
+
+      (if (> X2 X1)
+
+        (foreach Y1 YList
+
+          (foreach Y2 YList
+
+            (if (> Y2 Y1)
+
+              ;; Verifica che il rettangolo sia libero
+              (if
+                (EasyCut:RectangleFree
+                  X1 Y1 X2 Y2 LstShape
+                )
+
+                (progn
+                  (setq Area
+                    (*
+                      (- X2 X1)
+                      (- Y2 Y1)
+                    )
+                  )
+
+                  (setq Rect
+                    (list
+                      (list X1 Y1)
+                      (list X2 Y2)
+                      Area
+                    )
+                  )
+
+                  (setq LstRect
+                    (cons Rect LstRect)
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+
+  ;; Elimina i rettangoli contenuti in altri rettangoli
+  (setq LstRect
+    (EasyCut:RemoveContainedRectangles LstRect)
+  )
+
+  ;; Ordina per area decrescente
+  (EasyCut:SortScrapRectangles LstRect)
+)
 ;
 ;
