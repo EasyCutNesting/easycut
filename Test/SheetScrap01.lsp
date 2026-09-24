@@ -1,190 +1,185 @@
 ;;; ================================================================
 ;;; SCRAP SHEET
 ;;; ================================================================
-(defun ScrapSheet:FindScrapRectangles (SheetBox LstShape /  ScrapSheet:AddUnique
-															ScrapSheet:SortNumbers
-															ScrapSheet:GetCandidateCoordinates
-															ScrapSheet:RectanglesOverlap
-															ScrapSheet:RectangleFree
-															ScrapSheet:RectangleContained-p
-															ScrapSheet:RemoveContainedRectangles
-															ScrapSheet:SortScrapRectangles
-															Coords XList YList X1 X2 Y1 Y2 Rect Area LstRect)
+(defun ScrapSheet:FindScrapRectangles (SheetBox LstShape /
+                                       ScrapSheet:UniqueSorted
+                                       ScrapSheet:FreeIntervals
+                                       ScrapSheet:IntersectIntervals
+                                       ScrapSheet:InsideAny-p
+                                       ScrapSheet:SortScrapRectangles
+                                       Tol MinX MaxX MinY MaxY Boxes Bx V XRaw XList Xs
+                                       Slabs SlabI SlabJ PrevSlab NextSlab XI XJ Cur Iv LstRect)
 
-	(defun ScrapSheet:AddUnique (Value Lst)
-		(if (member Value Lst)
-			Lst
-			(cons Value Lst)
-		)
-	)
-	;
-	(defun ScrapSheet:SortNumbers (Lst)
-	  (vl-sort Lst '(lambda (A B) (< A B)))
-	)
-	;
-	(defun ScrapSheet:GetCandidateCoordinates (SheetBox LstShape / XList YList MinX MaxX MinY MaxY Shape P1 P2)
-		;; Coordinate del foglio
-		(setq MinX (cdr (assoc 'MINX SheetBox))
-			  MaxX (cdr (assoc 'MAXX SheetBox))
-			  MinY (cdr (assoc 'MINY SheetBox))
-			  MaxY (cdr (assoc 'MAXY SheetBox))
-		)
-		(setq XList (list MinX MaxX)
-			 YList (list MinY MaxY)
-		)
-		;; Coordinate degli shape rettangolari
-		(foreach Shape LstShape
-			(setq P1 (nth 0 Shape)
-				  P2 (nth 1 Shape)
-			)
-			(setq XList (ScrapSheet:AddUnique (car P1) XList))
-			(setq XList (ScrapSheet:AddUnique (car P2) XList))
-			(setq YList (ScrapSheet:AddUnique (cadr P1) YList))
-			(setq YList (ScrapSheet:AddUnique (cadr P2) YList))
-		)
-		(list (ScrapSheet:SortNumbers XList) (ScrapSheet:SortNumbers YList))
-	)
-	;
-	(defun ScrapSheet:RectanglesOverlap (Rect1 Rect2 / A1 B1 A2 B2 X1Min X1Max Y1Min Y1Max X2Min X2Max Y2Min Y2Max)
-		(setq A1 (nth 0 Rect1)
-			  B1 (nth 1 Rect1)
-			  A2 (nth 0 Rect2)
-			  B2 (nth 1 Rect2)
-		)
-		(setq X1Min (min (car A1) (car B1))
-			  X1Max (max (car A1) (car B1))
-			  Y1Min (min (cadr A1) (cadr B1))
-			  Y1Max (max (cadr A1) (cadr B1))
-
-			  X2Min (min (car A2) (car B2))
-			  X2Max (max (car A2) (car B2))
-			  Y2Min (min (cadr A2) (cadr B2))
-			  Y2Max (max (cadr A2) (cadr B2))
-		)
-		;; Uso di < e >:
-		;; se due rettangoli condividono soltanto un bordo,
-		;; non vengono considerati sovrapposti.
-		(and (< X1Min X2Max) (> X1Max X2Min) (< Y1Min Y2Max) (> Y1Max Y2Min))
-	)
-	;
-	(defun ScrapSheet:RectangleFree (X1 Y1 X2 Y2 LstShape / Candidate Shape Rtn)
-		(setq Candidate (list (list X1 Y1) (list X2 Y2)))
-		(setq Rtn T)
-		(foreach Shape LstShape
-			(if (ScrapSheet:RectanglesOverlap Candidate Shape)
-				(setq Rtn nil)
+	;; Ordina e toglie i duplicati (con tolleranza)
+	(defun ScrapSheet:UniqueSorted (Lst Tol / Result V)
+		(foreach V (vl-sort Lst '<)
+			(if (or (null Result) (> (- V (car Result)) Tol))
+				(setq Result (cons V Result))
 			)
 		)
-	  Rtn
+		(reverse Result)
 	)
 	;
-	(defun ScrapSheet:RectangleContained-p (Rect1 Rect2 / A1 B1 A2 B2 X1Min X1Max Y1Min Y1Max X2Min X2Max Y2Min Y2Max)
-		(setq A1 (nth 0 Rect1)
-			  B1 (nth 1 Rect1)
-			  A2 (nth 0 Rect2)
-			  B2 (nth 1 Rect2)
-		)
-		(setq X1Min (min (car A1) (car B1))
-			  X1Max (max (car A1) (car B1))
-			  Y1Min (min (cadr A1) (cadr B1))
-			  Y1Max (max (cadr A1) (cadr B1))
-
-			  X2Min (min (car A2) (car B2))
-			  X2Max (max (car A2) (car B2))
-			  Y2Min (min (cadr A2) (cadr B2))
-			  Y2Max (max (cadr A2) (cadr B2))
-		)
-		;; Contenimento stretto:
-		;; rettangoli uguali non vengono considerati contenuti.
-		(and  (<= X2Min X1Min) (<= X1Max X2Max) (<= Y2Min Y1Min) (<= Y1Max Y2Max)
-			  (or (< X2Min X1Min) (< X1Max X2Max) (< Y2Min Y1Min) (< Y1Max Y2Max))
-		)
-	)
-	;
-	(defun ScrapSheet:RemoveContainedRectangles (LstRect / Result Rect Other Contained)
-		(setq Result nil)
-		(foreach Rect LstRect
-			(setq Contained nil)
-			(foreach Other LstRect
-				(if  (and
-						(not (equal Rect Other 1e-8))
-						(ScrapSheet:RectangleContained-p Rect Other)
+	;; Intervalli Y liberi (lista di (Y1 . Y2)) della fetta X0..X1.
+	;; Boxes: lista di (XMin XMax YMin YMax) ordinata per YMin crescente.
+	(defun ScrapSheet:FreeIntervals (X0 X1 Boxes MinY MaxY Tol / Cursor Result Bx Top)
+		(setq Cursor MinY)
+		(foreach Bx Boxes
+			(if (and (< (nth 0 Bx) (- X1 Tol))
+					 (> (nth 1 Bx) (+ X0 Tol))
+				)
+				(progn
+					(setq Top (min (nth 2 Bx) MaxY))
+					(if (> (- Top Cursor) Tol)
+						(setq Result (cons (cons Cursor Top) Result))
 					)
-					(setq Contained T)
+					(if (> (nth 3 Bx) Cursor)
+						(setq Cursor (nth 3 Bx))
+					)
 				)
 			)
-			(if (not Contained)
-				(setq Result (cons Rect Result))
+		)
+		(if (> (- MaxY Cursor) Tol)
+			(setq Result (cons (cons Cursor MaxY) Result))
+		)
+		(reverse Result)
+	)
+	;
+	;; Intersezione di due liste ordinate di intervalli (solo lunghezza > Tol)
+	(defun ScrapSheet:IntersectIntervals (A B Tol / Result Lo Hi)
+		(while (and A B)
+			(setq Lo (max (caar A) (caar B))
+				  Hi (min (cdar A) (cdar B))
+			)
+			(if (> (- Hi Lo) Tol)
+				(setq Result (cons (cons Lo Hi) Result))
+			)
+			(if (< (cdar A) (cdar B))
+				(setq A (cdr A))
+				(setq B (cdr B))
 			)
 		)
-		Result
+		(reverse Result)
+	)
+	;
+	;; T se l'intervallo Iv e' contenuto in uno degli intervalli di Lst
+	(defun ScrapSheet:InsideAny-p (Iv Lst Tol / Found)
+		(while (and Lst (not Found))
+			(if (and (<= (- (caar Lst) Tol) (car Iv))
+					 (>= (+ (cdar Lst) Tol) (cdr Iv))
+				)
+				(setq Found T)
+			)
+			(setq Lst (cdr Lst))
+		)
+		Found
 	)
 	;
 	(defun ScrapSheet:SortScrapRectangles (LstRect)
 		(vl-sort LstRect
 			'(lambda (R1 R2 / A1 A2 P1 P2)
-					(setq A1 (caddr R1)
-						  A2 (caddr R2)
-						  P1 (car R1)
-						  P2 (car R2)
-					)
-					(cond
-						;; Prima area decrescente
-						((/= A1 A2)
-							(> A1 A2)
-						)
-						;; Poi X iniziale crescente
-						((/= (car P1) (car P2))
-							(< (car P1) (car P2))
-						)
-						;; Poi Y iniziale crescente
-						((/= (cadr P1) (cadr P2))
-							(< (cadr P1) (cadr P2))
-						)
-						;; Poi X finale crescente
-						((/= (car (cadr R1)) (car (cadr R2)))
-							(< (car (cadr R1)) (car (cadr R2)))
-						)
-						;; Infine Y finale crescente
-						(T
-							(< (cadr (cadr R1)) (cadr (cadr R2)))
-						)
-					)
+				(setq A1 (caddr R1)
+					  A2 (caddr R2)
+					  P1 (car R1)
+					  P2 (car R2)
+				)
+				(cond
+					((/= A1 A2) (> A1 A2))
+					((/= (car P1) (car P2)) (< (car P1) (car P2)))
+					((/= (cadr P1) (cadr P2)) (< (cadr P1) (cadr P2)))
+					((/= (car (cadr R1)) (car (cadr R2))) (< (car (cadr R1)) (car (cadr R2))))
+					(T (< (cadr (cadr R1)) (cadr (cadr R2))))
+				)
 			)
 		)
 	)
 	;
 	; Main ++++
 	;
-	(setq LstRect nil)
-	;; Coordinate candidate
-	(setq Coords (ScrapSheet:GetCandidateCoordinates SheetBox LstShape))
-	(setq	XList (nth 0 Coords)
-			YList (nth 1 Coords)
+	(setq 	Tol  1e-8
+			MinX (cdr (assoc 'MINX SheetBox))
+			MaxX (cdr (assoc 'MAXX SheetBox))
+			MinY (cdr (assoc 'MINY SheetBox))
+			MaxY (cdr (assoc 'MAXY SheetBox))
 	)
-	;; Tutte le combinazioni possibili
-	(foreach X1 XList
-		(foreach X2 XList
-			(if (> X2 X1)
-				(foreach Y1 YList
-					(foreach Y2 YList
-						(if (> Y2 Y1)
-							;; Verifica che il rettangolo sia libero
-							(if (ScrapSheet:RectangleFree X1 Y1 X2 Y2 LstShape)
-								(progn
-									(setq Area    (* (- X2 X1) (- Y2 Y1)))
-									(setq Rect    (list (list X1 Y1) (list X2 Y2) Area))
-									(setq LstRect (cons Rect LstRect))
-								)
+	;; Normalizza gli shape (min/max una volta sola) e ordina per YMin
+	(setq Boxes
+		(vl-sort
+			(mapcar
+				'(lambda (S / P1 P2)
+					(setq P1 (car S)
+						  P2 (cadr S)
+					)
+					(list (min (car P1) (car P2))
+						  (max (car P1) (car P2))
+						  (min (cadr P1) (cadr P2))
+						  (max (cadr P1) (cadr P2))
+					)
+				)
+				LstShape
+			)
+			'(lambda (A B) (< (nth 2 A) (nth 2 B)))
+		)
+	)
+	;; Coordinate X di taglio (solo quelle interne al foglio)
+	(setq XRaw (list MinX MaxX))
+	(foreach Bx Boxes
+		(foreach V (list (nth 0 Bx) (nth 1 Bx))
+			(if (and (> V (+ MinX Tol)) (< V (- MaxX Tol)))
+				(setq XRaw (cons V XRaw))
+			)
+		)
+	)
+	(setq XList (ScrapSheet:UniqueSorted XRaw Tol))
+	;; Intervalli liberi di ogni fetta
+	(setq Xs XList
+		  Slabs nil
+	)
+	(while (cdr Xs)
+		(setq Slabs (cons (ScrapSheet:FreeIntervals (car Xs) (cadr Xs) Boxes MinY MaxY Tol) Slabs)
+			  Xs    (cdr Xs)
+		)
+	)
+	(setq Slabs (reverse Slabs))
+	;; Sweep: per ogni fetta di partenza allargo la striscia verso destra
+	(setq SlabI    Slabs
+		  XI       XList
+		  PrevSlab nil
+          LstRect  nil
+	)
+	(while SlabI
+		(setq Cur   (car SlabI)
+			  SlabJ SlabI
+			  XJ    (cdr XI)       ; (car XJ) = X destra della striscia
+		)
+		(while (and SlabJ Cur)
+			(setq NextSlab (cadr SlabJ))
+			(foreach Iv Cur
+				(if (and (not (ScrapSheet:InsideAny-p Iv NextSlab Tol))   ; non estendibile a destra
+						 (not (ScrapSheet:InsideAny-p Iv PrevSlab Tol))   ; non estendibile a sinistra
+					)
+					(setq LstRect
+						(cons (list (list (car XI) (car Iv))
+									(list (car XJ) (cdr Iv))
+									(* (- (car XJ) (car XI)) (- (cdr Iv) (car Iv)))
 							)
+							LstRect
 						)
 					)
 				)
 			)
+			(setq SlabJ (cdr SlabJ)
+				  XJ    (cdr XJ)
 			)
+			(if SlabJ
+				(setq Cur (ScrapSheet:IntersectIntervals Cur (car SlabJ) Tol))
+			)
+		)
+		(setq PrevSlab (car SlabI)
+			  SlabI    (cdr SlabI)
+			  XI       (cdr XI)
+		)
 	)
-	;; Elimina i rettangoli contenuti in altri rettangoli
-	(setq LstRect (ScrapSheet:RemoveContainedRectangles LstRect))
 	;; Ordina per area decrescente
 	(ScrapSheet:SortScrapRectangles LstRect)
 )
@@ -209,6 +204,37 @@
 				(setq Pos (1+ Pos))
 			)
 			(grdraw (last itm) (car itm) Color Highlight)
+		)
+	)
+)
+;
+;
+(defun GetRectSheetAndShape (/ Ssel EnameSheet LstShape itm Shape ShapeBox Sheet SheetBox)
+
+	(prompt "\nSelezionare la lamiera..")
+	(setq Ssel (ssget "_+.:E:S" (list (list -3 (list (strcat $RgpSheet "," $RgpSheetTarget))))))
+	(if Ssel
+		(progn
+			(setq EnameSheet (GetEnameSheetByDummyEname (ssname Ssel 0)))
+			(if EnameSheet
+				(progn
+					(setq LstShape (GetEnameShapeByEnameSheet EnameSheet "CE"))
+					(foreach itm LstShape
+						(setq Shape (BoundingBoxLstEname (list itm)))
+						(setq ShapeBox (append ShapeBox (list (list (car Shape) (caddr Shape)))))
+					)
+					(setq Sheet (BoundingBoxLstEname (list EnameSheet)))
+					(setq SheetBox
+					  (list
+						(vl-list* 'MINX (car  (car Sheet)))
+						(vl-list* 'MAXX (car  (caddr Sheet)))
+						(vl-list* 'MINY (cadr (car Sheet)))
+						(vl-list* 'MAXY (cadr (caddr Sheet)))
+					  )
+					)
+					(ScrapSheet:ChoiseScrap SheetBox ShapeBox)
+				)
+			)
 		)
 	)
 )
@@ -358,7 +384,7 @@
 ;;; RECTANGLE UNION
 ;;; ================================================================
 ;;; ============================================================
-;;; SOMMARECT.LSP - Unione booleana di rettangoli (lati // X e Y)
+;;; Unione booleana di rettangoli (lati // X e Y)
 ;;; Comando: RectangleUnion
 ;;; Semplificazioni: rettangoli con lati paralleli agli assi,
 ;;; risultato senza fori (se ci fossero, i contorni interni
