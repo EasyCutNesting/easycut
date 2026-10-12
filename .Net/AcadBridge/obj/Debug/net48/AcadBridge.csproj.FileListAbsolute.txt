@@ -1,0 +1,10 @@
+C:\Users\adl20\Desktop\EasyCutNesting Beta\.Net\AcadBridge\bin\Debug\net48\AcadBridge.dll
+C:\Users\adl20\Desktop\EasyCutNesting Beta\.Net\AcadBridge\bin\Debug\net48\AcadBridge.pdb
+C:\Users\adl20\Desktop\EasyCutNesting Beta\.Net\AcadBridge\obj\Debug\net48\AcadBridge.csproj.AssemblyReference.cache
+C:\Users\adl20\Desktop\EasyCutNesting Beta\.Net\AcadBridge\obj\Debug\net48\AcadBridge.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\adl20\Desktop\EasyCutNesting Beta\.Net\AcadBridge\obj\Debug\net48\AcadBridge.AssemblyInfoInputs.cache
+C:\Users\adl20\Desktop\EasyCutNesting Beta\.Net\AcadBridge\obj\Debug\net48\AcadBridge.AssemblyInfo.cs
+C:\Users\adl20\Desktop\EasyCutNesting Beta\.Net\AcadBridge\obj\Debug\net48\AcadBridge.csproj.CoreCompileInputs.cache
+C:\Users\adl20\Desktop\EasyCutNesting Beta\.Net\AcadBridge\obj\Debug\net48\AcadBridge.sourcelink.json
+C:\Users\adl20\Desktop\EasyCutNesting Beta\.Net\AcadBridge\obj\Debug\net48\AcadBridge.dll
+C:\Users\adl20\Desktop\EasyCutNesting Beta\.Net\AcadBridge\obj\Debug\net48\AcadBridge.pdb

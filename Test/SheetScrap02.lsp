@@ -1,4 +1,4 @@
-;;; ============================================================
+;;; ============================================================ 
 ;;; SOMMARECT.LSP - Unione booleana di rettangoli (lati // X e Y)
 ;;; Comando: SOMMARECT
 ;;; Semplificazioni: rettangoli con lati paralleli agli assi,

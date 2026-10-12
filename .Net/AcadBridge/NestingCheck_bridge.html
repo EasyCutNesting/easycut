@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Nesting Check - prova ponte AutoCAD</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 16px; }
+  h2 { text-align: center; }
+  table { border-collapse: collapse; width: 96%; margin: 0 auto; }
+  th, td { border: 1px solid #555; padding: 6px 10px; text-align: center; }
+  th { background: #b9d3ee; }
+  tr:nth-child(even) td { background: #dce9f6; }
+  td.diff { background: yellow !important; }
+
+  /* --- Stile per i link del ponte --- */
+  a.bridge { color: #0b4a9e; text-decoration: underline; cursor: pointer; }
+  a.bridge:hover { background: #fff3a0; }
+  tr.bridge-sent td { outline: 2px solid #2e8b57; }
+  #bridge-toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%);
+                  background: #222; color: #fff; padding: 8px 16px; border-radius: 6px;
+                  font-size: 14px; opacity: 0; transition: opacity .25s; pointer-events: none; }
+  #bridge-toast.show { opacity: .92; }
+  @media print { a.bridge { color: inherit; text-decoration: none; } #bridge-toast { display: none; } }
+</style>
+</head>
+<body>
+
+<h2>Shape &nbsp; Nested &nbsp; List</h2>
+
+<!-- TABELLA DI PROVA (nella pagina reale c'e' gia' la tua) -->
+<table>
+  <tr><th>Itm</th><th>Order</th><th>Phase</th><th>Mark</th><th>Thick</th><th>Qty Shape</th><th>Qty Nested</th><th>Diff.</th></tr>
+  <tr><td>001</td><td>2015016</td><td>100</td><td>1000</td><td>8</td><td>5</td><td>10</td><td class="diff">5</td></tr>
+  <tr><td>003</td><td>2015016</td><td>100</td><td>1002</td><td>25</td><td>20</td><td>40</td><td class="diff">20</td></tr>
+  <tr><td>005</td><td>2015016</td><td>126</td><td>1006</td><td>8</td><td>4</td><td>8</td><td class="diff">4</td></tr>
+  <tr><td>013</td><td>2015016</td><td>126</td><td>1010</td><td>30</td><td>192</td><td>384</td><td class="diff">192</td></tr>
+</table>
+
+<div id="bridge-toast"></div>
+
+<!-- ============================================================
+     PONTE AUTOCAD: copia questo blocco prima di </body>
+     nella pagina reale.
+     ============================================================ -->
+<script>
+(function () {
+  // Funzione LISP da chiamare: deve essere nella whitelist del plugin/LISP
+  const FUNZIONE = 'myfunc';
+  const FILE_CMD = 'cmd.txt';
+
+  let dir = null;
+  const toast = document.getElementById('bridge-toast');
+
+  function avviso(testo) {
+    if (!toast) return;
+    toast.textContent = testo;
+    toast.classList.add('show');
+    clearTimeout(avviso._t);
+    avviso._t = setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+
+  // --- Memorizza la cartella scelta (IndexedDB), cosi' non va riscelta ogni volta ---
+  function apriDb() {
+    return new Promise((ok, ko) => {
+      const r = indexedDB.open('acadbridge', 1);
+      r.onupgradeneeded = () => r.result.createObjectStore('h');
+      r.onsuccess = () => ok(r.result);
+      r.onerror = () => ko(r.error);
+    });
+  }
+  async function leggiCartella() {
+    try {
+      const db = await apriDb();
+      return await new Promise(ok => {
+        const q = db.transaction('h').objectStore('h').get('dir');
+        q.onsuccess = () => ok(q.result || null);
+        q.onerror = () => ok(null);
+      });
+    } catch (e) { return null; }
+  }
+  async function salvaCartella(h) {
+    try { const db = await apriDb(); db.transaction('h', 'readwrite').objectStore('h').put(h, 'dir'); }
+    catch (e) { /* senza memoria: la cartella verra' richiesta di nuovo */ }
+  }
+
+  async function cartella() {
+    if (!dir) dir = await leggiCartella();
+    if (dir) {
+      let p = await dir.queryPermission({ mode: 'readwrite' });
+      if (p !== 'granted') p = await dir.requestPermission({ mode: 'readwrite' });
+      if (p === 'granted') return dir;
+    }
+    dir = await window.showDirectoryPicker({ mode: 'readwrite' });
+    await salvaCartella(dir);
+    return dir;
+  }
+
+  async function invia(arg, tr) {
+    if (!window.showDirectoryPicker) {
+      alert('Questo browser non supporta la scrittura su cartella. Usa Chrome o Edge.');
+      return;
+    }
+    try {
+      const d = await cartella();
+      const fh = await d.getFileHandle(FILE_CMD, { create: true });
+      const w = await fh.createWritable();
+      await w.write(FUNZIONE + '|' + arg);
+      await w.close();
+      document.querySelectorAll('tr.bridge-sent').forEach(r => r.classList.remove('bridge-sent'));
+      tr.classList.add('bridge-sent');
+      avviso('Inviato ad AutoCAD: ' + arg);
+    } catch (e) {
+      if (e.name !== 'AbortError') avviso('Errore: ' + e.message);
+    }
+  }
+
+  // --- Trasforma la colonna Mark in link: Order + Phase + Mark ---
+  document.querySelectorAll('table').forEach(tab => {
+    const righe = Array.from(tab.rows);
+    if (!righe.length) return;
+    const testa = Array.from(righe[0].cells).map(c => c.textContent.trim().toLowerCase());
+    const iO = testa.indexOf('order'), iP = testa.indexOf('phase'), iM = testa.indexOf('mark');
+    if (iO < 0 || iP < 0 || iM < 0) return;
+
+    righe.slice(1).forEach(tr => {
+      const c = tr.cells;
+      if (c.length <= Math.max(iO, iP, iM)) return;
+      const order = c[iO].textContent.trim();
+      const phase = c[iP].textContent.trim();
+      const mark  = c[iM].textContent.trim();
+      // Concatenazione senza separatori; tengo solo i caratteri accettati dal ponte
+      const arg = (order + phase + mark).replace(/[^A-Za-z0-9._\-]/g, '');
+      if (!arg) return;
+
+      const a = document.createElement('a');
+      a.href = '#';
+      a.className = 'bridge';
+      a.title = 'Invia ad AutoCAD: ' + arg;
+      a.textContent = mark;
+      a.addEventListener('click', ev => { ev.preventDefault(); invia(arg, tr); });
+      c[iM].textContent = '';
+      c[iM].appendChild(a);
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
