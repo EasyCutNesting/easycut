@@ -15,9 +15,13 @@
 (function () {
 
   // Funzione AutoLISP da chiamare: deve essere nella whitelist del LISP
-  var FUNZIONE = 'myfunc';
+  var FUNZIONE = 'CatchPaste';
   var PREFISSO = 'ACADBRIDGE';
   var COMANDO  = 'BRIDGEINCOLLA';
+
+  // Separatore tra Order, Phase e Mark. Deve essere un carattere accettato dal LISP
+  // (lettere, numeri, spazio . - _) e diverso da "|", che separa i campi del comando.
+  var SEP = ' ';
 
   var toast = null;
 
@@ -78,7 +82,7 @@
       var prec = document.querySelectorAll('tr.bridge-sent');
       for (var i = 0; i < prec.length; i++) prec[i].className = '';
       tr.className = 'bridge-sent';
-      avviso('Copiato: ' + arg + '  -  in AutoCAD digita ' + COMANDO);
+      // avviso('Copiato: ' + arg + '  -  in AutoCAD digita ' + COMANDO);
     } catch (e) {
       avviso('Errore: ' + e.message);
     }
@@ -107,15 +111,20 @@
           var order = c[iO].textContent.replace(/\s+/g, '');
           var phase = c[iP].textContent.replace(/\s+/g, '');
           var mark  = c[iM].textContent.replace(/\s+/g, '');
-          // Concatenazione senza separatori; tengo solo i caratteri accettati dal ponte
-          var arg = (order + phase + mark).replace(/[^A-Za-z0-9._\-]/g, '');
-          if (!arg) return;
+          // Ogni valore viene pulito dai caratteri non accettati dal ponte, poi uniti con SEP
+          var testoMark = mark;   // testo mostrato nel link, resta com'e' nella tabella
+          var pulisci = function (s) { return s.replace(/[^A-Za-z0-9._\-]/g, ''); };
+          order = pulisci(order);
+          phase = pulisci(phase);
+          mark  = pulisci(mark);
+          if (!order && !phase && !mark) return;
+          var arg = order + SEP + phase + SEP + mark;
 
           var a = document.createElement('a');
           a.href = '#';
           a.className = 'bridge';
           a.title = 'Copia per AutoCAD: ' + arg;
-          a.appendChild(document.createTextNode(mark));
+          a.appendChild(document.createTextNode(testoMark));
           a.onclick = function () { invia(arg, tr); return false; };
 
           c[iM].innerHTML = '';

@@ -10,9 +10,10 @@
 ;;; "AcadBridge" con un form "Bridge") nei percorsi di supporto.
 ;;; ------------------------------------------------------------------
 ;;; --- Configurazione ------------------------------------------------
-(setq *BR-WHITELIST* '("myfunc"))   ; funzioni LISP chiamabili dalla pagina (minuscolo)
+(setq *BR-WHITELIST* '("CatchPaste"))   ; funzioni LISP chiamabili dalla pagina (minuscolo)
 (setq *BR-PREFISSO*  "ACADBRIDGE")
-(setq *BR-INTERVAL*  500)          	; millisecondi tra un controllo e l'altro
+(setq *BR-INTERVAL*  500)          		; millisecondi tra un controllo e l'altro
+(setq *BR-SEPARATOR* " ")          		; separatori dati copiati
 ;;; --- Stato ---------------------------------------------------------
 (setq *BR-ULTIMO-ID* nil)
 (setq *BR-ESEGUITI*  0)
@@ -20,9 +21,40 @@
 (setq *BR-ATTIVO*    nil)
 (setq *BR-BUSY*      nil)
 ;
-(defun myfunc (arg)
-	(if arg
-		(princ arg)
+(defun br-FindEnameBomShape (OrderShape PhaseShape NameShape / LstEnameBom itm Order Phase Name LstRtn)
+	;
+	; Main +++++
+ 	;
+	(if (and OrderShape PhaseShape NameShape)
+		(progn
+		
+			(setq LstEnameBom (GetLstBlock NameBlockShape$))
+			(foreach itm LstEnameBom
+				(setq Order (LM:vl-getattributevalue (vlax-ename->vla-object itm) "ORDERSHAPE"))
+				(setq Phase (LM:vl-getattributevalue (vlax-ename->vla-object itm) "PHASESHAPE"))
+				(setq Name  (LM:vl-getattributevalue (vlax-ename->vla-object itm) "MKSHAPE"))
+				(if (and (= (strcase Order T) (strcase OrderShape T))
+						 (= (strcase Phase T) (strcase PhaseShape T))
+						 (= (strcase Name  T) (strcase NameShape  T))
+					)
+					(setq LstRtn (append LstRtn (list itm)))
+				)
+			)
+		)
+	)
+	LstRtn
+)
+;
+(defun CatchPaste (Arg / LstArgs LstEnameBom)
+
+	(if Arg
+		(progn
+			(setq LstArgs (br-split Arg " "))
+			(setq LstEnameBom (br-FindEnameBomShape (car LstArgs) (cadr LstArgs) (caddr LstArgs)))
+			(if (= (length lstEnameBom) 1)
+			    (ZoomEname (car LstEnameBom) 100)
+			)
+		)
 	)
 )
 ;
@@ -90,6 +122,7 @@
 (defun br-parse (txt / parti)
 	;;; Scompone il testo: restituisce (id funzione argomento) oppure nil
 	;;; se non e' un comando del ponte.
+	; ACADBRIDGE|1791998856759|myfunc|2015016;100;1000
 	(if (and txt (> (strlen txt) 0) (<= (strlen txt) 300))
 		(progn
 			(setq parti (br-split (vl-string-trim " \t\r\n" txt) "|"))
@@ -129,7 +162,8 @@
 			;; segnato subito: anche se viene rifiutato non sara' ripetuto a ogni giro
 			(setq *BR-ULTIMO-ID* id)
 			(cond
-				((not (member fn *BR-WHITELIST*))
+				;((not (member fn *BR-WHITELIST*))
+				((not (member fn (mapcar '(lambda (x) (strcase x t)) *BR-WHITELIST*)))
 					(princ (strcat "\n[Bridge] Funzione non consentita: " fn))
 				)
 				((not (br-arg-ok arg))
@@ -193,7 +227,9 @@
 	(if (not (boundp 'dcl-project-load))
 		(command "_OPENDCL")
 	)
-	(if (setq odcl (findfile "AcadBridge.odcl"))
+	(setq Path (vl-registry-read EasyCutRegistryPath$ "PathInstaller"))
+	; "\\OpenDCL\\OpenDCLLsp\\ODcl\\AcadBridge.odcl"
+	(if (setq odcl (findfile (strcat Path "\\AI\\AcadBridge\\AcadBridge.odcl")))
 		(progn
 			(dcl-Project-Load odcl T)
 			(if (boundp 'AcadBridge/Bridge)
@@ -267,5 +303,5 @@
 	(princ "\nUSO: BRIDGESTART, poi clic sul link Mark nella pagina.")
 	(princ)
 )
-(princ "\nAcadBridge (appunti + polling) caricato. BRIDGESTART per il polling, BRIDGEINCOLLA a richiesta.")
-(princ)
+;(princ "\nAcadBridge (appunti + polling) caricato. BRIDGESTART per il polling, BRIDGEINCOLLA a richiesta.")
+;(princ)
