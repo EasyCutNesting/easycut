@@ -31,6 +31,18 @@
 ;	)
 ;)
 ;
+(defun CheckFunctionLoad (CmdName)
+
+	; Check is loadad function
+	(if CmdName
+		(if (member (type (eval (read (strcase CmdName)))) '(SUBR USUBR))
+			T    
+			nil  
+		)
+		nil
+	)
+)
+;
 (defun C:ESEGUI_ADMIN (/ shellApp)
   (vl-load-com)
   (setq shellApp (vla-getinterfaceobject (vlax-get-acad-object) "Shell.Application"))

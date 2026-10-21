@@ -1,4 +1,4 @@
-4.0.0 19 1504 2026-09-13 19:06:48
+4.0.0 19 1509 2026-10-16 22:46:31
 ------------------------------
 FILE COMPRESSI:
 ------------------------------
@@ -6,12 +6,14 @@ FILE COMPRESSI:
 7-Zip 26.00 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-02-12
 
 Scanning the drive:
-109 folders, 1504 files, 250987876 bytes (240 MiB)
+112 folders, 1509 files, 251027348 bytes (240 MiB)
 
 Creating archive: C:\Users\adl20\Desktop\EasyCutNesting Beta\Release\Output\4.0.0\EasyCut_4.0.0.zip
 
-Add new data to archive: 109 folders, 1504 files, 250987876 bytes (240 MiB)
+Add new data to archive: 112 folders, 1509 files, 251027348 bytes (240 MiB)
 
++ AI\ScrapSheet\SheetScrap01.lsp
++ AI\Tocca\tocca.lsp
 + Apps\Banner.exe
 + Apps\DxfNest\ACadSharp.dll
 + Apps\DxfNest\ACadSharp.pdb
@@ -1199,6 +1201,7 @@ Add new data to archive: 109 folders, 1504 files, 250987876 bytes (240 MiB)
 + Apps\RectPack\_ssl.pyd
 + Apps\RectPack\_tkinter.pyd
 + Apps\RectPack\_uuid.pyd
++ Bin\AcadBridge.lsp
 + Bin\AdlNesting.lsp
 + Bin\BarCode.lsp
 + Bin\BinpackCut.lsp
@@ -1313,6 +1316,7 @@ Add new data to archive: 109 folders, 1504 files, 250987876 bytes (240 MiB)
 + Html\Html4.lsp
 + Html\Html5.lsp
 + Html\LoadHtml.lsp
++ Html\script\acadbridge.js
 + Html\script\jquery-1.3.2.min.js
 + Html\script\jquery-barcode-2.0.2.min.js
 + Html\script\normalize.css
@@ -1416,6 +1420,7 @@ Add new data to archive: 109 folders, 1504 files, 250987876 bytes (240 MiB)
 + Load\StartEasyCut.lsp
 + OpenDCL\EasyCutOpenDcl.lsp
 + OpenDCL\LoadOpenDcl.lsp
++ OpenDCL\OpenDclLsp\ODcl\AcadBridge.odcl
 + OpenDCL\OpenDclLsp\ODcl\GridDxfChangeInfo.odcl
 + OpenDCL\OpenDclLsp\ODcl\Menu - Copia.odcl
 + OpenDCL\OpenDclLsp\ODcl\Menu.odcl
@@ -1517,7 +1522,7 @@ Add new data to archive: 109 folders, 1504 files, 250987876 bytes (240 MiB)
 + Support\25-08-2026-15-53-AcadDoc.lsp
 + Support\AcadDoc.lsp
 
-Files read from disk: 1504
-Archive size: 97153024 bytes (93 MiB)
+Files read from disk: 1509
+Archive size: 97167379 bytes (93 MiB)
 Volumes: 19
 Everything is Ok

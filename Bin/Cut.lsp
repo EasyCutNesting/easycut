@@ -2118,7 +2118,7 @@
 					)
 					((= Dir 4) 
 						(ZoomWindow01 	(list (- XminShape Margin) (- YminSheet Margin))
-										(list (- XmaxShape Margin) (- YmaxShape Margin)))
+										(list (+ XmaxShape Margin) (+ YmaxShape Margin)))
 						(setq Rtn (ssget "_C" (list XminShape YminSheet) (list XmaxShape YmaxShape) '((0 . "LWPOLYLINE"))))
 						(ZoomPrevius01)
 					)

@@ -1,6 +1,8 @@
 (defun LoadBin (Path)
 	(if Path
 		(progn
+			(MyLoad (strcat Path "\\Bin\\AcadBridge.lsp"	))
+			(PrgBr NfileLsp$)
 			(MyLoad (strcat Path "\\Bin\\Entity.lsp"	    ))
 			(PrgBr NfileLsp$)
 			(MyLoad (strcat Path "\\Bin\\ShapeEntity.lsp"   ))

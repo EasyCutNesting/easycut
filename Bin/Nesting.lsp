@@ -3068,7 +3068,10 @@
 
 	(if (and LstShape LstSheet)
 		(progn
-
+			(if (not *BR-ATTIVO*)
+				(c:BRIDGESTART)
+			)
+			
 			; LstShape ---> Prg Id Order Phase Mark Qta Thik Length Height Mat n.torch
 			; LstSheet ---> Prg Id Stok Width Length Thik Surface Weight Mat n.torch
 
@@ -3201,6 +3204,10 @@
 	
 	(if (GetLstBlockBomSheetByRgp)
 		(progn
+		
+			(if (not *BR-ATTIVO*)
+				(c:BRIDGESTART)
+			)
 			
 			(if (not (CheckSameIdShape))
 				(setq LstShape (SortTable (GetTableStockDeductShapeNesting) '(0 2 3 4 0 1 0 0 0 0 0) "<"))

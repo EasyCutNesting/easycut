@@ -77,6 +77,8 @@
 	(boundp 'dcl-Project-Load)
 )
 ;
+; ViewerModless
+;
 ;(ViewerOpenDcl "C:\\EasyCutNesting Beta\\Tmp\\SetupEasyCut01.ps1")
 (defun ViewerOpenDcl (FileName / cmdecho Path)
 
@@ -121,6 +123,7 @@
   (dcl-Form-Close ViewerModless/Form1/TextButton1)
 )
 ;
+; GridDxfChangeInfo
 ;
 (defun Dialog01ModifiedLstShapeOpenDcl (LstTableFiltered LstNth LstButtonKey LstTypeValue LstDimButton LstModeData)
 																										  
