@@ -57,7 +57,7 @@
 	;
 	; Main
 	;
-;	(if (setq LstPackFile (DownloadReleaseEasyCut "https://github.com/EasyCutNesting/easycut/releases/latest/download/version.txt" nil))
+	;	(if (setq LstPackFile (DownloadReleaseEasyCut "https://github.com/EasyCutNesting/easycut/releases/latest/download/version.txt" nil))
 	(if (setq LstPackFile (DownloadReleaseEasyCut "https://github.com/EasyCutNesting/easycut" nil))
 		(progn
 			(UninstallEasyCut)
@@ -98,12 +98,12 @@
 			(action_tile "Cancel"    "(setq *InstalEasyCut* (done_dialog)) (unload_dialog xx) (vl-file-delete FileDialog)")
 			(start_dialog)
 		)
-		(LM:popup "Errore" (strcat "Il file " (car LstPackFile) " non e' sato estratto\n"
+		(LM:popup "Errore" (strcat "Il file di installazione non e' sato estratto\n"
 									"Possibili anomalie :\n"
-									"L'estrazione e' stata interrotta\n"
-									"Il file ZIP e' danneggiato\n"
-									"Alcuni file sono starti rimossi dall'Antivirus\n"
-									"Non hai i permessi di scrittura") (+ 0 16 4096))
+									"1. Il download e' stato interrotto\n"
+									"2. Il file ZIP e' danneggiato\n"
+									"3. Alcuni file sono starti rimossi dall'Antivirus\n"
+									"4. Non hai i permessi di scrittura") (+ 0 16 4096))
 	)
 )
 ;

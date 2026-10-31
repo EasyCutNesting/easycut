@@ -162,3 +162,20 @@
 		)
 	)
 )
+;
+;
+(defun AreaInView-p (Pmin Pmax / vctr vsize scrn x_size y_size x2 y2)
+	(setq vctr  (getvar "VIEWCTR")
+		  vsize (getvar "VIEWSIZE")
+		  scrn  (getvar "SCREENSIZE")
+		  y_size vsize
+		  x_size (* vsize (/ (float (car scrn)) (cadr scrn)))
+		  x2 (/ x_size 2.0)
+		  y2 (/ y_size 2.0)
+	)
+	(and (>= (car Pmin)  (- (car vctr) x2))
+		 (<= (car Pmax)  (+ (car vctr) x2))
+         (>= (cadr Pmin) (- (cadr vctr) y2))
+		 (<= (cadr Pmax) (+ (cadr vctr) y2))
+	)
+)

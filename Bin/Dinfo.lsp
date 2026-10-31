@@ -1,6 +1,5 @@
 ;
 ;
-;
 (defun c:arrow (/ *error* MakeArrow DeletedArrow EnameShape LocalDimBox)
 
 	;
@@ -15,8 +14,6 @@
 		(princ)
     )
 	;
-	;
-	;
 	(defun MakeArrow (Pmin Pmax)
 	
 		(if (and Pmin Pmax)
@@ -30,13 +27,11 @@
 		)
 	)
 	;
-	;
-	;
 	(defun DeletedArrow ()
 		(redraw)
 	)
 	;
-	;
+	; Main
 	;
     (setq EnameShape (ssname (ssget) 0))
 	(setq LocalDimBox (ucs-bbox EnameShape))
@@ -59,8 +54,53 @@
 )
 ;
 ;
+(defun c:PolarArrow (/ *error* MakeArrowPolar DeletedArrow EnameShape LocalDimBox NArrow gr code data)
+
+	(defun *error* (msg)
+		(DeletedArrow)
+		(if (and msg (not (wcmatch (strcase msg) "*BREAK*,*CANCEL*,*EXIT*")))
+			(princ (strcat "\n** Error: " msg " **"))
+		)
+		(princ)
+	)
+	;
+	(defun MakeArrowPolar (Pmin Pmax n / i ang)
+		;; Disegna N frecce disposte in modo polare attorno al centro del box
+		(if (and Pmin Pmax (> n 0))
+			(progn
+				(setq i 0)
+				(repeat n
+					(setq ang (* 2.0 pi (/ (float i) n)))   ; angolo in radianti
+					(ArrowGraphPolar ang Pmin Pmax)
+					(setq i (1+ i))
+				)
+			)
+		)
+	)
+	;
+	(defun DeletedArrow () 
+		(redraw)
+	)
+	;
+	;; Main
+	;
+	(initget 4)  ; no zero, no negativi
+	(setq NArrow (getint "\nNumero di frecce <4>: "))
+	(if (null NArrow) (setq NArrow 4))
+	(setq EnameShape (ssname (ssget) 0))
+	(setq LocalDimBox (ucs-bbox EnameShape))
+	(while (setq gr (grread t 15 0) code (car gr) data (cadr gr))
+		(cond
+			((and (= code 5) (listp data))              ; movimento mouse
+				(DeletedArrow)
+				(MakeArrowPolar (nth 0 LocalDimBox) (nth 1 LocalDimBox) NArrow))
+			(t nil)
+		)
+	)
+)
 ;
-(defun c:PolarArw (/ *error* MakeArrow DeletedArrow EnameShape LocalDimBox CenterSheet)
+;
+(defun c:PolarRular (/ *error* MakeArrow DeletedArrow EnameShape LocalDimBox CenterSheet)
 
 	;
     ; *error* ++++++++++++++++++
@@ -72,8 +112,6 @@
 		(princ)
     )
 	;
-	;
-	;
 	(defun MakePolarRular (PtCenter Radius)
 	
 		(if (and PtCenter Radius)
@@ -81,13 +119,9 @@
 		)
 	)
 	;
-	;
-	;
 	(defun DeletedArrow ()
 		(redraw)
 	)
-	;
-	;
 	;
     (setq EnameShape (ssname (ssget) 0))
 	(setq LocalDimBox (ucs-bbox EnameShape))
@@ -112,7 +146,6 @@
 
     )
 )
-;
 ;
 ;
 (defun PolarRuler (PtCenter Radius / Prol
@@ -211,7 +244,6 @@
 )
 ;
 ;
-;
 (defun ArrowGraph (quad p1 p2 /  ArrowColor HBodyArrow LBodyArrow LArrow HArrow 
 								 pm dist pa pb pc pd pe pf pg lista_out EnameArrow cos_dir)
 	
@@ -299,6 +331,71 @@
 			(list pa pb pc pd pe pf pg)
 )
 ;
+;
+(defun ArrowGraphPolar (ang p1 p2 / ArrowColor HBodyArrow LBodyArrow HArrow vs
+									pm hw hh c s tx ty dist h lb ha pts out)
+
+	;; Freccia orientata secondo l'angolo ang, che parte dal bordo del box
+	(setq ArrowColor 1)
+	(setq HBodyArrow 30.0   ; altezza corpo freccia
+		  LBodyArrow 20.0   ; lunghezza corpo freccia
+		  HArrow     30.0)  ; altezza testa freccia (era 60/2)
+
+	(setq vs (getvar 'VIEWSIZE))
+
+	;; centro e semi-dimensioni del box
+	(setq pm (list (/ (+ (car p1) (car p2)) 2.0)
+				   (/ (+ (cadr p1) (cadr p2)) 2.0))
+	)
+	(setq hw (/ (- (car p2) (car p1)) 2.0)
+		  hh (/ (- (cadr p2) (cadr p1)) 2.0)
+	)
+	;; distanza centro -> bordo del rettangolo lungo la direzione ang
+	(setq c (abs (cos ang))
+		  s (abs (sin ang))
+		  tx (if (> c 1e-9) (/ hw c) 1e99)
+		  ty (if (> s 1e-9) (/ hh s) 1e99)
+		dist (+ (min tx ty) (/ vs 50.0))     ; stesso margine di prima
+	)
+	;; misure della freccia
+	(setq h  (/ vs HBodyArrow)
+		  lb (/ vs LBodyArrow)
+		  ha (/ vs HArrow)
+	)
+	;; freccia "locale" orientata verso +X (come il vecchio quad 1)
+	(setq pts
+		(list
+			(list dist 0.0)                          ; (non usato, segnaposto indice 0)
+			(list dist h)                            ; pa
+			(list dist (- h))                        ; pb
+			(list (+ dist lb) h)                     ; pc
+			(list (+ dist lb) (- h))                 ; pd
+			(list (+ dist lb) (+ h ha))              ; pe
+			(list (+ dist lb) (- (+ h ha)))          ; pf
+			(list (+ dist (* ha 3.0)) 0.0)           ; pg
+		)
+	)
+	(setq pts (cdr pts))
+	;; rotazione attorno all'origine + traslazione sul centro
+	(setq out
+		(mapcar
+			'(lambda (p)
+				(list (+ (car pm)  (- (* (car p) (cos ang)) (* (cadr p) (sin ang))))
+					  (+ (cadr pm) (+ (* (car p) (sin ang)) (* (cadr p) (cos ang))))
+				)
+			)
+			pts
+		)
+	)
+	(grdraw (nth 0 out) (nth 1 out) ArrowColor)   ; pa-pb
+	(grdraw (nth 0 out) (nth 2 out) ArrowColor)   ; pa-pc
+	(grdraw (nth 1 out) (nth 3 out) ArrowColor)   ; pb-pd
+	(grdraw (nth 2 out) (nth 4 out) ArrowColor)   ; pc-pe
+	(grdraw (nth 3 out) (nth 5 out) ArrowColor)   ; pd-pf
+	(grdraw (nth 4 out) (nth 6 out) ArrowColor)   ; pe-pg
+	(grdraw (nth 5 out) (nth 6 out) ArrowColor)   ; pf-pg
+	out
+)
 ;
 ;
 (defun DinamicInfo (/ ;;      { Funzioni locali }
@@ -1094,7 +1191,6 @@
         )
     )
 )
-;
 ;
 ;
 (defun test (/ Pos)

@@ -21,16 +21,19 @@
 ;;;   3. scegli la direzione: X+ X- Y+ Y- oppure Angolo
 ;;; ============================================================
 (setq *tc-eps* 1e-9)
-;; ---- Prodotto vettoriale 2D --------------------------------
+;
 (defun tc:cross (u v)
+	;; ---- Prodotto vettoriale 2D --------------------------------
 	(- (* (car u) (cadr v)) (* (cadr u) (car v)))
 )
-;; ---- Prodotto scalare 2D (proiezione di un punto su un asse) -
+;
 (defun tc:project (pt v)
+	;; ---- Prodotto scalare 2D (proiezione di un punto su un asse) -
 	(+ (* (car pt) (car v)) (* (cadr pt) (cadr v)))
 )
-;; ---- Vertici 2D di una LWPOLYLINE --------------------------
+;
 (defun tc:verts (en / pts)
+	;; ---- Vertici 2D di una LWPOLYLINE --------------------------
 	(foreach g (entget en)
 		(if (= (car g) 10)
 			(setq pts (cons (list (cadr g) (caddr g)) pts))
@@ -38,15 +41,17 @@
 	)
 	(reverse pts)
 )
-;; ---- Controllo: solo segmenti rettilinei -------------------
+;
 (defun tc:has-bulge (en)
+	;; ---- Controllo: solo segmenti rettilinei -------------------
 	(vl-some
 		'(lambda (g) (and (= (car g) 42) (> (abs (cdr g)) 1e-12)))
 		(entget en)
 	)
 )
-;; ---- Lati del poligono (sempre chiuso): lista di (q1 q2) ---
+;
 (defun tc:edges (pts / res n i)
+	;; ---- Lati del poligono (sempre chiuso): lista di (q1 q2) ---
 	(setq n (length pts) i 0)
 	(repeat n
 		(setq res (cons (list (nth i pts) (nth (rem (1+ i) n) pts)) res))
@@ -54,19 +59,21 @@
 	)
 	(reverse res)
 )
-;; ---- Orientamento di un poligono dai suoi lati:
-;;      +1.0 antiorario, -1.0 orario ---------------------------
+;
 (defun tc:orient (edges / a)
+	;; ---- Orientamento di un poligono dai suoi lati:
+	;;      +1.0 antiorario, -1.0 orario ---------------------------
 	(setq a 0.0)
 	(foreach ed edges
 		(setq a (+ a (tc:cross (car ed) (cadr ed))))
 	)
 	(if (>= a 0.0) 1.0 -1.0)
 )
-;; ---- Distanza minima tt>=0 per cui un vertice di 'pts',
-;;      spostato di tt*d, tocca un lato di 'edges' (raggio da
-;;      un punto, usato per il calcolo del contatto finale). --
+;
 (defun tc:ray (pts edges d / best q1 q2 e den w tt s sgn)
+	;; ---- Distanza minima tt>=0 per cui un vertice di 'pts',
+	;;      spostato di tt*d, tocca un lato di 'edges' (raggio da
+	;;      un punto, usato per il calcolo del contatto finale). --
 	(setq sgn (tc:orient edges))
 	(foreach ed edges
 		(setq q1  (car ed)
@@ -98,10 +105,11 @@
 	)
 	best
 )
-;; ---- Distanza di traslazione di A verso d fino al contatto
-;;      con un B, dati vertici/lati gia' calcolati di entrambi.
-;;      Ritorna nil se non c'e' mai contatto in quella direzione.
+;
 (defun tc:distance2 (va edges-a vb edges-b d / r1 r2 dneg)
+	;; ---- Distanza di traslazione di A verso d fino al contatto
+	;;      con un B, dati vertici/lati gia' calcolati di entrambi.
+	;;      Ritorna nil se non c'e' mai contatto in quella direzione.
 	(setq dneg 	 (list (- (car d)) (- (cadr d)))
 			r1   (tc:ray va edges-b d)      ; vertici A -> lati B
 			r2   (tc:ray vb edges-a dneg)   ; vertici B -> lati A
@@ -112,18 +120,20 @@
 		(r2 r2)
 	)
 )
-;; ---- Minima proiezione dei vertici su una direzione --------
+;
 (defun tc:min-projection (verts dir / m v)
+	;; ---- Minima proiezione dei vertici su una direzione --------
 	(foreach pt verts
 		(setq v (tc:project pt dir))
 		(if (or (null m) (< v m)) (setq m v))
 	)
 	m
 )
-;; ---- Un segmento (q1 q2) attraversa la retta infinita che
-;;      passa per p0 con direzione d? (solo per il test di
-;;      presenza di materiale, non calcola la distanza). ------
+;
 (defun tc:edge-crosses-line (p0 d q1 q2 / e den w s)
+	;; ---- Un segmento (q1 q2) attraversa la retta infinita che
+	;;      passa per p0 con direzione d? (solo per il test di
+	;;      presenza di materiale, non calcola la distanza). ------
 	(setq e   (list (- (car q2) (car q1)) (- (cadr q2) (cadr q1)))
 		  den (tc:cross d e)
 	)
@@ -135,13 +145,15 @@
 		)
 	)
 )
-;; ---- Punto sulla retta perpendicolare p, a distanza pm
-;;      dall'origine lungo l'asse p (d-coordinata nulla). ------
+;
 (defun tc:point-on-p (p pm)
+	;; ---- Punto sulla retta perpendicolare p, a distanza pm
+	;;      dall'origine lungo l'asse p (d-coordinata nulla). ------
 	(list (* (car p) pm) (* (cadr p) pm))
 )
-;; ---- Elimina duplicati da una lista di numeri GIA' ordinata -
+;
 (defun tc:dedupe (sorted / out)
+	;; ---- Elimina duplicati da una lista di numeri GIA' ordinata -
 	(foreach v sorted
 		(if (or (null out) (> (- v (car out)) *tc-eps*))
 			(setq out (cons v out))
@@ -149,11 +161,12 @@
 	)
 	(reverse out)
 )
-;; ---- "Ombra reale" di un poligono lungo l'asse perpendicolare
-;;      p, rispetto alla direzione di moto d: lista di
-;;      intervalli (a . b) dove esiste davvero del contorno,
-;;      con eventuali buchi se il poligono e' concavo. ---------
+;
 (defun tc:shadow-intervals (verts edges d p / breaks sorted n i a b pm p0 material ivs)
+	;; ---- "Ombra reale" di un poligono lungo l'asse perpendicolare
+	;;      p, rispetto alla direzione di moto d: lista di
+	;;      intervalli (a . b) dove esiste davvero del contorno,
+	;;      con eventuali buchi se il poligono e' concavo. ---------
 	(setq breaks nil)
 	(foreach pt verts 
 		(setq breaks (cons (tc:project pt p) breaks))
@@ -181,9 +194,10 @@
 	)
 	(tc:merge-intervals (reverse ivs))
 )
-;; ---- Unisce una lista di intervalli (a . b) sovrapposti o
-;;      adiacenti in una lista minima ordinata e disgiunta. ----
+;
 (defun tc:merge-intervals (ivs / sorted out last)
+	;; ---- Unisce una lista di intervalli (a . b) sovrapposti o
+	;;      adiacenti in una lista minima ordinata e disgiunta. ----
 	(setq sorted (vl-sort ivs '(lambda (x y) (< (car x) (car y)))))
 	(foreach iv sorted
 		(if (and last (<= (car iv) (+ (cdr last) *tc-eps*)))
@@ -199,9 +213,10 @@
 	)
 	(reverse out)
 )
-;; ---- Un intervallo (a . b) e' interamente contenuto nella
-;;      lista 'covering' (gia' unita/ordinata)? ----------------
+;
 (defun tc:interval-covered-p (iv covering)
+	;; ---- Un intervallo (a . b) e' interamente contenuto nella
+	;;      lista 'covering' (gia' unita/ordinata)? ----------------
 	(vl-some
 		'(lambda (c)
 			(and (<= (car c) (+ (car iv) *tc-eps*))
@@ -211,13 +226,15 @@
 		covering
 	)
 )
-;; ---- Tutti gli intervalli di 'shadow' sono coperti da
-;;      'covering'? Lista vuota => non coperto (si mantiene). --
+;
 (defun tc:shadow-covered-p (shadow covering)
+	;; ---- Tutti gli intervalli di 'shadow' sono coperti da
+	;;      'covering'? Lista vuota => non coperto (si mantiene). --
 	(and shadow (vl-every '(lambda (iv) (tc:interval-covered-p iv covering)) shadow))
 )
-;; ---- Selezione di una singola LWPOLYLINE valida ------------
+;
 (defun tc:pick (msg / sel en)
+	;; ---- Selezione di una singola LWPOLYLINE valida ------------
 	(while (not en)
 		(setq sel (entsel msg))
 		(cond
@@ -237,9 +254,9 @@
 	)
 	(if (= en 'annulla) nil en)
 )
-
-;; ---- Selezione di piu' LWPOLYLINE valide, INVIO per finire --
+;
 (defun tc:pick-many (msg / result sel en stop)
+	;; ---- Selezione di piu' LWPOLYLINE valide, INVIO per finire --
 	(setq result nil stop nil)
 	(while (not stop)
 		(setq sel (entsel (strcat "\n" msg " (INVIO per terminare): ")))
@@ -336,9 +353,9 @@
 			(setq best nil)
 			
 			(foreach item kept
-				(princ "\n")
-				(princ edges-a)
-				(princ "\n")
+				;(princ "\n")
+				;(princ edges-a)
+				;(princ "\n")
 				(setq tt (tc:distance2 va edges-a (nth 1 item) (nth 2 item) Direction))
 				(if (and tt (or (null best) (< tt (cdr best))))
 					(setq best (cons (car item) tt))
@@ -365,65 +382,215 @@
 	Rtn
 )
 ;
-(defun FenceSelect05 (EnameShape EnameSheet Dir / SelectionShape
-								 			      EnameOffset SelShape 
-												  Grp NotIncludeList itm MoveShape MoveSheet Rtn)
+(defun FenceSelect05 (EnameShape EnameSheet DirLst / SelectionShape
+								 			         EnameOffset SelShape 
+												     Grp NotIncludeList itm MoveShape MoveSheet Rtn)
 	;
-	(defun SelectionShape (EnameSheet EnameShape Dir / 	Margin
-														DimSheet DimShape 
-														XminShape YminShape XmaxShape YmaxShape XminSheet YminSheet XmaxSheet YmaxSheet Rtn)
-
-		(if (and EnameSheet EnameShape Dir)
+	(defun SelectionShape (EnameSheet EnameShape DirLst Debug /
+							Shp:Corners Shp:ToUV Shp:ToXY Shp:IntSeg
+							Shp:ClipHalf Shp:ClipRect Shp:Dedup Shp:Area Shp:SortCCW
+							Len CosA SinA SheetBox ShapeUV SheetUV
+							uMinShape vMinShape vMaxShape uMaxSheet
+							P_List ActiveZoom SS i n en Rtn)
+		;; DirLst = (cos sin) di un vettore che indica dove "avanza" la ricerca (in WCS)
+		;; (1 0) = destra, (0 1) = su, (-1 0) = sinistra, (0 -1) = giu
+		;; Viene normalizzato internamente.
+		;; Debug = T disegna il poligono usato da ssget e attende un input
+		(defun Shp:Corners (Dim / p1 p3)
+			;; Angoli (4 punti) di un bounding box [min ... max]
+			(setq p1 (car Dim) p3 (caddr Dim))
+			(list p1 (list (car p3) (cadr p1)) p3 (list (car p1) (cadr p3)))
+		)
+		;
+		(defun Shp:ToUV (P CosA SinA)
+			;; Mondo -> locale (u = lungo la direzione, v = perpendicolare)
+			(list (+ (* (car P) CosA) (* (cadr P) SinA))
+				  (- (* (cadr P) CosA) (* (car P) SinA)))
+		)
+		;
+		(defun Shp:ToXY (U V CosA SinA)
+			;; Locale -> mondo
+			(list (- (* U CosA) (* V SinA))
+				  (+ (* U SinA) (* V CosA)))
+		)
+		;
+		(defun Shp:IntSeg (A B k c / d tt)
+			;; Intersezione del segmento A-B con la retta coordinata[k] = c (k: 0 = X, 1 = Y)
+			(setq d (- (nth k B) (nth k A)))
+			(if (< (abs d) 1e-12)
+				A
+				(progn
+					(setq tt (/ (- c (nth k A)) d))
+					(list (+ (car  A) (* tt (- (car  B) (car  A))))
+						  (+ (cadr A) (* tt (- (cadr B) (cadr A)))))
+				)
+			)
+		)
+		;
+		(defun Shp:ClipHalf (Poly k c s / out prev inP inC)
+			;; Taglia Poly contro un semipiano. s = +1 tiene coord >= c, s = -1 tiene coord <= c
+			(setq prev (last Poly))
+			(foreach cur Poly
+				(setq inP (>= (* s (- (nth k prev) c)) 0.0)
+					  inC (>= (* s (- (nth k cur)  c)) 0.0)
+				)
+				(cond
+					((and inP inC)
+						(setq out (cons cur out)))
+					((and inP (not inC))
+						(setq out (cons (Shp:IntSeg prev cur k c) out)))
+					((and (not inP) inC)
+						(setq out (cons cur (cons (Shp:IntSeg prev cur k c) out))))
+				)
+				(setq prev cur)
+			)
+			(reverse out)
+		)
+		;
+		(defun Shp:ClipRect (Poly Box / xmn ymn xmx ymx)
+			;; Sutherland-Hodgman contro un bbox (formato di BoundingBoxLstEname)
+			(setq xmn (car  (car   Box)) ymn (cadr (car   Box))
+				  xmx (car  (caddr Box)) ymx (cadr (caddr Box))
+			)
+			(foreach h (list (list 0 xmn 1.0) (list 0 xmx -1.0)
+                       (list 1 ymn 1.0) (list 1 ymx -1.0))
+				(if Poly
+					(setq Poly (Shp:ClipHalf Poly (car h) (cadr h) (caddr h)))
+				)
+			)
+			Poly
+		)
+		;
+		(defun Shp:Dedup (Poly Tol / out)
+			;; Elimina vertici consecutivi duplicati (il clipping puo generarne)
+			(foreach p Poly
+				(if (or (null out) (> (distance p (car out)) Tol))
+					(setq out (cons p out))
+				)
+			)
+			(if (and (cdr out) (<= (distance (car out) (last out)) Tol))
+				(setq out (cdr out))
+			)
+			(reverse out)
+		)
+		;
+		(defun Shp:Area (Poly / a prev)
+			;; Area con segno (formula di Gauss)
+			(setq a 0.0 prev (last Poly))
+			(foreach p Poly
+				(setq a (+ a (- (* (car prev) (cadr p)) (* (car p) (cadr prev))))
+					  prev p
+				)
+			)
+			(/ a 2.0)
+		)
+		;
+		(defun Shp:SortCCW (Poly / cx cy n)
+			;; Ordina i vertici di un poligono convesso in senso antiorario
+			(setq n  (float (length Poly))
+				  cx (/ (apply '+ (mapcar 'car  Poly)) n)
+				  cy (/ (apply '+ (mapcar 'cadr Poly)) n)
+			)
+			(mapcar 'cdr
+				(vl-sort
+					(mapcar '(lambda (p) (cons (atan (- (cadr p) cy) (- (car p) cx)) p)) Poly)
+					'(lambda (a b) (< (car a) (car b)))
+				)
+			)
+		)
+		;
+		; Main ******
+		;
+		(if (and EnameSheet EnameShape DirLst)
 			(progn
-				;(ZoomEname EnameSheet 100.0)
-				(setq Margin 10.0)
-				(setq DimSheet  (BoundingBoxLstEname (list EnameSheet)))
-				(setq DimShape	(BoundingBoxLstEname (list EnameShape)))
-				
-				(setq XminShape	(car  (car  DimShape)) 
-					  YminShape	(cadr (car  DimShape))
-					  XmaxShape	(car  (caddr DimShape))
-					  YmaxShape	(cadr (caddr DimShape))
+				;; Direzione normalizzata
+				(setq Len (sqrt (+ (* (car DirLst)  (car DirLst))
+								   (* (cadr DirLst) (cadr DirLst))))
 				)
-				(setq XminSheet	(car  (car  DimSheet))
-					  YminSheet	(cadr (car  DimSheet))
-					  XmaxSheet (car  (caddr DimSheet))
-					  YmaxSheet	(cadr (caddr DimSheet))
-				)
-				(cond 
-					((= Dir 1)
-						(setq Pz1 (list (- XminShape Margin) (- YminShape Margin))
-							  Pz2 (list (+ XmaxSheet Margin) (+ YmaxShape Margin))
-							  Pc1 (list XminShape YminShape) 
-							  Pc2 (list XmaxSheet YmaxShape)
+				(if (> Len 1e-9)
+					(progn
+						(setq CosA (/ (car  DirLst) Len)
+							  SinA (/ (cadr DirLst) Len)
 						)
-					)
-					((= Dir 2) 
-						(setq Pz1 (list (- XminShape Margin) (- YminShape Margin)) 
-							  Pz2 (list (+ XmaxShape Margin) (+ YmaxSheet Margin))
-						      Pc1 (list XminShape YminShape) 
-							  Pc2 (list XmaxShape YmaxSheet)
+						(setq SheetBox (BoundingBoxLstEname (list EnameSheet)))
+						(setq ShapeUV (mapcar '(lambda (p) (Shp:ToUV p CosA SinA))
+											(Shp:Corners (BoundingBoxLstEname (list EnameShape))))
+							  SheetUV (mapcar '(lambda (p) (Shp:ToUV p CosA SinA))
+											(Shp:Corners SheetBox))
 						)
-					)
-					((= Dir 3) 
-						(setq Pz1 (list (- XminSheet Margin) (- YminShape Margin)) 
-							  Pz2 (list (+ XmaxShape Margin) (+ YmaxShape Margin))
-						      Pc1 (list XminSheet YminShape) 
-							  Pc2 (list XmaxShape YmaxShape)
+						(setq uMinShape (apply 'min (mapcar 'car  ShapeUV))
+							  vMinShape (apply 'min (mapcar 'cadr ShapeUV))
+							  vMaxShape (apply 'max (mapcar 'cadr ShapeUV))
+							  uMaxSheet (apply 'max (mapcar 'car  SheetUV))
 						)
-					)
-					((= Dir 4) 
-						(setq Pz1 (list (- XminShape Margin) (- YminSheet Margin))
-							  Pz2 (list (+ XmaxShape Margin) (+ YmaxShape Margin))
-						      Pc1 (list XminShape YminSheet) 
-							  Pc2 (list XmaxShape YmaxShape)
+						;; Lo shape deve stare prima del bordo lontano del foglio,
+						;; altrimenti il rettangolo si ribalta
+						(if (> uMaxSheet uMinShape)
+							(progn
+								;; Rettangolo in WCS
+								(setq P_List
+									(list (Shp:ToXY uMinShape vMinShape CosA SinA)
+										  (Shp:ToXY uMaxSheet vMinShape CosA SinA)
+										  (Shp:ToXY uMaxSheet vMaxShape CosA SinA)
+										  (Shp:ToXY uMinShape vMaxShape CosA SinA))
+								)
+								;; Clipping sul foglio (WCS), poi pulizia e ordinamento
+								(setq P_List (Shp:ClipRect P_List SheetBox))
+								(if P_List
+									(setq P_List (Shp:SortCCW (Shp:Dedup P_List 1e-4)))
+								)
+								;; Poligono valido solo con almeno 3 vertici e area non nulla
+								(if (and (>= (length P_List) 3)
+										 (> (abs (Shp:Area P_List)) 1e-6)
+									)
+									(progn
+										;; WCS -> UCS (richiesto da ssget e grdraw)
+										(setq P_List (mapcar '(lambda (p) (trans (list (car p) (cadr p) 0.0) 0 1))
+										      P_List)
+										)
+										; ------ blocco ZOOM ----
+										(if (not (AreaInView-p (car SheetBox) (caddr SheetBox)))
+											(progn
+												(ZoomWindow01 (car SheetBox) (caddr SheetBox))
+												(setq ActiveZoom T)
+											)
+										)
+										;---------------------------------------------------------------------------
+										(if Debug ;; disegna i punti realmente passati a ssget
+											(progn
+												(setq n (length P_List) i 0)
+												(repeat n
+													(grdraw (nth i P_List) (nth (rem (1+ i) n) P_List) 1 1)
+													(setq i (1+ i))
+												)
+												(getstring "<>")
+												(redraw)
+											)
+										)
+										(if (setq SS (ssget "_CP" P_List
+														 (list (cons 0 "LWPOLYLINE") (list -3 (list $RgpShape)))
+													 )
+											)
+											(progn
+												(setq i (sslength SS))
+												(while (> i 0)
+													(setq i  (1- i)
+														  en (ssname SS i)
+													)
+													(if (= (GetTypeShape en) 1)
+														(setq Rtn (cons en Rtn))
+													)
+												)
+											)
+										)
+										; -------------------------------------------------------------------------
+										(if ActiveZoom
+											(ZoomPrevius01)
+										)
+									)
+								)
+							)
 						)
-					)
-				)
-				(ZoomWindow01 Pz1 Pz2)  
-				(foreach itm (LM:ss->ent (ssget "_C" Pc1 Pc2 (list (cons 0 "LWPOLYLINE") (list -3 (list $RgpShape)))))
-					(if (= (GetTypeShape itm) 1)
-						(setq Rtn (cons itm Rtn)) 
 					)
 				)
 			)
@@ -431,35 +598,190 @@
 		Rtn
 	)
 	;
-	;
 	; Main
 	;
-	(if (and EnameShape EnameSheet Dir)
+	(if (and EnameShape EnameSheet DirLst)
 		(progn
-		
+			
 			(setq EnameOffset 		(car (OffsetShapeDelimitated EnameShape $MargineAccosto)))
-			(setq LstShape   		(SelectionShape EnameSheet EnameOffset Dir))
+			(setq LstShapeToCheck	(SelectionShape EnameSheet EnameOffset DirLst nil))
+			(setq LstShapeToCheck	(vl-remove EnameShape LstShapeToCheck))
 
-			(cond
-				((= Dir 1) (setq d (list  1.0  0.0)))
-				((= Dir 3) (setq d (list -1.0  0.0)))
-				((= Dir 2) (setq d (list  0.0  1.0)))
-				((= Dir 4) (setq d (list  0.0 -1.0)))
-				;(T
-				;	(setq ang (getangle "\nAngolo di traslazione: "))
-				;	(if ang (setq d (list (cos ang) (sin ang))))
-				;)
-			)
-			(setq MoveShape (tc:FenceShapeToShape EnameOffset LstShape   d nil))
-			(setq MoveSheet (ti:FenceShapeToSheet EnameOffset EnameSheet d nil))
-			(if (< (car MoveShape) (car MoveSheet))
-				(setq Rtn MoveShape)
-				(setq Rtn MoveSheet)
+			
+			;(cond
+			;	((= Dir 1) (setq d (list  1.0  0.0)))
+			;	((= Dir 3) (setq d (list -1.0  0.0)))
+			;	((= Dir 2) (setq d (list  0.0  1.0)))
+			;	((= Dir 4) (setq d (list  0.0 -1.0)))
+			;	;(T
+			;	;	(setq ang (getangle "\nAngolo di traslazione: "))
+			;	;	(if ang (setq d (list (cos ang) (sin ang))))
+			;	;)
+			;)
+			(setq MoveShape (tc:FenceShapeToShape EnameOffset LstShapeToCheck DirLst nil))
+			(setq MoveSheet (ti:FenceShapeToSheet EnameOffset EnameSheet      DirLst nil))
+			(setq Rtn
+				(cond
+					((and MoveShape MoveSheet)
+						(if (< (car MoveShape) (car MoveSheet)) 
+							MoveShape 
+							MoveSheet
+						)
+					)
+					(MoveShape)
+					(MoveSheet)
+				)
 			)
 			(if EnameOffset (entdel EnameOffset))
 		)
 	)
 	Rtn
+)
+;
+(defun MoveShapeAlongArrow (EnameShape / *error* MakeArrowPolar DeletedArrow MakeSolidArrow DefinitionSolidArrow
+										 msgLst Loop EnameSheet LstPointArrow gr code data direction LstArrow
+										 InfoMove tt Direction P1 P2 )
+
+	(defun *error* (msg)
+		(vla-EndUndoMark (vla-get-ActiveDocument (vlax-get-acad-object)))
+		(DeletedArrow)
+		(redraw)
+		(DeletedHatchEasyCut)
+		(DeleteEntity LstArrow)
+		(vla-highlight (vlax-ename->vla-object EnameShape) :vlax-false)
+		(princ)
+    )
+	;
+	(defun MakeArrowPolar (EnameShape n / Pmin Pmax i ang Rtn)
+		;; Disegna N frecce disposte in modo polare attorno al centro del box
+		(if (and EnameShape n)
+			(progn
+				(DeletedArrow)
+				(setq LocalDimBox (ucs-bbox EnameShape))
+				(setq Pmin (nth 0 LocalDimBox))
+				(setq Pmax (nth 1 LocalDimBox))		
+				(if (and Pmin Pmax (> n 0))
+					(progn
+						(setq i 0)
+						(repeat n
+							(setq ang (* 2.0 pi (/ (float i) n)))   ; angolo in radianti
+							(setq Rtn (cons (ArrowGraphPolar ang Pmin Pmax) Rtn))
+							(setq i (1+ i))
+						)
+					)
+				)
+			)
+		)
+		(reverse Rtn)
+	)
+	;
+	(defun DeletedArrow ()
+		(redraw)
+	)
+	;
+	(defun MakeSolidArrow (Pa Pb Pc Pd Pe Pf Pg / AppendXdata)
+	
+		(defun AppendXdata (Ename)
+			(entmod  (append (entget Ename) (list (list -3 (list $RgpTrash '(1002 . "{") '(1002 . "}"))))))
+			(entupd Ename)
+		)
+	
+		(if (and Pa Pb Pc Pd Pe Pf Pg)
+			(list (AppendXdata (LM:MakeSolid Pa Pb Pc Pd))
+				  (AppendXdata (LM:MakeSolid Pe Pf Pg Pg))
+			)
+		)
+	)
+	;
+	(defun DefinitionSolidArrow (Pt LstPointArrow / itm Rtn StepRad Pos)
+		(setq DirectionArrow$ nil)
+		(setq Pos 0)
+		(setq StepRad (/ (* 2.0 pi) (length LstPointArrow)))
+		(foreach itm LstPointArrow
+			(if (MeInsideBPlane (list (nth 0 itm) (nth 1 itm) (nth 3 itm) (nth 5 itm)
+									  (nth 6 itm) (nth 4 itm) (nth 2 itm))
+								Pt)
+				(progn
+					(setq Rtn (MakeSolidArrow (nth 0 itm) (nth 1 itm) (nth 2 itm) (nth 3 itm)
+											  (nth 4 itm) (nth 5 itm) (nth 6 itm)))
+					(setq DirectionArrow$ (list (cos (* Pos StepRad)) (sin (* Pos StepRad))))
+					;(princ "\n") (princ DirectionArrow$) (princ "\n")
+				)
+			)
+			(setq Pos (1+ Pos))
+		)
+		Rtn
+	)
+	;
+	; Main
+	;
+	(setq Loop T)
+	(setq EnameSheet (GetEnameSheetByEnameShape EnameShape))
+	(setq msgLst (strcat "\n<Esc / Enter>"))
+	(princ msgLst)
+	
+    (while Loop
+	
+		(setq LstPointArrow (MakeArrowPolar EnameShape 4))
+		(setq gr (grread 't 15 0) code (car gr) data (cadr gr))
+		(setq direction nil)
+		
+		(cond
+			((= Code 2)
+				(if (member data '(13 32 69 101)) ; enter space E e
+					(progn
+						(redraw)
+						;(DeleteEntity LstArrow)
+						(DeleteEntity (LM:ss->ent (ssget "X" (list (list -3 (list $RgpTrash))))))
+						(vla-highlight (vlax-ename->vla-object EnameShape) :vlax-false)
+						(setq Loop nil)
+					)
+				)
+			)
+			((and (member Code '(5 3)) (listp Data))  ; Mouse rolling
+				(setq LstPointArrow (MakeArrowPolar EnameShape 4))
+				
+				(if (= Code 5)
+					(progn
+						;(DeleteEntity LstArrow)
+						(DeleteEntity (LM:ss->ent (ssget "X" (list (list -3 (list $RgpTrash))))))
+						(setq LstArrow (DefinitionSolidArrow Data LstPointArrow))
+					)
+				)
+				
+				(if (= Code 3)						  ; Left click mouse
+					(progn
+						(redraw)
+						;(princ "\n") (princ DirectionArrow$) 
+						(if DirectionArrow$	(setq direction DirectionArrow$))
+					)
+				)
+			)
+		)
+		; Action +++++++++++
+		(if direction
+			(progn
+				;(DeleteEntity LstArrow)
+				(DeleteEntity (LM:ss->ent (ssget "X" (list (list -3 (list $RgpTrash))))))
+				(setq InfoMove (FenceSelect05 EnameShape EnameSheet direction))
+				(princ msgLst)
+				(if InfoMove
+					(if (>= (car InfoMove) $MargineAccosto)
+						(progn
+							(setq tt        (car  InfoMove))
+							(setq Direction (cadr InfoMove))
+							(setq P1 (list 0.0 0.0 0.0)
+								  P2 (list (* tt (car Direction)) (* tt (cadr Direction)) 0.0)
+							)
+							(setq EnameShape (car (Move+Rotate+MirrorShape EnameShape (list P1 P2 nil nil))))
+							(MakeArrow EnameShape)
+						)
+					)
+				)
+			)
+		)
+	)
+	(princ)
 )
 ;
 ;; ---- Comando principale ------------------------------------
@@ -493,5 +815,16 @@
 	)
 	(princ)
 )
+
+
+
+
 (princ "\nComando TOCCA caricato.")
 (princ)
+
+
+
+
+
+
+
