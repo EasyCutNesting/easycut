@@ -19,12 +19,14 @@
 ;;; Le polilinee con archi (bulge) non sono supportate.
 ;;; ============================================================
 (setq *ti-eps* 1e-9)
-;; ---- Prodotto vettoriale 2D --------------------------------
+;
 (defun ti:cross (u v)
+	;; ---- Prodotto vettoriale 2D --------------------------------
 	(- (* (car u) (cadr v)) (* (cadr u) (car v)))
 )
-;; ---- Vertici 2D di una LWPOLYLINE --------------------------
+;
 (defun ti:verts (en / pts)
+	;; ---- Vertici 2D di una LWPOLYLINE --------------------------
 	(foreach g (entget en)
 		(if (= (car g) 10)
 			(setq pts (cons (list (cadr g) (caddr g)) pts))
@@ -32,15 +34,17 @@
 	)
 	(reverse pts)
 )
-;; ---- Controllo: solo segmenti rettilinei -------------------
+;
 (defun ti:has-bulge (en)
+	;; ---- Controllo: solo segmenti rettilinei -------------------
 	(vl-some
 		'(lambda (g) (and (= (car g) 42) (> (abs (cdr g)) 1e-12)))
 		(entget en)
 	)
 )
-;; ---- Lati del poligono (sempre chiuso): lista di (q1 q2) ---
+;
 (defun ti:edges (pts / res n i)
+	;; ---- Lati del poligono (sempre chiuso): lista di (q1 q2) ---
 	(setq n (length pts) i 0)
 	(repeat n
 		(setq res (cons (list (nth i pts) (nth (rem (1+ i) n) pts)) res))
@@ -48,10 +52,11 @@
 	)
 	(reverse res)
 )
-;; ---- Un punto e' dentro il poligono definito da 'edges'?
-;;      Crossing-number test (raggio orizzontale verso +X),
-;;      valido anche per poligoni concavi. --------------------
+;
 (defun ti:point-inside-p (pt edges / cnt x y p1 p2 x1 y1 x2 y2 xinters)
+	;; ---- Un punto e' dentro il poligono definito da 'edges'?
+	;;      Crossing-number test (raggio orizzontale verso +X),
+	;;      valido anche per poligoni concavi. --------------------
 	(setq cnt 0 x (car pt) y (cadr pt))
 	(foreach ed edges
 		(setq p1 (car ed) p2 (cadr ed)
@@ -70,24 +75,27 @@
 	)
 	(= (rem cnt 2) 1)
 )
-;; ---- Tutti i vertici di A sono dentro B? Ritorna T/nil ------
+;
 (defun ti:contained-p (va edges-b)
+	;; ---- Tutti i vertici di A sono dentro B? Ritorna T/nil ------
 	(vl-every '(lambda (p) (ti:point-inside-p p edges-b)) va)
 )
-;; ---- Orientamento di un poligono dai suoi lati:
-;;      +1.0 antiorario, -1.0 orario ---------------------------
+;
 (defun ti:orient (edges / a)
+	;; ---- Orientamento di un poligono dai suoi lati:
+	;;      +1.0 antiorario, -1.0 orario ---------------------------
 	(setq a 0.0)
 	(foreach ed edges
 		(setq a (+ a (ti:cross (car ed) (cadr ed))))
 	)
 	(if (>= a 0.0) 1.0 -1.0)
 )
-;; ext = T  : 'edges' e' il contenitore B, il contatto a zero blocca
-;;            solo se d punta verso l'ESTERNO del poligono.
-;; ext = nil: 'edges' e' A, il contatto a zero blocca solo se d
-;;            entra nell'INTERNO del poligono.
+;
 (defun ti:ray (pts edges d ext / best q1 q2 e den w tt s sgn cr)
+	;; ext = T  : 'edges' e' il contenitore B, il contatto a zero blocca
+	;;            solo se d punta verso l'ESTERNO del poligono.
+	;; ext = nil: 'edges' e' A, il contatto a zero blocca solo se d
+	;;            entra nell'INTERNO del poligono.
 	(setq sgn (ti:orient edges))
 	(foreach ed edges
 		(setq q1  (car ed)
@@ -123,12 +131,13 @@
 	)
 	best
 )
-;; ---- Distanza di traslazione di A, verso d, fino al contatto
-;;      col bordo interno di B. Combina entrambe le direzioni
-;;      di raggio (vertici di A contro lati di B, e viceversa),
-;;      cosi' funziona anche se B e' concavo (es. A si incastra
-;;      in una rientranza). Ritorna nil se non c'e' contatto. --
+;
 (defun ti:distance (va edges-a vb edges-b d / r1 r2 dneg)
+	;; ---- Distanza di traslazione di A, verso d, fino al contatto
+	;;      col bordo interno di B. Combina entrambe le direzioni
+	;;      di raggio (vertici di A contro lati di B, e viceversa),
+	;;      cosi' funziona anche se B e' concavo (es. A si incastra
+	;;      in una rientranza). Ritorna nil se non c'e' contatto. --
 	(setq dneg 	 (list (- (car d)) (- (cadr d)))
 			r1   (ti:ray va edges-b d    T)      ; vertici A -> lati B
 			r2   (ti:ray vb edges-a dneg nil)    ; vertici B -> lati A
@@ -139,8 +148,9 @@
 		(r2 r2)
 	)
 )
-;; ---- Selezione di una LWPOLYLINE valida --------------------
+;
 (defun ti:pick (msg / sel en)
+	;; ---- Selezione di una LWPOLYLINE valida --------------------
 	(while (not en)
 		(setq sel (entsel msg))
 		(cond

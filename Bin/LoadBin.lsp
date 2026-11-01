@@ -11,6 +11,8 @@
 			(PrgBr NfileLsp$)
 			(MyLoad (strcat Path "\\Bin\\Cut.lsp"			))
 			(PrgBr NfileLsp$)
+			(MyLoad (strcat Path "\\Bin\\ToolMove.lsp"		))
+			(PrgBr NfileLsp$)
 			(MyLoad (strcat Path "\\Bin\\PointTrigger.lsp"	))
 			(PrgBr NfileLsp$)
 			(MyLoad (strcat Path "\\Bin\\PostProcessor.lsp"	))

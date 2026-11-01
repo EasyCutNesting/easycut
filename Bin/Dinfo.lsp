@@ -332,11 +332,11 @@
 )
 ;
 ;
-(defun ArrowGraphPolar (ang p1 p2 / ArrowColor HBodyArrow LBodyArrow HArrow vs
+(defun ArrowGraphPolar (ang p1 p2 ArrowColor / ArrowColor HBodyArrow LBodyArrow HArrow vs
 									pm hw hh c s tx ty dist h lb ha pts out)
 
 	;; Freccia orientata secondo l'angolo ang, che parte dal bordo del box
-	(setq ArrowColor 1)
+	;(setq ArrowColor 1)
 	(setq HBodyArrow 30.0   ; altezza corpo freccia
 		  LBodyArrow 20.0   ; lunghezza corpo freccia
 		  HArrow     30.0)  ; altezza testa freccia (era 60/2)

@@ -1,7 +1,7 @@
 ;;; ============================================================
-;;; TOCCA.LSP - Trasla una polilinea (A) fino al contatto con la
-;;;             prima di una lista di polilinee (B1, B2, ...),
-;;;             in una direzione data.
+;;; Trasla una polilinea (A) fino al contatto con la
+;;; prima di una lista di polilinee (B1, B2, ...),
+;;; in una direzione data.
 ;;;
 ;;; Prima del calcolo vero e proprio, la lista di B viene
 ;;; filtrata: se un B piu' vicino ad A, lungo la direzione di
@@ -382,6 +382,232 @@
 	Rtn
 )
 ;
+;;; ============================================================
+;;; TOCCA_INTERNO.LSP - Trasla una polilinea A, posizionata
+;;;             ALL'INTERNO del contorno di una polilinea B,
+;;;             fino al contatto con il bordo interno di B,
+;;;             in una direzione data.
+;;;
+;;; Esempio d'uso: A e' un oggetto/stanza/sagoma dentro un
+;;; perimetro B, e si vuole sapere di quanto puo' traslare
+;;; prima di toccare la parete (il contorno) di B.
+;;;
+;;; Script autonomo, non dipende da TOCCA.LSP.
+;;;
+;;; Comando: TOCCAINT
+;;;   1. seleziona il poligono interno da spostare (A)
+;;;   2. seleziona il poligono contenitore (B)
+;;;   3. scegli la direzione: X+ X- Y+ Y- oppure Angolo
+;;;
+;;; Vale per poligoni (A e B) concavi o convessi, lati inclinati.
+;;; Le polilinee con archi (bulge) non sono supportate.
+;;; ============================================================
+(setq *ti-eps* 1e-9)
+;
+(defun ti:cross (u v)
+	;; ---- Prodotto vettoriale 2D --------------------------------
+	(- (* (car u) (cadr v)) (* (cadr u) (car v)))
+)
+;
+(defun ti:verts (en / pts)
+	;; ---- Vertici 2D di una LWPOLYLINE --------------------------
+	(foreach g (entget en)
+		(if (= (car g) 10)
+			(setq pts (cons (list (cadr g) (caddr g)) pts))
+		)
+	)
+	(reverse pts)
+)
+;
+(defun ti:has-bulge (en)
+	;; ---- Controllo: solo segmenti rettilinei -------------------
+	(vl-some
+		'(lambda (g) (and (= (car g) 42) (> (abs (cdr g)) 1e-12)))
+		(entget en)
+	)
+)
+;
+(defun ti:edges (pts / res n i)
+	;; ---- Lati del poligono (sempre chiuso): lista di (q1 q2) ---
+	(setq n (length pts) i 0)
+	(repeat n
+		(setq res (cons (list (nth i pts) (nth (rem (1+ i) n) pts)) res))
+		(setq i (1+ i))
+	)
+	(reverse res)
+)
+;
+(defun ti:point-inside-p (pt edges / cnt x y p1 p2 x1 y1 x2 y2 xinters)
+	;; ---- Un punto e' dentro il poligono definito da 'edges'?
+	;;      Crossing-number test (raggio orizzontale verso +X),
+	;;      valido anche per poligoni concavi. --------------------
+	(setq cnt 0 x (car pt) y (cadr pt))
+	(foreach ed edges
+		(setq p1 (car ed) p2 (cadr ed)
+			  x1 (car p1) y1 (cadr p1)
+			  x2 (car p2) y2 (cadr p2)
+		)
+		(if (and (/= y1 y2)
+				 (>= y (min y1 y2))
+				 (<  y (max y1 y2))
+			)
+			(progn
+				(setq xinters (+ x1 (/ (* (- y y1) (- x2 x1)) (- y2 y1))))
+				(if (> xinters (+ x *ti-eps*)) (setq cnt (1+ cnt)))
+			)
+		)
+	)
+	(= (rem cnt 2) 1)
+)
+;
+(defun ti:contained-p (va edges-b)
+	;; ---- Tutti i vertici di A sono dentro B? Ritorna T/nil ------
+	(vl-every '(lambda (p) (ti:point-inside-p p edges-b)) va)
+)
+;
+(defun ti:orient (edges / a)
+	;; ---- Orientamento di un poligono dai suoi lati:
+	;;      +1.0 antiorario, -1.0 orario ---------------------------
+	(setq a 0.0)
+	(foreach ed edges
+		(setq a (+ a (ti:cross (car ed) (cadr ed))))
+	)
+	(if (>= a 0.0) 1.0 -1.0)
+)
+;
+(defun ti:ray (pts edges d ext / best q1 q2 e den w tt s sgn cr)
+	;; ext = T  : 'edges' e' il contenitore B, il contatto a zero blocca
+	;;            solo se d punta verso l'ESTERNO del poligono.
+	;; ext = nil: 'edges' e' A, il contatto a zero blocca solo se d
+	;;            entra nell'INTERNO del poligono.
+	(setq sgn (ti:orient edges))
+	(foreach ed edges
+		(setq q1  (car ed)
+			  q2  (cadr ed)
+			  e   (list (- (car q2) (car q1)) (- (cadr q2) (cadr q1)))
+			  den (ti:cross d e)
+		)
+		(if (> (abs den) *ti-eps*)
+			(foreach p pts
+				(setq w  (list (- (car q1) (car p)) (- (cadr q1) (cadr p)))
+					  tt (/ (ti:cross w e) den)
+					  s  (/ (ti:cross w d) den)
+					  cr (* sgn (ti:cross e d))
+				)
+				(if (and (>= tt (- *ti-eps*))
+						 (>= s  (- *ti-eps*))
+						 (<= s  (+ 1.0 *ti-eps*))
+						 ;; contatto gia' in atto (tt ~ 0): vale solo se
+						 ;; il movimento attraversa il bordo di B
+						 (or (> tt *ti-eps*)
+							 (if ext
+								 (< cr (- *ti-eps*))
+								 (> cr *ti-eps*)
+							 )
+						 )
+					)
+					(setq tt   (max tt 0.0)
+						  best (if best (min best tt) tt)
+					)
+				)
+			)
+		)
+	)
+	best
+)
+;
+(defun ti:distance (va edges-a vb edges-b d / r1 r2 dneg)
+	;; ---- Distanza di traslazione di A, verso d, fino al contatto
+	;;      col bordo interno di B. Combina entrambe le direzioni
+	;;      di raggio (vertici di A contro lati di B, e viceversa),
+	;;      cosi' funziona anche se B e' concavo (es. A si incastra
+	;;      in una rientranza). Ritorna nil se non c'e' contatto. --
+	(setq dneg 	 (list (- (car d)) (- (cadr d)))
+			r1   (ti:ray va edges-b d    T)      ; vertici A -> lati B
+			r2   (ti:ray vb edges-a dneg nil)    ; vertici B -> lati A
+	)
+	(cond
+		((and r1 r2) (min r1 r2))
+		(r1 r1)
+		(r2 r2)
+	)
+)
+;
+(defun ti:pick (msg / sel en)
+	;; ---- Selezione di una LWPOLYLINE valida --------------------
+	(while (not en)
+		(setq sel (entsel msg))
+		(cond
+			((null sel) 
+				(setq en 'annulla)
+			)
+			((/= (cdr (assoc 0 (entget (car sel)))) "LWPOLYLINE")
+				(princ "\nL'oggetto non e' una LWPOLYLINE.")
+			)
+			((ti:has-bulge (car sel))
+				(princ "\nLa polilinea contiene archi: non supportata.")
+			)
+			(T 
+				(setq en (car sel))
+			)
+		)
+	)
+	(if (= en 'annulla) nil en)
+)
+;
+(defun ti:MoveShape (EnameShape InfoMove / tt Direction)
+	(if (and EnameShape InfoMove)
+		(progn
+			;(princ "\nDato 1") (princ (car  InfoMove))
+			;(princ "\nDato 2") (princ (cadr InfoMove))
+			(setq tt        (car  InfoMove))
+			(setq Direction (cadr InfoMove))
+			(vla-move	(vlax-ename->vla-object EnameShape)
+						(vlax-3d-point '(0.0 0.0 0.0))
+						(vlax-3d-point (list (* tt (car Direction)) (* tt (cadr Direction)) 0.0))
+			)
+		)
+	)
+)
+;
+(defun ti:FenceShapeToSheet (EnameShape EnameSheet Direction Verbose / 
+							 va edges-a vb edges-b tt ok Rtn)
+	
+	(if (and EnameShape EnameSheet Direction)
+		(progn
+			(setq 	va      (ti:verts EnameShape)
+					edges-a (ti:edges va)
+					vb      (ti:verts EnameSheet)
+					edges-b (ti:edges vb)
+			)
+			;; --- verifica che A sia davvero dentro B -----------------
+			(setq ok (ti:contained-p va edges-b))
+			(if (and (not ok) Verbose)
+				(princ "\nAttenzione: almeno un vertice di A risulta FUORI dal contorno di B. Il calcolo prosegue comunque, ma il risultato va verificato.")
+			)
+			(setq tt (ti:distance va edges-a vb edges-b Direction))
+			(cond
+				((null tt)
+					(if Verbose
+						(princ "\nNessun contatto trovato con il bordo di B in questa direzione.")
+					)
+				)
+				(T
+					(if (> tt 0.0)
+						(setq Rtn (list tt Direction))
+					)
+					(if Verbose
+						(princ (strcat "\nTraslato di " (rtos tt 2 6) " unita' fino al contatto con B."))
+					)
+				)
+			)
+		)
+	)
+	Rtn
+)
+;
+; +++++++++++++++++++++
+;
 (defun FenceSelect05 (EnameShape EnameSheet DirLst / SelectionShape
 								 			         Margin EnameOffset SelShape 
 												     Grp NotIncludeList itm MoveShape MoveSheet Rtn)
@@ -584,7 +810,7 @@
 										;		)
 										;	)
 										;)
-										(if (setq LstEname (MySsget P_List 7 
+										(if (setq LstEname (EA:Ssget P_List 7 
 																	(list (cons 0 "LWPOLYLINE") (cons 1001 $RgpShape))))
 											(foreach en LstEname
 												(if (= (GetTypeShape en) 1)
@@ -616,16 +842,6 @@
 			(setq LstShapeToCheck	(SelectionShape EnameOffset EnameSheet DirLst nil))
 			(setq LstShapeToCheck	(vl-remove EnameShape LstShapeToCheck))
 						
-			;(cond
-			;	((= Dir 1) (setq d (list  1.0  0.0)))
-			;	((= Dir 3) (setq d (list -1.0  0.0)))
-			;	((= Dir 2) (setq d (list  0.0  1.0)))
-			;	((= Dir 4) (setq d (list  0.0 -1.0)))
-			;	;(T
-			;	;	(setq ang (getangle "\nAngolo di traslazione: "))
-			;	;	(if ang (setq d (list (cos ang) (sin ang))))
-			;	;)
-			;)
 			(setq MoveShape (tc:FenceShapeToShape EnameOffset LstShapeToCheck DirLst nil))
 			(setq MoveSheet (ti:FenceShapeToSheet EnameOffset EnameSheet      DirLst nil))
 			(setq Rtn
@@ -650,187 +866,9 @@
 	Rtn
 )
 ;
-(defun MoveShapeAlongArrow (EnameShape / *error* MakeArrowPolar DeletedArrow MakeSolidArrow DefinitionSolidArrow
-										 msgLst Loop EnameSheet DimShape LstPointArrow gr code data direction LstArrow
-										 InfoMove tt Direction P1 P2 )
-
-	(defun *error* (msg)
-		(vla-EndUndoMark (vla-get-ActiveDocument (vlax-get-acad-object)))
-		(DeletedArrow)
-		(redraw)
-		(DeletedHatchEasyCut)
-		(DeleteEntity LstArrow)
-		(vla-highlight (vlax-ename->vla-object EnameShape) :vlax-false)
-		(princ)
-    )
-	;
-	(defun MakeArrowPolar (DimShape n / LocalDimBox Pmin Pmax Pmid b h half i ang Rtn)
-		;; Disegna N frecce disposte in modo polare attorno al centro del box
-		(if (and DimShape (numberp n) (> n 0))
-			(progn
-				(setq Pmin (nth 0 DimShape))
-				(setq Pmax (nth 1 DimShape))
-				(if (and Pmin Pmax)
-					(progn
-						(setq Pmid (list (/ (+ (car Pmax) (car Pmin)) 2.0)
-										 (/ (+ (cadr Pmax) (cadr Pmin)) 2.0)))
-						(setq b (- (car Pmax) (car Pmin)))
-						(setq h (- (cadr Pmax) (cadr Pmin)))
-						(setq half (/ (max b h) 2.0))
-						(setq Pmin (list (- (car Pmid) half) (- (cadr Pmid) half)))
-						(setq Pmax (list (+ (car Pmid) half) (+ (cadr Pmid) half)))
-						(DeletedArrow)
-						(setq i 0)
-						(repeat n
-							(setq ang (* 2.0 pi (/ (float i) n)))
-							(setq Rtn (cons (ArrowGraphPolar ang Pmin Pmax) Rtn))
-							(setq i (1+ i))
-						)
-					)
-				)
-			)
-		)
-		(reverse Rtn)
-	)	
-	;
-	(defun DeletedArrow ()
-		(redraw)
-	)
-	;
-	(defun MakeSolidArrow (Pa Pb Pc Pd Pe Pf Pg / AppendXdata)
-	
-		(defun AppendXdata (Ename)
-			(entmod  (append (entget Ename) (list (list -3 (list $RgpTrash '(1002 . "{") '(1002 . "}"))))))
-			(entupd Ename)
-		)
-	
-		(if (and Pa Pb Pc Pd Pe Pf Pg)
-			(list (AppendXdata (LM:MakeSolid Pa Pb Pc Pd))
-				  (AppendXdata (LM:MakeSolid Pe Pf Pg Pg))
-			)
-		)
-	)
-	;
-	(defun DirectionMove (Pc PClick NumArrow / StepRad Ang StartAng Direction )
-
-		(setq StepRad  (/ (* 2.0 pi) NumArrow))
-		(setq Ang      (angle Pc PClick))
-		(setq StartAng (/ StepRad 2.0))
-;		
-		(if Ang
-			(repeat NumArrow
-				(if (and (>= Ang  StartAng)
-						 (<= Ang  (+ StartAng StepRad))
-					)
-					(setq Direction (list (cos StartAng) (sin StartAng)))
-					(setq StartAng (+ StartAng StepRad))
-				)
-			)
-		)
-		Direction
-	)
-	;
-	;(defun DefinitionSolidArrow (Pt LstPointArrow / itm Rtn StepRad Pos)
-	;	(setq DirectionArrow$ nil)
-	;	(setq Pos 0)
-	;	(setq StepRad (/ (* 2.0 pi) (length LstPointArrow)))
-	;	(foreach itm LstPointArrow
-	;		(if (MeInsideBPlane (list (nth 0 itm) (nth 1 itm) (nth 3 itm) (nth 5 itm)
-	;								  (nth 6 itm) (nth 4 itm) (nth 2 itm))
-	;							Pt)
-	;			(progn
-	;				;(setq Rtn (MakeSolidArrow (nth 0 itm) (nth 1 itm) (nth 2 itm) (nth 3 itm)
-	;				;						  (nth 4 itm) (nth 5 itm) (nth 6 itm)))
-	;				(setq DirectionArrow$ (list (cos (* Pos StepRad)) (sin (* Pos StepRad))))
-	;				;(princ "\n") (princ DirectionArrow$) (princ "\n")
-	;			)
-	;		)
-	;		(setq Pos (1+ Pos))
-	;	)
-	;	Rtn
-	;)
-	;
-	;
-	; Main
-	;
-	(setq Narrow 8)
-	(setq Loop T)
-	(setq EnameSheet (GetEnameSheetByEnameShape EnameShape))
-	(setq DimShape (ucs-bbox EnameShape))
-	(setq MidPoint (mapcar '(lambda (e1 e2) (/ (+ e1 e2) 2.0)) (car DimShape) (cadr DimShape)))
-							
-	(setq msgLst (strcat "\n<Esc / Enter>"))
-	(princ msgLst)
-	
-    (while Loop
-	
-		(setq LstPointArrow (MakeArrowPolar DimShape Narrow))
-		(setq gr (grread 't 15 0) code (car gr) data (cadr gr))
-		(setq direction nil)
-		
-		(cond
-			((= Code 2)
-				(if (member data '(13 32 69 101)) ; enter space E e
-					(progn
-						(redraw)
-						;(DeleteEntity LstArrow)
-						;   (DeleteEntity (LM:ss->ent (ssget "X" (list (list -3 (list $RgpTrash))))))
-						(vla-highlight (vlax-ename->vla-object EnameShape) :vlax-false)
-						(setq Loop nil)
-					)
-				)
-			)
-			((and (member Code '(5 3)) (listp Data))  ; Mouse rolling
-				(setq LstPointArrow (MakeArrowPolar DimShape Narrow))
-				
-				;(if (= Code 5)
-				;	(progn
-				;		;(DeleteEntity LstArrow)
-				;		;   (DeleteEntity (LM:ss->ent (ssget "X" (list (list -3 (list $RgpTrash))))))
-				;		(setq LstArrow (DefinitionDirectionArrow Data LstPointArrow Narrow))
-				;	)
-				;)
-				
-				(if (= Code 3)						  ; Left click mouse
-					(progn
-						(redraw)
-						;(princ "\n") (princ DirectionArrow$) 
-						(setq Direction (DirectionMove MidPoint Data Narrow))
-						;(if DirectionArrow$	(setq direction DirectionArrow$))
-					)
-				)
-			)
-		)
-		; Action +++++++++++
-		(if Direction
-			(progn
-				;(DeleteEntity LstArrow)
-				;   (DeleteEntity (LM:ss->ent (ssget "X" (list (list -3 (list $RgpTrash))))))
-				(setq InfoMove (FenceSelect05 EnameShape EnameSheet direction))
-				(princ msgLst)
-				(if InfoMove
-					(if (>= (car InfoMove) $MargineAccosto)
-						(progn
-							(setq tt        (car  InfoMove))
-							(setq Direction (cadr InfoMove))
-							(setq P1 (list 0.0 0.0 0.0)
-								  P2 (list (* tt (car Direction)) (* tt (cadr Direction)) 0.0)
-							)
-							(setq EnameShape (car (Move+Rotate+MirrorShape EnameShape (list P1 P2 nil nil))))
-							(setq DimShape (ucs-bbox EnameShape))
-							(MakeArrowPolar DimShape Narrow)
-						)
-					)
-				)
-			)
-		)
-	)
-	(princ)
-)
+; ---- Comando principale ------------------------------------
 ;
-;; ---- Comando principale ------------------------------------
-;
-(defun C:TOCCA (/ ea lsb kw ang d DataPos)
+(defun C:TOCCACONT (/ ea lsb kw ang d DataPos)
 	(setq ea (tc:pick "\nSeleziona il poligono da spostare (A): "))
 	(if ea
 		(progn
@@ -859,64 +897,434 @@
 	)
 	(princ)
 )
-
-
-
-
-(princ "\nComando TOCCA caricato.")
-(princ)
 ;
-; Test Ssget
 ;
+(defun C:TOCCALAM (/ ea eb va edges-a vb edges-b kw ang d)
 
-;
-(defun MySsget (pts mode flt / MakeFilter
-								 doc ssets ss arr f res old)
-
-	; 	(setq pts '((0.0 0.0 0.0) (1500.0 0.0 0.0) (1500.0 3000.0 0.0) (0.0 1500.0 0.0)))
-	;	(my-cp-vla pts 7 (list (cons 0 "LWPOLYLINE") (cons 1001 $RgpShape)))
-	;	(my-cp-vla pts 7 '((0 . "LWPOLYLINE") (62 . 2))) ; solo colore giallo
-
-
-
-	(defun MakeFilter (pairs / n ft fd)
-		(setq n  (length pairs)
-			  ft (vlax-make-safearray vlax-vbInteger (cons 0 (1- n)))
-			  fd (vlax-make-safearray vlax-vbVariant (cons 0 (1- n)))
+	(if (and (setq ea (ti:pick "\nSeleziona il poligono interno da spostare (A): "))
+			 (setq eb (ti:pick "\nSeleziona il poligono contenitore (B): "))
 		)
-		(vlax-safearray-fill ft (mapcar 'car pairs))
-		(vlax-safearray-fill fd (mapcar 'cdr pairs))
-		(list (vlax-make-variant ft) (vlax-make-variant fd))
-	)
-	;
-	; Main ++++++++
-	;
-	(setq doc   (vla-get-activedocument (vlax-get-acad-object))
-		  ssets (vla-get-selectionsets doc)
-	)
-	;; elimina un eventuale "TMP" rimasto da una esecuzione precedente
-	(setq old (vl-catch-all-apply 'vla-item (list ssets "TMP")))
-	(if (not (vl-catch-all-error-p old))
-		(vla-delete old)
-	)
-	(setq ss  (vla-add ssets "TMP")
-		  arr (vlax-make-safearray vlax-vbDouble (cons 0 (1- (* 3 (length pts)))))
-	)
-	(vlax-safearray-fill arr (apply 'append pts))
-
-	(if flt
 		(progn
-			(setq f (MakeFilter flt))
-			(vla-selectbypolygon ss mode (vlax-make-variant arr) (car f) (cadr f))
+			(initget "X+ X- Y+ Y- Angolo")
+			(setq kw (getkword "\nDirezione [X+/X-/Y+/Y-/Angolo] <X+>: "))
+			(if (null kw) (setq kw "X+"))
+			(cond
+				((= kw "X+") (setq d (list  1.0  0.0)))
+				((= kw "X-") (setq d (list -1.0  0.0)))
+				((= kw "Y+") (setq d (list  0.0  1.0)))
+				((= kw "Y-") (setq d (list  0.0 -1.0)))
+				(T
+					(setq ang (getangle "\nAngolo di traslazione: "))
+					(if ang (setq d (list (cos ang) (sin ang))))
+				)
+			)
+			(setq DataPos (ti:FenceShapeToSheet ea eb d T))
+			(if DataPos
+				(ti:MoveShape ea DataPos)
+			)
 		)
-		(vla-selectbypolygon ss mode (vlax-make-variant arr))
+		(princ "\nNessun poligono selezionato.")
 	)
-	(vlax-for obj ss
-		(setq res (cons (vlax-vla-object->ename obj) res))
-	)
-	(vla-delete ss)
-	(reverse res)
+	(princ)
 )
+;
+;
+(defun ToolMove (/ *error* MakeArrowPolar DirectionMove
+					FreeMovePosition FreePosition FreeCopyPosition
+					FreeMirrorPosition FreeRotatePosition FreeLeanOnPosition
+					EnameShape Narrow msgLst Loop EnameSheet DimShape MidPoint
+					Gr Code Data Direction Move Free Rotate Mirror New Copy Lean_on Nesting 
+					DirectionArrow InfoMove tt P1 P2 )
+
+	(defun *error* (msg)
+		(vla-EndUndoMark (vla-get-ActiveDocument (vlax-get-acad-object)))
+		(redraw)
+		(vla-highlight (vlax-ename->vla-object EnameShape) :vlax-false)
+		(princ)
+    )
+	;
+	(defun MakeArrowPolar (DimShape n AngleEvidence / Pmin Pmax Pmid b h half i ang Rtn col evAng)
+
+		;; Angolo da evidenziare, ricavato da (cosangle sinangle)
+		(setq evAng (if (and AngleEvidence (= (length AngleEvidence) 2))
+						(angle '(0.0 0.0) AngleEvidence)
+					)
+		)
+		(if (and DimShape (numberp n) (> n 0))
+			(progn
+				(setq Pmin (nth 0 DimShape)
+					  Pmax (nth 1 DimShape)
+				)
+				(if (and Pmin Pmax)
+					(progn
+						(setq Pmid (list (/ (+ (car  Pmax) (car  Pmin)) 2.0)
+									     (/ (+ (cadr Pmax) (cadr Pmin)) 2.0))
+							  b    (- (car Pmax) (car Pmin))
+							  h    (- (cadr Pmax) (cadr Pmin))
+							  half (/ (max b h) 2.0)
+							  Pmin (list (- (car Pmid) half) (- (cadr Pmid) half))
+							  Pmax (list (+ (car Pmid) half) (+ (cadr Pmid) half))
+						)
+						(redraw)
+						(setq i 0)
+						(repeat n
+							(setq ang (* 2.0 pi (/ (float i) n)))
+							;; stesso angolo -> colore di evidenza (1 = rosso), altrimenti 7
+							(setq col (if (and evAng (equal ang evAng 1e-6)) 1 7))
+							(setq Rtn (cons (ArrowGraphPolar ang Pmin Pmax col) Rtn))
+							(setq i (1+ i))
+						)
+					)
+				)
+			)
+		)
+		(reverse Rtn)
+	)	
+	;
+	(defun DirectionMove (Pc PClick NumArrow / StepRad Ang Idx Dir)
+		(if (and (> NumArrow 0)
+				 (> (distance Pc PClick) 1e-9)
+			)
+			(progn
+				(setq StepRad (/ (* 2.0 pi) NumArrow)
+					  Ang     (angle Pc PClick)
+					  ;; indice del settore più vicino, con wrap-around
+					  Idx     (rem (fix (+ (/ Ang StepRad) 0.5)) NumArrow)
+					  Dir     (* Idx StepRad)
+				)
+				(list (cos Dir) (sin Dir))
+			)
+		)
+	)
+	;
+	(defun FreeMovePosition (EnameShape / Ssel PtStart PtEnd EnameCheck Rtn)
+		(if EnameShape
+			(progn
+				(vla-StartUndoMark (vla-get-ActiveDocument (vlax-get-acad-object)))
+				(setq Ssel    (SelectShape EnameShape))
+				(setq PtStart (EnameCenter EnameShape))
+				(setq PtEnd   (DragMove Ssel PtStart))
+				(setq EnameCheck (Copy+Rotate+MirrorDummy EnameShape (list PtStart PtEnd nil nil)))
+				(while (CheckIntersectionObjects EnameCheck (LM:ss->ent Ssel))
+					(alert "Sovapposizione")
+					(DeleteEntity (list EnameCheck))
+					(setq PtEnd (DragMove Ssel PtStart))
+					(setq EnameCheck (Copy+Rotate+MirrorDummy EnameShape (list PtStart PtEnd nil nil)))
+				)
+				(DeleteEntity (list EnameCheck))
+				(setq Rtn (car (Move+Rotate+MirrorShape EnameShape (list PtStart PtEnd nil nil))))
+				(vla-EndUndoMark (vla-get-ActiveDocument (vlax-get-acad-object)))
+			)
+		)
+		Rtn
+	)
+	;
+	(defun FreePosition (EnameShape / Shape PtStart PtEnd Rotation Mirror Rtn)
+		(if EnameShape
+			(progn
+				(vla-StartUndoMark (vla-get-ActiveDocument (vlax-get-acad-object)))
+				
+				;(setq Shape 	  (DiscretizeShape EnameShape))
+				(setq Shape 	  (DiscretizeShapeNoControl EnameShape))
+				(setq PtStart     (EnameCenter EnameShape))
+				(setq Rtn         (DinamicPositionLowGraphics Shape nil 1.0))	; Shape PtEnd Rotation Mirror
+				(if Rtn
+					(progn
+						(setq Shape 	  (nth 0 Rtn))
+						(setq PtEnd		  (nth 1 Rtn))
+						(setq Rotation	  (nth 2 Rtn))
+						(setq Mirror      (nth 3 Rtn))
+						(setq Rtn (Move+Rotate+MirrorShape EnameShape (list PtStart PtEnd Rotation Mirror)))
+					)
+				)
+				(vla-EndUndoMark (vla-get-ActiveDocument (vlax-get-acad-object)))
+			)
+		)
+		Rtn
+	)
+	;
+	(defun FreeCopyPosition (EnameShape / Ssel PtStart PtEnd EnameCheck Rtn)
+		(if EnameShape
+			(progn
+				(vla-StartUndoMark (vla-get-ActiveDocument (vlax-get-acad-object)))
+				(setq Ssel    (SelectShape EnameShape))
+				(setq PtStart (EnameCenter EnameShape))
+				(setq PtEnd   (DragMove Ssel PtStart))
+				(setq EnameCheck (Copy+Rotate+MirrorDummy EnameShape (list PtStart PtEnd nil nil)))
+				(while (CheckIntersectionObjects EnameCheck nil)
+					(alert "Sovapposizione")
+					(DeleteEntity (list EnameCheck))
+					(setq PtEnd (DragMove Ssel PtStart))
+					(setq EnameCheck (Copy+Rotate+MirrorDummy EnameShape (list PtStart PtEnd nil nil)))
+				)
+				(DeleteEntity (list EnameCheck))
+				(setq Rtn (car (Copy+Rotate+MirrorShape EnameShape (list PtStart PtEnd nil nil))))
+				(vla-EndUndoMark (vla-get-ActiveDocument (vlax-get-acad-object)))
+			)
+		)
+		Rtn
+	)
+
+	;
+	(defun FreeMirrorPosition (EnameShape / Ssel PtStart PtEnd EnameCheck Rtn)
+		(if EnameShape
+			(progn
+				(vla-StartUndoMark (vla-get-ActiveDocument (vlax-get-acad-object)))
+				(setq Ssel    (SelectShape EnameShape))
+				(setq PtStart (EnameCenter EnameShape))
+				(setq PtEnd   (DragMirror Ssel PtStart))
+				(setq EnameCheck (Copy+Rotate+MirrorDummy EnameShape (list PtEnd PtEnd nil (angle PtStart PtEnd))))
+				(while (CheckIntersectionObjects EnameCheck (LM:ss->ent Ssel))
+					(alert "Sovapposizione")
+					(DeleteEntity (list EnameCheck))
+					(setq PtEnd (DragMirror Ssel PtStart))
+					(setq EnameCheck (Copy+Rotate+MirrorDummy EnameShape (list PtEnd PtEnd nil (angle PtStart PtEnd))))
+				)
+				(DeleteEntity (list EnameCheck))
+				(setq Rtn (car (Move+Rotate+MirrorShape EnameShape (list PtEnd PtEnd nil (angle PtStart PtEnd)))))
+				(vla-EndUndoMark (vla-get-ActiveDocument (vlax-get-acad-object)))
+			)
+		)
+		Rtn
+	)
+	;
+	(defun FreeRotatePosition (EnameShape / Ssel PtStart PtEnd EnameCheck Rtn)
+		(if EnameShape
+			(progn
+				(vla-StartUndoMark (vla-get-ActiveDocument (vlax-get-acad-object)))
+				(setq Ssel    (SelectShape EnameShape))
+				(setq PtStart (EnameCenter EnameShape))
+				(setq PtEnd   (DragRotate Ssel PtStart))
+				(setq EnameCheck (Copy+Rotate+MirrorDummy EnameShape (list PtEnd PtEnd (angle PtStart PtEnd) nil)))
+				(while (CheckIntersectionObjects EnameCheck (LM:ss->ent Ssel))
+					(alert "Sovapposizione")
+					(DeleteEntity (list EnameCheck))
+					(setq PtEnd (DragMirror Ssel PtStart))
+					(setq EnameCheck (Copy+Rotate+MirrorDummy EnameShape (list PtEnd PtEnd (angle PtStart PtEnd) nil )))
+				)
+				(DeleteEntity (list EnameCheck))
+				(setq Rtn (car (Move+Rotate+MirrorShape EnameShape (list PtEnd PtEnd (angle PtStart PtEnd) nil))))
+				(vla-EndUndoMark (vla-get-ActiveDocument (vlax-get-acad-object)))
+			)
+		)
+		Rtn
+	)
+	;
+	(defun FreeLeanOnPosition (EnameShape / *error* Loop PtRotate ActOsmode Rtn)
+	
+		(defun *error* (msg)
+			(setvar "osmode" ActOsmode)
+		)
+		;
+		(if EnameShape
+			(progn
+				(setq ActOsmode  (getvar "OSMODE"))
+				(setvar "osmode" 39)
+				(prompt "\nPunto di rotazione ")
+				(setq Loop T)
+				(while Loop
+					(if (setq PtRotate (getpoint))
+						(setq Loop nil)
+					)
+				)
+				(setvar "osmode" ActOsmode)
+				(if PtRotate
+					(progn
+						(vla-StartUndoMark (vla-get-ActiveDocument (vlax-get-acad-object)))
+						(setq Rtn (LeanOn EnameShape PtRotate))
+						(vla-EndUndoMark (vla-get-ActiveDocument (vlax-get-acad-object)))
+					)
+				)
+			)
+		)
+		Rtn
+	)
+	;
+	; Main
+	;
+	(setq Narrow 8)
+	(setq Loop T)
+	(setq msgLst (strcat "\r[L]ibero | [M]uovi | [R]uota | [S]pecchia | [C]opia | [N]uova selezione | [A]ppoggia | [D]ummy Nesting <Esc / Enter>"))
+	(princ msgLst)
+    (while Loop
+	
+		(setq Direction nil)
+		(setq Move 		nil)
+		(setq Free 		nil)
+		(setq Rotate 	nil)
+		(setq Mirror 	nil)
+		(setq New 		nil)
+		(setq Copy 		nil)
+		(setq Lean_on 	nil)
+		(setq Nesting 	nil)
+	
+		(if (not EnameShape)
+			(progn
+				(prompt "\nSagoma da muovere ")
+				(if (setq EnameShape (SselSelectShape))
+					(progn
+						(setq DimShape (ucs-bbox EnameShape))
+						(setq MidPoint (mapcar '(lambda (e1 e2) (/ (+ e1 e2) 2.0)) (car DimShape) (cadr DimShape)))
+						(setq EnameSheet (GetEnameSheetByEnameShape EnameShape))
+						(if (not EnameSheet)
+							(progn
+								(alert "Manca la lamiera")
+								(exit)
+							)
+						)
+					)
+				)
+				(princ msgLst)
+			)
+		)
+		(MakeArrowPolar DimShape Narrow DirectionArrow)
+		(setq Gr (grread 't 15 0) Code (car gr) Data (cadr gr))
+		(cond
+			((= Code 2)
+				(cond
+					((or (= Data 76) (= Data 108)) 	; Libero (tasto l/L)
+						(setq Free T)
+					)
+					((or (= Data 77) (= Data 109)) 	; Muovi (tasto m/M)
+						(setq Move T)
+					)
+					((or (= Data 99) (= Data 67)) 	; duplica contorno (tasto c/C)
+						(setq Copy T)
+					)
+					((or (= Data 82) (= Data 114)) 	; rotazione	(tasto r/R)
+						(setq Rotate T)
+					)
+					((or (= Data 83) (= Data 115)) 	; specchia	(tasto s/S)
+						(setq Mirror T)
+					)
+					((or (= Data 78) (= Data 110))	; nuovo (tasto N)
+						(setq New T)
+					)
+					((or (= Data 65) (= Data 97))	; appoggiare (tasto A/a)
+						(setq Lean_on T)
+					)
+					((or (= Data 68) (= Data 100))	; (tasto D o d)
+						(setq Nesting T)
+						(redraw)
+					)
+					((member Data '(13 32 69 101)) ; enter space E e
+						(redraw)
+						(vla-highlight (vlax-ename->vla-object EnameShape) :vlax-false)
+						(setq loop nil)
+					)
+				)
+			)
+			((= Code 5)
+				(setq DirectionArrow (DirectionMove MidPoint Data Narrow)) ; Rolling Mouse
+			)
+			((= Code 3)
+				(redraw)
+				(setq Direction (DirectionMove MidPoint Data Narrow)) ; Clik left
+			)
+		)
+		; Action +++++++++++
+		(if Direction
+			(progn
+				(setq InfoMove (FenceSelect05 EnameShape EnameSheet direction))
+				(princ msgLst)
+				(if InfoMove
+					(if (>= (car InfoMove) $MargineAccosto)
+						(progn
+							(setq tt        (car  InfoMove))
+							(setq Direction (cadr InfoMove))
+							(setq P1 (list 0.0 0.0 0.0)
+								  P2 (list (* tt (car Direction)) (* tt (cadr Direction)) 0.0)
+							)
+							(setq EnameShape (car (Move+Rotate+MirrorShape EnameShape (list P1 P2 nil nil))))
+							(setq DimShape (ucs-bbox EnameShape))
+							(setq MidPoint (mapcar '(lambda (e1 e2) (/ (+ e1 e2) 2.0)) (car DimShape) (cadr DimShape)))
+						)
+					)
+				)
+			)
+		)
+		(if Free
+			(progn
+				(redraw)
+				(setq EnameShape (car (FreePosition EnameShape)))
+				(setq DimShape (ucs-bbox EnameShape))
+				(setq MidPoint (mapcar '(lambda (e1 e2) (/ (+ e1 e2) 2.0)) (car DimShape) (cadr DimShape)))
+				(MakeArrowPolar DimShape Narrow DirectionArrow)
+				(princ msgLst)
+			)
+		)
+		(if Move
+			(progn
+			(redraw)
+				(setq EnameShape (FreeMovePosition EnameShape))
+				(setq DimShape (ucs-bbox EnameShape))
+				(setq MidPoint (mapcar '(lambda (e1 e2) (/ (+ e1 e2) 2.0)) (car DimShape) (cadr DimShape)))
+				(MakeArrowPolar DimShape Narrow DirectionArrow)
+				(princ msgLst)
+			)
+		)
+		(if Rotate
+			(progn
+				(redraw)
+				(setq EnameShape (FreeRotatePosition EnameShape))
+				(setq DimShape (ucs-bbox EnameShape))
+				(setq MidPoint (mapcar '(lambda (e1 e2) (/ (+ e1 e2) 2.0)) (car DimShape) (cadr DimShape)))
+				(MakeArrowPolar DimShape Narrow DirectionArrow)
+				(princ msgLst)
+			)
+		)
+		(if Mirror
+			(progn
+				(redraw)
+				(setq EnameShape (FreeMirrorPosition EnameShape))
+				(setq DimShape (ucs-bbox EnameShape))
+				(setq MidPoint (mapcar '(lambda (e1 e2) (/ (+ e1 e2) 2.0)) (car DimShape) (cadr DimShape)))
+				(MakeArrowPolar DimShape Narrow DirectionArrow)
+				(princ msgLst)
+			)
+		)
+		(if Copy
+			(progn
+				(redraw)
+				(setq EnameShape (FreeCopyPosition EnameShape))
+				(setq DimShape (ucs-bbox EnameShape))
+				(setq MidPoint (mapcar '(lambda (e1 e2) (/ (+ e1 e2) 2.0)) (car DimShape) (cadr DimShape)))
+				(MakeArrowPolar DimShape Narrow DirectionArrow)
+				(princ msgLst)
+			)
+		)
+		(if New
+			(progn
+				(redraw)
+				(vla-highlight (vlax-ename->vla-object EnameShape) :vlax-false)
+				(setq EnameShape nil)
+			)
+		)
+		(if Lean_on
+			(progn
+				(redraw)
+				(setq EnameShape (FreeLeanOnPosition EnameShape))
+				(setq DimShape (ucs-bbox EnameShape))
+				(setq MidPoint (mapcar '(lambda (e1 e2) (/ (+ e1 e2) 2.0)) (car DimShape) (cadr DimShape)))
+				(MakeArrowPolar DimShape Narrow DirectionArrow)
+				(princ msgLst)
+			)
+		)
+		(if nesting
+			(progn
+				(redraw)
+				(setq EnameShape (car (DummyNesting EnameShape T)))
+				(setq DimShape (ucs-bbox EnameShape))
+				(setq MidPoint (mapcar '(lambda (e1 e2) (/ (+ e1 e2) 2.0)) (car DimShape) (cadr DimShape)))
+				(MakeArrowPolar DimShape Narrow DirectionArrow)
+				(princ msgLst)
+			)
+		)
+	)
+	(princ)
+)
+;
+;
 
 
 

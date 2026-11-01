@@ -1,3 +1,51 @@
+(defun EA:Ssget (pts mode flt / MakeFilter
+							   doc ssets ss arr f res old)
+
+	; 	(setq pts '((0.0 0.0 0.0) (1500.0 0.0 0.0) (1500.0 3000.0 0.0) (0.0 1500.0 0.0)))
+	;	(my-cp-vla pts 7 (list (cons 0 "LWPOLYLINE") (cons 1001 $RgpShape)))
+	;	(my-cp-vla pts 7 '((0 . "LWPOLYLINE") (62 . 2))) ; solo colore giallo
+
+	(defun MakeFilter (pairs / n ft fd)
+		(setq n  (length pairs)
+			  ft (vlax-make-safearray vlax-vbInteger (cons 0 (1- n)))
+			  fd (vlax-make-safearray vlax-vbVariant (cons 0 (1- n)))
+		)
+		(vlax-safearray-fill ft (mapcar 'car pairs))
+		(vlax-safearray-fill fd (mapcar 'cdr pairs))
+		(list (vlax-make-variant ft) (vlax-make-variant fd))
+	)
+	;
+	; Main ++++++++
+	;
+	(setq doc   (vla-get-activedocument (vlax-get-acad-object))
+		  ssets (vla-get-selectionsets doc)
+	)
+	;; elimina un eventuale "TMP" rimasto da una esecuzione precedente
+	(setq old (vl-catch-all-apply 'vla-item (list ssets "TMP")))
+	(if (not (vl-catch-all-error-p old))
+		(vla-delete old)
+	)
+	(setq ss  (vla-add ssets "TMP")
+		  arr (vlax-make-safearray vlax-vbDouble (cons 0 (1- (* 3 (length pts)))))
+	)
+	(vlax-safearray-fill arr (apply 'append pts))
+
+	(if flt
+		(progn
+			(setq f (MakeFilter flt))
+			(vla-selectbypolygon ss mode (vlax-make-variant arr) (car f) (cadr f))
+		)
+		(vla-selectbypolygon ss mode (vlax-make-variant arr))
+	)
+	(vlax-for obj ss
+		(setq res (cons (vlax-vla-object->ename obj) res))
+	)
+	(vla-delete ss)
+	(reverse res)
+)
+;
+;
+;
 (defun GetEnt ()
 	(car (entsel))
 )
