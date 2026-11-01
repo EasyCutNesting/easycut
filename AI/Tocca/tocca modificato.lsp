@@ -383,10 +383,10 @@
 )
 ;
 (defun FenceSelect05 (EnameShape EnameSheet DirLst / SelectionShape
-								 			         EnameOffset SelShape 
+								 			         Margin EnameOffset SelShape 
 												     Grp NotIncludeList itm MoveShape MoveSheet Rtn)
 	;
-	(defun SelectionShape (EnameSheet EnameShape DirLst Debug /
+	(defun SelectionShape (EnameShape EnameSheet DirLst Debug /
 							Shp:Corners Shp:ToUV Shp:ToXY Shp:IntSeg
 							Shp:ClipHalf Shp:ClipRect Shp:Dedup Shp:Area Shp:SortCCW
 							Len CosA SinA SheetBox ShapeUV SheetUV
@@ -549,12 +549,12 @@
 										      P_List)
 										)
 										; ------ blocco ZOOM ----
-										(if (not (AreaInView-p (car SheetBox) (caddr SheetBox)))
-											(progn
-												(ZoomWindow01 (car SheetBox) (caddr SheetBox))
-												(setq ActiveZoom T)
-											)
-										)
+										;(if (not (AreaInView-p (car SheetBox) (caddr SheetBox)))
+										;	(progn
+										;		(ZoomWindow01 (car SheetBox) (caddr SheetBox))
+										;		(setq ActiveZoom T)
+										;	)
+										;)
 										;---------------------------------------------------------------------------
 										(if Debug ;; disegna i punti realmente passati a ssget
 											(progn
@@ -567,26 +567,35 @@
 												(redraw)
 											)
 										)
-										(if (setq SS (ssget "_CP" P_List
-														 (list (cons 0 "LWPOLYLINE") (list -3 (list $RgpShape)))
-													 )
-											)
-											(progn
-												(setq i (sslength SS))
-												(while (> i 0)
-													(setq i  (1- i)
-														  en (ssname SS i)
-													)
-													(if (= (GetTypeShape en) 1)
-														(setq Rtn (cons en Rtn))
-													)
+										
+										;(if (setq SS (ssget "_CP" P_List
+										;				 (list (cons 0 "LWPOLYLINE") (list -3 (list $RgpShape)))
+										;			 )
+										;	)
+										;	(progn
+										;		(setq i (sslength SS))
+										;		(while (> i 0)
+										;			(setq i  (1- i)
+										;				  en (ssname SS i)
+										;			)
+										;			(if (= (GetTypeShape en) 1)
+										;				(setq Rtn (cons en Rtn))
+										;			)
+										;		)
+										;	)
+										;)
+										(if (setq LstEname (MySsget P_List 7 
+																	(list (cons 0 "LWPOLYLINE") (cons 1001 $RgpShape))))
+											(foreach en LstEname
+												(if (= (GetTypeShape en) 1)
+													(setq Rtn (cons en Rtn))
 												)
 											)
 										)
 										; -------------------------------------------------------------------------
-										(if ActiveZoom
-											(ZoomPrevius01)
-										)
+										;(if ActiveZoom
+										;	(ZoomPrevius01)
+										;)
 									)
 								)
 							)
@@ -602,12 +611,11 @@
 	;
 	(if (and EnameShape EnameSheet DirLst)
 		(progn
-			
-			(setq EnameOffset 		(car (OffsetShapeDelimitated EnameShape $MargineAccosto)))
-			(setq LstShapeToCheck	(SelectionShape EnameSheet EnameOffset DirLst nil))
+			(setq Margin 0.5)
+			(setq EnameOffset 		(car (OffsetShapeDelimitated EnameShape (- $MargineAccosto Margin))))
+			(setq LstShapeToCheck	(SelectionShape EnameOffset EnameSheet DirLst nil))
 			(setq LstShapeToCheck	(vl-remove EnameShape LstShapeToCheck))
-
-			
+						
 			;(cond
 			;	((= Dir 1) (setq d (list  1.0  0.0)))
 			;	((= Dir 3) (setq d (list -1.0  0.0)))
@@ -624,12 +632,16 @@
 				(cond
 					((and MoveShape MoveSheet)
 						(if (< (car MoveShape) (car MoveSheet)) 
-							MoveShape 
-							MoveSheet
+							(list (- (car MoveShape) Margin) (cadr MoveShape)) 
+							(list (- (car MoveSheet) Margin) (cadr MoveSheet))
 						)
 					)
-					(MoveShape)
-					(MoveSheet)
+					(MoveShape
+						(list (- (car MoveShape) Margin) (cadr MoveShape))
+					)
+					(MoveSheet
+						(list (- (car MoveSheet) Margin) (cadr MoveSheet))
+					)
 				)
 			)
 			(if EnameOffset (entdel EnameOffset))
@@ -639,7 +651,7 @@
 )
 ;
 (defun MoveShapeAlongArrow (EnameShape / *error* MakeArrowPolar DeletedArrow MakeSolidArrow DefinitionSolidArrow
-										 msgLst Loop EnameSheet LstPointArrow gr code data direction LstArrow
+										 msgLst Loop EnameSheet DimShape LstPointArrow gr code data direction LstArrow
 										 InfoMove tt Direction P1 P2 )
 
 	(defun *error* (msg)
@@ -652,19 +664,25 @@
 		(princ)
     )
 	;
-	(defun MakeArrowPolar (EnameShape n / Pmin Pmax i ang Rtn)
+	(defun MakeArrowPolar (DimShape n / LocalDimBox Pmin Pmax Pmid b h half i ang Rtn)
 		;; Disegna N frecce disposte in modo polare attorno al centro del box
-		(if (and EnameShape n)
+		(if (and DimShape (numberp n) (> n 0))
 			(progn
-				(DeletedArrow)
-				(setq LocalDimBox (ucs-bbox EnameShape))
-				(setq Pmin (nth 0 LocalDimBox))
-				(setq Pmax (nth 1 LocalDimBox))		
-				(if (and Pmin Pmax (> n 0))
+				(setq Pmin (nth 0 DimShape))
+				(setq Pmax (nth 1 DimShape))
+				(if (and Pmin Pmax)
 					(progn
+						(setq Pmid (list (/ (+ (car Pmax) (car Pmin)) 2.0)
+										 (/ (+ (cadr Pmax) (cadr Pmin)) 2.0)))
+						(setq b (- (car Pmax) (car Pmin)))
+						(setq h (- (cadr Pmax) (cadr Pmin)))
+						(setq half (/ (max b h) 2.0))
+						(setq Pmin (list (- (car Pmid) half) (- (cadr Pmid) half)))
+						(setq Pmax (list (+ (car Pmid) half) (+ (cadr Pmid) half)))
+						(DeletedArrow)
 						(setq i 0)
 						(repeat n
-							(setq ang (* 2.0 pi (/ (float i) n)))   ; angolo in radianti
+							(setq ang (* 2.0 pi (/ (float i) n)))
 							(setq Rtn (cons (ArrowGraphPolar ang Pmin Pmax) Rtn))
 							(setq i (1+ i))
 						)
@@ -673,7 +691,7 @@
 			)
 		)
 		(reverse Rtn)
-	)
+	)	
 	;
 	(defun DeletedArrow ()
 		(redraw)
@@ -693,36 +711,60 @@
 		)
 	)
 	;
-	(defun DefinitionSolidArrow (Pt LstPointArrow / itm Rtn StepRad Pos)
-		(setq DirectionArrow$ nil)
-		(setq Pos 0)
-		(setq StepRad (/ (* 2.0 pi) (length LstPointArrow)))
-		(foreach itm LstPointArrow
-			(if (MeInsideBPlane (list (nth 0 itm) (nth 1 itm) (nth 3 itm) (nth 5 itm)
-									  (nth 6 itm) (nth 4 itm) (nth 2 itm))
-								Pt)
-				(progn
-					(setq Rtn (MakeSolidArrow (nth 0 itm) (nth 1 itm) (nth 2 itm) (nth 3 itm)
-											  (nth 4 itm) (nth 5 itm) (nth 6 itm)))
-					(setq DirectionArrow$ (list (cos (* Pos StepRad)) (sin (* Pos StepRad))))
-					;(princ "\n") (princ DirectionArrow$) (princ "\n")
+	(defun DirectionMove (Pc PClick NumArrow / StepRad Ang StartAng Direction )
+
+		(setq StepRad  (/ (* 2.0 pi) NumArrow))
+		(setq Ang      (angle Pc PClick))
+		(setq StartAng (/ StepRad 2.0))
+;		
+		(if Ang
+			(repeat NumArrow
+				(if (and (>= Ang  StartAng)
+						 (<= Ang  (+ StartAng StepRad))
+					)
+					(setq Direction (list (cos StartAng) (sin StartAng)))
+					(setq StartAng (+ StartAng StepRad))
 				)
 			)
-			(setq Pos (1+ Pos))
 		)
-		Rtn
+		Direction
 	)
+	;
+	;(defun DefinitionSolidArrow (Pt LstPointArrow / itm Rtn StepRad Pos)
+	;	(setq DirectionArrow$ nil)
+	;	(setq Pos 0)
+	;	(setq StepRad (/ (* 2.0 pi) (length LstPointArrow)))
+	;	(foreach itm LstPointArrow
+	;		(if (MeInsideBPlane (list (nth 0 itm) (nth 1 itm) (nth 3 itm) (nth 5 itm)
+	;								  (nth 6 itm) (nth 4 itm) (nth 2 itm))
+	;							Pt)
+	;			(progn
+	;				;(setq Rtn (MakeSolidArrow (nth 0 itm) (nth 1 itm) (nth 2 itm) (nth 3 itm)
+	;				;						  (nth 4 itm) (nth 5 itm) (nth 6 itm)))
+	;				(setq DirectionArrow$ (list (cos (* Pos StepRad)) (sin (* Pos StepRad))))
+	;				;(princ "\n") (princ DirectionArrow$) (princ "\n")
+	;			)
+	;		)
+	;		(setq Pos (1+ Pos))
+	;	)
+	;	Rtn
+	;)
+	;
 	;
 	; Main
 	;
+	(setq Narrow 8)
 	(setq Loop T)
 	(setq EnameSheet (GetEnameSheetByEnameShape EnameShape))
+	(setq DimShape (ucs-bbox EnameShape))
+	(setq MidPoint (mapcar '(lambda (e1 e2) (/ (+ e1 e2) 2.0)) (car DimShape) (cadr DimShape)))
+							
 	(setq msgLst (strcat "\n<Esc / Enter>"))
 	(princ msgLst)
 	
     (while Loop
 	
-		(setq LstPointArrow (MakeArrowPolar EnameShape 4))
+		(setq LstPointArrow (MakeArrowPolar DimShape Narrow))
 		(setq gr (grread 't 15 0) code (car gr) data (cadr gr))
 		(setq direction nil)
 		
@@ -732,37 +774,38 @@
 					(progn
 						(redraw)
 						;(DeleteEntity LstArrow)
-						(DeleteEntity (LM:ss->ent (ssget "X" (list (list -3 (list $RgpTrash))))))
+						;   (DeleteEntity (LM:ss->ent (ssget "X" (list (list -3 (list $RgpTrash))))))
 						(vla-highlight (vlax-ename->vla-object EnameShape) :vlax-false)
 						(setq Loop nil)
 					)
 				)
 			)
 			((and (member Code '(5 3)) (listp Data))  ; Mouse rolling
-				(setq LstPointArrow (MakeArrowPolar EnameShape 4))
+				(setq LstPointArrow (MakeArrowPolar DimShape Narrow))
 				
-				(if (= Code 5)
-					(progn
-						;(DeleteEntity LstArrow)
-						(DeleteEntity (LM:ss->ent (ssget "X" (list (list -3 (list $RgpTrash))))))
-						(setq LstArrow (DefinitionSolidArrow Data LstPointArrow))
-					)
-				)
+				;(if (= Code 5)
+				;	(progn
+				;		;(DeleteEntity LstArrow)
+				;		;   (DeleteEntity (LM:ss->ent (ssget "X" (list (list -3 (list $RgpTrash))))))
+				;		(setq LstArrow (DefinitionDirectionArrow Data LstPointArrow Narrow))
+				;	)
+				;)
 				
 				(if (= Code 3)						  ; Left click mouse
 					(progn
 						(redraw)
 						;(princ "\n") (princ DirectionArrow$) 
-						(if DirectionArrow$	(setq direction DirectionArrow$))
+						(setq Direction (DirectionMove MidPoint Data Narrow))
+						;(if DirectionArrow$	(setq direction DirectionArrow$))
 					)
 				)
 			)
 		)
 		; Action +++++++++++
-		(if direction
+		(if Direction
 			(progn
 				;(DeleteEntity LstArrow)
-				(DeleteEntity (LM:ss->ent (ssget "X" (list (list -3 (list $RgpTrash))))))
+				;   (DeleteEntity (LM:ss->ent (ssget "X" (list (list -3 (list $RgpTrash))))))
 				(setq InfoMove (FenceSelect05 EnameShape EnameSheet direction))
 				(princ msgLst)
 				(if InfoMove
@@ -774,7 +817,8 @@
 								  P2 (list (* tt (car Direction)) (* tt (cadr Direction)) 0.0)
 							)
 							(setq EnameShape (car (Move+Rotate+MirrorShape EnameShape (list P1 P2 nil nil))))
-							(MakeArrow EnameShape)
+							(setq DimShape (ucs-bbox EnameShape))
+							(MakeArrowPolar DimShape Narrow)
 						)
 					)
 				)
@@ -821,7 +865,58 @@
 
 (princ "\nComando TOCCA caricato.")
 (princ)
+;
+; Test Ssget
+;
 
+;
+(defun MySsget (pts mode flt / MakeFilter
+								 doc ssets ss arr f res old)
+
+	; 	(setq pts '((0.0 0.0 0.0) (1500.0 0.0 0.0) (1500.0 3000.0 0.0) (0.0 1500.0 0.0)))
+	;	(my-cp-vla pts 7 (list (cons 0 "LWPOLYLINE") (cons 1001 $RgpShape)))
+	;	(my-cp-vla pts 7 '((0 . "LWPOLYLINE") (62 . 2))) ; solo colore giallo
+
+
+
+	(defun MakeFilter (pairs / n ft fd)
+		(setq n  (length pairs)
+			  ft (vlax-make-safearray vlax-vbInteger (cons 0 (1- n)))
+			  fd (vlax-make-safearray vlax-vbVariant (cons 0 (1- n)))
+		)
+		(vlax-safearray-fill ft (mapcar 'car pairs))
+		(vlax-safearray-fill fd (mapcar 'cdr pairs))
+		(list (vlax-make-variant ft) (vlax-make-variant fd))
+	)
+	;
+	; Main ++++++++
+	;
+	(setq doc   (vla-get-activedocument (vlax-get-acad-object))
+		  ssets (vla-get-selectionsets doc)
+	)
+	;; elimina un eventuale "TMP" rimasto da una esecuzione precedente
+	(setq old (vl-catch-all-apply 'vla-item (list ssets "TMP")))
+	(if (not (vl-catch-all-error-p old))
+		(vla-delete old)
+	)
+	(setq ss  (vla-add ssets "TMP")
+		  arr (vlax-make-safearray vlax-vbDouble (cons 0 (1- (* 3 (length pts)))))
+	)
+	(vlax-safearray-fill arr (apply 'append pts))
+
+	(if flt
+		(progn
+			(setq f (MakeFilter flt))
+			(vla-selectbypolygon ss mode (vlax-make-variant arr) (car f) (cadr f))
+		)
+		(vla-selectbypolygon ss mode (vlax-make-variant arr))
+	)
+	(vlax-for obj ss
+		(setq res (cons (vlax-vla-object->ename obj) res))
+	)
+	(vla-delete ss)
+	(reverse res)
+)
 
 
 
