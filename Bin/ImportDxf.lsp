@@ -296,7 +296,7 @@
 				(progn
 					(Message)
 					(setq Rtn  (PreviewShapeDxf LstFileDxf))
-					(setq Ssel (NestingShapeDxf (car Rtn) (cadr Rtn) (getvar "LASTPOINT") LstFileDxf))
+					(setq Ssel (NestingShapeDxf (car Rtn) (cadr Rtn) (getvar "LASTPOINT") LstFileDxf)) ;SselShape LstDimBom PtInsert LstFileShapeDxf
 				)
 			)
 		)

@@ -932,19 +932,21 @@
         ;)
         (princ)
     )
+	;
 	(defun LM:startundo ( doc )
 		(LM:endundo doc)
 		(vla-startundomark doc)
 	)
+	;
 	(defun LM:endundo ( doc )
 		(while (= 8 (logand 8 (getvar 'undoctl)))
 			(vla-endundomark doc)
 		)
 	)
+	;
 	(defun LM:acdoc nil
 		(cond ( acdoc ) ((setq acdoc (vla-get-activedocument (vlax-get-acad-object)))))
 	)
-
 	;
 	;
 	;

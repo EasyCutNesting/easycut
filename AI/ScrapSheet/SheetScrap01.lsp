@@ -605,7 +605,7 @@
 			)
 			(if rects
 				(progn
-					(setq loops (rect-sum rects))
+					(setq loops (ScrapSheet:rect-sum rects))
 					(foreach l loops (ScrapSheet:make-pline l (getvar "CLAYER")))
 					(prompt (strcat "\nCreati " (itoa (length loops)) " contorni."))
 					(initget "Si No")
@@ -628,7 +628,6 @@
 	)
 	(princ)
 )
-;
 ;
 ;(prompt "\nCaricato: SOMMARECT (unione booleana di rettangoli).")
 ;(princ)
