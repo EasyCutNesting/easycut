@@ -260,7 +260,39 @@
   (princ)
 )
 ;
-(defun UpDateQuantityImportDxf (FileXls Sheet LstColumns TypeValue / ReadTabExcel CheckUniqValue BuildTab
+(defun ReadTabExcel (FileXls Sheet LstColumns TypeValue / res Tabella)
+	(if (and FileXls (findfile FileXls) Sheet)
+		(progn
+			(OpenExcel FileXls)
+			(if MyBook$
+				(progn
+					(setq res
+						(vl-catch-all-apply
+							'(lambda ()
+								(if (member Sheet (GetListSheet))
+									(progn
+										(ActiveSheet Sheet)
+										(ReadColumns LstColumns TypeValue 1)
+									)
+									(progn (princ (strcat "\n" Sheet " non trovato.")) nil)
+								)
+							)
+						)
+					)
+					(CloseExcel)
+					(if (vl-catch-all-error-p res)
+						(princ (strcat "\nErrore: " (vl-catch-all-error-message res)))
+						(setq Tabella res)
+					)
+				)
+			)
+		)
+		(princ "\nFile non trovato.")
+	)
+	Tabella
+)
+;
+(defun UpDateQuantityImportDxf (FileXls Sheet LstColumns TypeValue / CheckUniqValue BuildTab
 																	 Tab NewTab SselBom LstBom itm obj
 																	 NameShape Record Order Phase Qta Tk Mat)
 
@@ -284,38 +316,6 @@
 			(setq Tabella (cdr Tabella))
 		)
 		Rtn
-	)
-	;
-	(defun ReadTabExcel (FileXls Sheet LstColumns TypeValue / res Tabella)
-		(if (and FileXls (findfile FileXls) Sheet)
-			(progn
-				(OpenExcel FileXls)
-				(if MyBook$
-					(progn
-						(setq res
-							(vl-catch-all-apply
-								'(lambda ()
-									(if (member Sheet (GetListSheet))
-										(progn
-											(ActiveSheet Sheet)
-											(ReadColumns LstColumns TypeValue 1)
-										)
-										(progn (princ (strcat "\n" Sheet " non trovato.")) nil)
-									)
-								)
-							)
-						)
-						(CloseExcel)
-						(if (vl-catch-all-error-p res)
-							(princ (strcat "\nErrore: " (vl-catch-all-error-message res)))
-							(setq Tabella res)
-						)
-					)
-				)
-			)
-			(princ "\nFile non trovato.")
-		)
-		Tabella
 	)
 	;
 	(defun BuildTab (Tab / itm Rtn)
@@ -383,6 +383,88 @@
 	)
 	(princ)
 )	
+;(setq tab (ReadTabExcel "C:\\Users\\adl20\\Desktop\\EasyCutNesting Beta\\Test\\MergeInfo.xlsx" 
+;						 "Foglio1" 
+;						 '("A" "B" "C" "D" "E" "F") 
+;						 '("STR" "STR" "STR" "INT" "REAL" "STR")))
+;(ShowTable Tab '("Order" "Phase" "Name" "Qty" "Tk" "Mat"))
+
+(defun ShowTable (Tabella Titoli / ValToStr
+								   fn f id Rows Widths Pos Tabs w r c s)
+
+	(defun ValToStr (v)
+		;; Converte qualsiasi valore in stringa (nil -> "")
+		(cond
+			((null v)
+				""
+			)
+			((= (type v) 'REAL)
+				(rtos v 2 4)
+			)
+			((= (type v) 'INT)   
+				(itoa v)
+			)
+			((= (type v) 'STR)
+				v
+			)
+			(T
+				(vl-princ-to-string v)
+			)
+		)
+	)
+	;
+	;
+	; Main
+	;
+	;; Tabella: lista di righe. Titoli: lista di intestazioni (oppure nil)
+	(setq Rows (mapcar '(lambda (r) (mapcar 'ValToStr r)) Tabella))
+	(if Titoli 
+		(setq Rows (cons Titoli Rows))
+	)
+	;; larghezza massima di ogni colonna
+	(setq Widths (mapcar '(lambda (x) 0) (car Rows)))
+	(foreach r Rows
+		(setq Widths (mapcar '(lambda (w s) (max w (strlen s))) Widths r))
+	)
+
+	;; posizione dei tab
+	(setq Pos 0 Tabs "")
+	(foreach w Widths
+		(setq Pos  (+ Pos w 2))
+		(setq Tabs (strcat Tabs (itoa Pos) " "))
+	)
+
+	;; DCL temporaneo
+	(setq fn (vl-filename-mktemp "tabxls" nil ".dcl"))
+	(setq f  (open fn "w"))
+	(write-line "tabxls : dialog { label = \"Dati letti da Excel\";" f)
+	(write-line
+		(strcat ": list_box { key = \"lst\"; fixed_width_font = true; height = 20; width = "
+            (itoa (min 140 (+ Pos 4)))
+            "; tabs = \"" Tabs "\"; }"
+		)
+		f
+	)
+	(write-line "ok_only; }" f)
+	(close f)
+
+	(setq id (load_dialog fn))
+	(if (new_dialog "tabxls" id)
+		(progn
+			(start_list "lst")
+			(foreach r Rows
+				(setq s "")
+				(foreach c r 
+					(setq s (strcat s c "\t"))
+				)
+				(add_list s)
+			)
+			(end_list)
+			(start_dialog)
+		)
+	)
+	(unload_dialog id)
+	(vl-file-delete fn)
+	(princ)
+)	
 ;	
-	
-	
